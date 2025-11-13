@@ -1,21 +1,33 @@
+using System.Collections.Generic;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using Utils;
 
 public class Lobby : MonoBehaviourPunCallbacks
 {
     [Header("UI")]
-    [SerializeField] GameObject _roomIdInputField;
+    [SerializeField] InputField _roomIdInputField;
+
+    Dictionary<short, string> _errorCodeDict = new Dictionary<short, string>();
 
     void Start()
     {
         ConnectToPhoton();
         HideRoomInput();
+        SetErrorCode();
+    }
+
+    void SetErrorCode()
+    {
+        _errorCodeDict.Add(32757, "방 가득 참");
+        _errorCodeDict.Add(32758, "방 없음");
     }
 
     #region Photon Connection
-    private void ConnectToPhoton()
+    void ConnectToPhoton()
     {
         if (!PhotonNetwork.IsConnected)
             PhotonNetwork.ConnectUsingSettings();
@@ -39,6 +51,7 @@ public class Lobby : MonoBehaviourPunCallbacks
 
     public void OnClickEnterRoom()
     {
+        _roomIdInputField.text = "";
         ShowRoomInput();
     }
 
@@ -54,13 +67,18 @@ public class Lobby : MonoBehaviourPunCallbacks
         Debug.Log($"방 입장 시도: {roomId}");
         HideRoomInput();
     }
+
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
     #endregion
 
     #region Helper
     private string GenerateRoomName() => Random.Range(1000, 9999).ToString();
 
-    private void ShowRoomInput() => _roomIdInputField.SetActive(true);
-    private void HideRoomInput() => _roomIdInputField.SetActive(false);
+    private void ShowRoomInput() => _roomIdInputField.gameObject.SetActive(true);
+    private void HideRoomInput() => _roomIdInputField.gameObject.SetActive(false);
     #endregion
 
     #region Photon Callbacks
@@ -69,20 +87,14 @@ public class Lobby : MonoBehaviourPunCallbacks
         Debug.Log("방 생성 완료: " + PhotonNetwork.CurrentRoom.Name);
     }
 
-    public override void OnCreateRoomFailed(short returnCode, string message)
-    {
-        Debug.LogError($"방 생성 실패: {message}");
-    }
-
     public override void OnJoinedRoom()
     {
-        Debug.Log("방 입장 성공: " + PhotonNetwork.CurrentRoom.Name);
         SceneManager.LoadScene("SelectCharacterScene");
     }
 
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
-        Debug.LogError($"방 입장 실패: {message}");
+        SimpleSingleton<NotifyManager>.Instance.Notify($"방 입장 실패: {_errorCodeDict[returnCode]}");
     }
     #endregion
 }
