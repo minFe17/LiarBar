@@ -580,7 +580,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63811fb85313a114c8b2b6bf6a7c0bfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _roomIdInputField: {fileID: 1977172482}
+  _roomIDInputField: {fileID: 1977172482}
 --- !u!1 &1019745716
 GameObject:
   m_ObjectHideFlags: 0
@@ -1154,7 +1154,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 946109498}
         m_TargetAssemblyTypeName: Lobby, Assembly-CSharp
-        m_MethodName: ExitGame
+        m_MethodName: OnClickExitGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
