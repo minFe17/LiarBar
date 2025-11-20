@@ -104,19 +104,10 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
         // 슬롯 UI 갱신
         UpdateAllPlayerUI();
     }
-
-    public void OnClickChangeCharacter(int direction)
-    {
-        // direction: -1 left, 1 right
-        var localPlayer = PhotonNetwork.LocalPlayer;
-        int currentIndex = (int)localPlayer.CustomProperties["SelectedCharacterIndex"];
-        int newIndex = (currentIndex + direction + 4) % 4; // 0~3 순환
-        _photonManager.SetCharacterIndex(newIndex);
-    }
     #endregion
 
     #region Photon Callbacks
-    public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
     {
         // 슬롯 전체 갱신
         UpdateAllPlayerUI();
