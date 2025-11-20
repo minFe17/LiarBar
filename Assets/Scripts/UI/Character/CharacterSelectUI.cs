@@ -20,6 +20,9 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
     [Header("Player UI Slots")]
     [SerializeField] PlayerSlotUI[] _playerSlots;
 
+    [Header("Voice")]
+    [SerializeField] Toggle _voiceToggle;
+
     PhotonManager _photonManager;
     bool _isReady = false;
 
@@ -103,6 +106,11 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
 
         // ½½·Ô UI °»½Å
         UpdateAllPlayerUI();
+    }
+
+    public void OnClickVoiceToggle()
+    {
+        SimpleSingleton<VoiceManager>.Instance.ChangeVoiceChat(_voiceToggle.isOn);
     }
     #endregion
 
