@@ -82,6 +82,26 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
         return defaultValue;
     }
 
+    void CheckAllPlayerReady()
+    {
+        if (PhotonNetwork.PlayerList.Length != 4)
+            return;
+
+        for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+        {
+            Player player = PhotonNetwork.PlayerList[i];
+
+            PlayerInfo info = new PlayerInfo
+            {
+                IsReady = GetCustomProperty(player, "IsReady", false),
+               
+            };
+            if (!info.IsReady)
+                return;
+        }
+        SceneManager.LoadScene("IngameScene");
+    }
+
     #region UI Event
     public void OnRegisterNickname(string nickname)
     {
@@ -119,6 +139,7 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
     {
         // 슬롯 전체 갱신
         UpdateAllPlayerUI();
+        CheckAllPlayerReady();
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)

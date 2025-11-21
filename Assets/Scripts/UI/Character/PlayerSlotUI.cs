@@ -22,6 +22,7 @@ public class PlayerSlotUI : MonoBehaviour
         _characterList.ShowCharacter(info.SelectedCharacterIndex);
         _pageButton.SetActive(info.ActorNumber == PhotonNetwork.LocalPlayer.ActorNumber);
     }
+
     public void ClearSlot()
     {
         _nicknameText.text = "";
@@ -31,6 +32,8 @@ public class PlayerSlotUI : MonoBehaviour
     #region Button Event
     public void OnClickChangeCharacter(int direction)
     {
+        if (_readyIcon.activeSelf)
+            return;
         int newIndex = _characterList.ChangeCharacter(direction);
         MonoSingleton<PhotonManager>.Instance.SetCharacterIndex(newIndex);
     }
