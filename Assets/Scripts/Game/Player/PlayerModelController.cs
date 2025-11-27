@@ -10,13 +10,11 @@ public class PlayerModelController : MonoBehaviour
 
     List<GameObject> _models = new List<GameObject>();
     PhotonView _view;
-    Transform _transform;
     int _index = 0;
-
+    List<Vector3> _positions = new List<Vector3>();
     private void Start()
     {
         _view = GetComponentInParent<PhotonView>();
-        _transform = GetComponentInParent<Transform>();
         FindModel();
         SetModelToIndex();
     }
@@ -24,6 +22,7 @@ public class PlayerModelController : MonoBehaviour
     {
         
     }
+
     private void SetModelToIndex()
     {
         int selectedIndex = 0;
@@ -37,7 +36,11 @@ public class PlayerModelController : MonoBehaviour
             if (idxObj is int idx)
                 selectedIndex = idx;
         }
+        if (_view.IsMine)
+        {
 
+        }
+        
         ActiveSelectedModel(selectedIndex);
     }
     private void ActiveSelectedModel(int index)
