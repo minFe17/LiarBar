@@ -1,6 +1,7 @@
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -67,6 +68,7 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
                 Nickname = GetCustomProperty(player, "Nickname", player.NickName),
                 IsReady = GetCustomProperty(player, "IsReady", false),
                 SelectedCharacterIndex = GetCustomProperty(player, "SelectedCharacterIndex", 0),
+                PositionIndex = GetCustomProperty(player,"PositionIndex",0),
                 ActorNumber = player.ActorNumber
             };
 
@@ -102,6 +104,31 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient)
             PhotonNetwork.LoadLevel("IngameScene");
     }
+    void AssignRandomPositionIndex()
+    {
+        // 이미 다른 플레이어가 사용중인 인덱스 수집
+        HashSet<int> usedIndexes = new HashSet<int>();
+        foreach (Player player in PhotonNetwork.PlayerList)
+        {
+            int posIndex = GetCustomProperty(player, "PositionIndex", -1);
+            if (posIndex >= 0)
+                usedIndexes.Add(posIndex);
+        }
+
+        int maxPlayers = PhotonNetwork.CurrentRoom.MaxPlayers;
+        List<int> availableIndexes = new List<int>();
+        for (int i = 0; i < maxPlayers; i++)
+        {
+            if (!usedIndexes.Contains(i))
+                availableIndexes.Add(i);
+        }
+
+        if (availableIndexes.Count > 0)
+        {
+            int chosenIndex = availableIndexes[Random.Range(0, availableIndexes.Count)];
+            _photonManager.SetPositionIndex(chosenIndex);
+        }
+    }
 
     #region UI Event
     public void OnRegisterNickname(string nickname)
@@ -109,6 +136,9 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
         _photonManager.SetNickname(nickname);
         _nicknameInputField.SetActive(false);
         _selectCharacterUI.SetActive(true);
+        AssignRandomPositionIndex();
+        UpdateAllPlayerUI(); //이거해줘야되나?
+
     }
 
     public void OnClickExitRoom()

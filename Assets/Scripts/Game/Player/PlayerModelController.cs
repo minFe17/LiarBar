@@ -17,6 +17,7 @@ public class PlayerModelController : MonoBehaviour
         _view = GetComponentInParent<PhotonView>();
         FindModel();
         SetModelToIndex();
+
     }
     private void Update()
     {
@@ -38,7 +39,9 @@ public class PlayerModelController : MonoBehaviour
         }
         if (_view.IsMine)
         {
-
+            object idxObj = targetPlayer.CustomProperties["PositionIndex"];
+            if (idxObj is int idx)
+                Debug.Log(idx);
         }
         
         ActiveSelectedModel(selectedIndex);

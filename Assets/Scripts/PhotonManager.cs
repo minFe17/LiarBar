@@ -61,7 +61,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         {
             { "Nickname", PhotonNetwork.NickName },
             { "IsReady", false },
-            { "SelectedCharacterIndex", 0 }
+            { "SelectedCharacterIndex", 0 },
+            { "PositionIndex", 0 }
         };
         PhotonNetwork.LocalPlayer.SetCustomProperties(props);
     }
@@ -75,6 +76,10 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public void SetCharacterIndex(int index)
     {
         PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable { { "SelectedCharacterIndex", index } });
+    }
+    public void SetPositionIndex(int index)
+    {
+        PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable { { "PositionIndex", index } });
     }
     #endregion
 
