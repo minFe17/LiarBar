@@ -99,7 +99,8 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
             if (!info.IsReady)
                 return;
         }
-        SceneManager.LoadScene("IngameScene");
+        if (PhotonNetwork.IsMasterClient)
+            PhotonNetwork.LoadLevel("SelectCharacterScene");
     }
 
     #region UI Event
@@ -113,7 +114,6 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
     public void OnClickExitRoom()
     {
         _photonManager.ExitRoom();
-        SceneManager.LoadScene("LobbyScene");
     }
 
     public void OnClickReadyButton()
@@ -149,6 +149,11 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
 
         // 슬롯 전체 갱신
         UpdateAllPlayerUI();
+    }
+
+    public override void OnLeftRoom()
+    {
+        SceneManager.LoadScene("LobbyScene");
     }
     #endregion
 }

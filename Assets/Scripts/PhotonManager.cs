@@ -17,6 +17,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     #region Photon Connection
     public void ConnectToPhoton()
     {
+        PhotonNetwork.AutomaticallySyncScene = true;
         if (!PhotonNetwork.IsConnected)
             PhotonNetwork.ConnectUsingSettings();
     }
@@ -45,7 +46,6 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
         Hashtable props = new Hashtable { { "Nickname", nickname } };
         PhotonNetwork.LocalPlayer.SetCustomProperties(props);
-
     }
 
     public void ExitRoom()
@@ -81,7 +81,10 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     #region Photon Callbacks
     public override void OnJoinedRoom()
     {
-        SceneManager.LoadScene("SelectCharacterScene");
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.LoadLevel("SelectCharacterScene");
+        }
     }
 
     public override void OnJoinRoomFailed(short returnCode, string message)
