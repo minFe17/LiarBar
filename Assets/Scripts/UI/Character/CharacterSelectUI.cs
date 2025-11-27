@@ -100,7 +100,7 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
                 return;
         }
         if (PhotonNetwork.IsMasterClient)
-            PhotonNetwork.LoadLevel("SelectCharacterScene");
+            PhotonNetwork.LoadLevel("IngameScene");
     }
 
     #region UI Event
