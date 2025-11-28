@@ -4,6 +4,7 @@ using Utils;
 
 public class NicknameUI : MonoBehaviour
 {
+    [SerializeField] GameObject _dplicateNicknameUI;
     FirebaseREST _firebaseRest;
 
     void Start()
@@ -13,8 +14,16 @@ public class NicknameUI : MonoBehaviour
 
     public void OnEndNickname(string value)
     {
-        _firebaseRest.User.SetField("nickname", value);
-        _firebaseRest.SaveUserData();
-        SceneManager.LoadScene("LobbyScene");
+        StartCoroutine(_firebaseRest.CheckNicknameDuplicate(value, (isAvailable) =>
+        {
+            if (isAvailable)
+            {
+                _firebaseRest.User.SetField("nickname", value);
+                _firebaseRest.SaveUserData();
+                SceneManager.LoadScene("LobbyScene");
+            }
+            else
+                _dplicateNicknameUI.SetActive(true);
+        }));
     }
 }

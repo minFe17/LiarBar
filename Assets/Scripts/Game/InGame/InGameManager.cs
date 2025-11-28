@@ -1,5 +1,6 @@
 using Photon.Pun;
 using UnityEngine;
+using Utils;
 
 public class InGameManager : MonoBehaviour
 {
@@ -46,7 +47,7 @@ public class InGameManager : MonoBehaviour
         Vector3 dir = center - spawnPos;
         Quaternion rot = Quaternion.LookRotation(dir);
 
-        PhotonNetwork.Instantiate("Player", spawnPos, rot);
+       PhotonNetwork.Instantiate("Player", spawnPos, rot);
         Debug.Log("Áö±Ý »ý¼ºµÊ");
     }
 }

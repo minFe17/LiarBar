@@ -14,9 +14,12 @@ public class LoginUI : AuthUIBase
         string nickname = _firebaseRest.User.GetField<string>("nickname");
 
         if(string.IsNullOrEmpty(nickname))
+        {
+            gameObject.SetActive(false);
             _nicknameUI.SetActive(true);
+        }
         else
-            SceneManager.LoadScene("LobbyScene");   
+            SceneManager.LoadScene("LobbyScene");
     }
 
     #region UI Event

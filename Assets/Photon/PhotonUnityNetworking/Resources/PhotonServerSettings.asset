@@ -42,6 +42,10 @@ MonoBehaviour:
   - DestroySpaceship
   - Fire
   - RespawnSpaceship
+  - RPC_RegisterPlayer
+  - RPC_NextTurn
+  - RPC_SetCurrentTurn
+  - RPC_SyncPlayerList
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

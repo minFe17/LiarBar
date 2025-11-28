@@ -16,16 +16,15 @@ public class FirestoreUser
     // °ª ÀúÀå
     public void SetField<T>(string key, T value)
     {
-        object firestoreValue = ConvertToFirestoreValue(value);
-        Fields[key] = firestoreValue;
+        Fields[key] = ConvertToFirestoreValue(value);
     }
 
     private object ConvertToFirestoreValue<T>(T value)
     {
         if (value is string s)
-            return new Dictionary<string, string> { { "stringValue", s } };
+            return new Dictionary<string, object> { { "stringValue", s } };
         if (value is int i)
-            return new Dictionary<string, string> { { "integerValue", i.ToString() } };
+            return new Dictionary<string, object> { { "integerValue", i.ToString() } };
         return null;
     }
 
@@ -35,7 +34,8 @@ public class FirestoreUser
         if (!Fields.ContainsKey(key))
             return default;
 
-        var valueDict = Fields[key] as Dictionary<string, object>;
+        Dictionary<string, object> valueDict = Fields[key] as Dictionary<string, object>;
+
         if (valueDict == null)
             return default;
 
