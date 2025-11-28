@@ -20,6 +20,10 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         PhotonNetwork.AutomaticallySyncScene = true;
         if (!PhotonNetwork.IsConnected)
             PhotonNetwork.ConnectUsingSettings();
+
+        // 네트워크 속도 세팅
+        PhotonNetwork.SendRate = 80;          // 1초에 60번 전송
+        PhotonNetwork.SerializationRate = 40; // 1초에 30번 직렬화
     }
 
     public override void OnConnectedToMaster()

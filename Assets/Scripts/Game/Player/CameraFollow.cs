@@ -6,7 +6,7 @@ public class CameraFollow : MonoBehaviour
     private PhotonView _view;
     private Camera _camera;
     private Transform _head;
-    private float smoothSpeed = 10f;
+    private float smoothSpeed = 1.0f;
 
     private void Start()
     {
@@ -32,6 +32,7 @@ public class CameraFollow : MonoBehaviour
     private void LateUpdate()
     {
         if (_head == null || !_view.IsMine) return;
+
 
         _camera.transform.position = Vector3.Lerp(_camera.transform.position, _head.position, Time.deltaTime * smoothSpeed);
         _camera.transform.rotation = Quaternion.Slerp(_camera.transform.rotation, _head.rotation, Time.deltaTime * smoothSpeed);
