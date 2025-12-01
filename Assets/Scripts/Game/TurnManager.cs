@@ -1,8 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Photon.Pun;
-using Photon.Realtime;
 using UnityEngine;
 
 public class TurnManager : MonoBehaviourPun
@@ -12,9 +10,8 @@ public class TurnManager : MonoBehaviourPun
     List<GamePlayer> _players = new List<GamePlayer>();
     int _currentPlayerIndex = 0;
 
-    private void Awake()
+    void Awake()
     {
-        // 싱글턴 설정
         if (Instance == null)
             Instance = this;
         else
@@ -36,15 +33,7 @@ public class TurnManager : MonoBehaviourPun
 
     public void EndTurn()
     {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            NextTurn();
-        }
-        else
-        {
-            // 마스터에게만 RPC로 턴 요청
-            photonView.RPC("RPC_NextTurn", RpcTarget.MasterClient);
-        }
+        photonView.RPC("RPC_NextTurn", RpcTarget.MasterClient);
     }
 
     void NextTurn()
@@ -56,12 +45,10 @@ public class TurnManager : MonoBehaviourPun
         photonView.RPC("RPC_SetCurrentTurn", RpcTarget.All, _currentPlayerIndex);
     }
 
-    #region RPCs
-
+    #region RPC
     [PunRPC]
     void RPC_NextTurn()
     {
-        // 마스터만 호출되므로 바로 진행
         if (PhotonNetwork.IsMasterClient)
             NextTurn();
     }
@@ -69,11 +56,11 @@ public class TurnManager : MonoBehaviourPun
     [PunRPC]
     void RPC_SetCurrentTurn(int playerIndex)
     {
-        if (_players.Count == 0 || playerIndex >= _players.Count) return;
+        if (_players.Count == 0 || playerIndex >= _players.Count)
+            return;
 
         GamePlayer currentPlayer = _players[playerIndex];
         currentPlayer.StartTurn();
     }
-
     #endregion
 }

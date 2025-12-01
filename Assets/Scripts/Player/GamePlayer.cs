@@ -1,36 +1,64 @@
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class GamePlayer : MonoBehaviour
 {
     PhotonView _photonView;
-    public int TurnIndex { get; set; }
+    public int TurnIndex { get; private set; }
 
     public int ViewID => _photonView.ViewID;
 
-    private void Awake()
+    void Awake()
     {
         _photonView = GetComponent<PhotonView>();
     }
 
-    private void Start()
+    void Start()
     {
-        // 씬에 이미 있는 TurnManager 싱글턴 사용
         TurnManager.Instance.RegisterPlayer(this);
+
+        SetTurnIndex();
     }
 
-    private void Update()
+    void Update()
     {
+        if (!_photonView.IsMine)
+            return;
+
         if (Mouse.current.leftButton.wasPressedThisFrame)
-        {
             TurnManager.Instance.EndTurn();
+    }
+
+    void SetTurnIndex()
+    {
+        for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+        {
+            Player player = PhotonNetwork.PlayerList[i];
+
+            if (player.ActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
+            {
+                TurnIndex = GetCustomProperty(player, "PositionIndex", 0);
+                break;
+            }
         }
+    }
+
+    T GetCustomProperty<T>(Player player, string key, T defaultValue)
+    {
+        if (player.CustomProperties.TryGetValue(key, out object value) && value is T typedValue)
+            return typedValue;
+        return defaultValue;
     }
 
     public void StartTurn()
     {
+        if (!_photonView.IsMine)
+            return; 
+
         Debug.Log($"Player {TurnIndex} 시작!");
-        // 여기서 턴 시작 로직 실행
+        // 내 턴일 때만 동작하는 로직
     }
+
 }
