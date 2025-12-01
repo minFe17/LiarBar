@@ -16,7 +16,7 @@ MonoBehaviour:
     AppIdRealtime: e61f6538-1158-42c2-b544-75edf9cc5116
     AppIdFusion: 
     AppIdChat: 
-    AppIdVoice: e61f6538-1158-42c2-b544-75edf9cc5116
+    AppIdVoice: add69a23-ac0f-403e-90be-56bd55cba7d9
     AppVersion: 
     UseNameServer: 1
     FixedRegion: 
@@ -46,6 +46,9 @@ MonoBehaviour:
   - RPC_NextTurn
   - RPC_SetCurrentTurn
   - RPC_SyncPlayerList
+  - RPC_ContinueGame
+  - RPC_RemovePlayer
+  - RPC_DiePlayer
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

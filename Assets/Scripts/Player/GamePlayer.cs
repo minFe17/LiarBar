@@ -56,9 +56,21 @@ public class GamePlayer : MonoBehaviour
     {
         if (!_photonView.IsMine)
             return; 
-
-        Debug.Log($"Player {TurnIndex} 시작!");
-        // 내 턴일 때만 동작하는 로직
+        if(TurnManager.Instance.CurrentPlayerIndex != TurnIndex)
+            return;
     }
 
+    public void Win()
+    {
+
+    }
+
+    public void Die()
+    {
+        if (!_photonView.IsMine)
+            return;
+
+        TurnManager.Instance.DiePlayer(this);
+        // firebase 기록도 여기서 해도 OK, 중복 발생 X
+    }
 }
