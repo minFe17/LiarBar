@@ -58,6 +58,7 @@ public class GamePlayer : MonoBehaviour
             return; 
         if(TurnManager.Instance.CurrentPlayerIndex != TurnIndex)
             return;
+        // 턴 시작 로직
     }
 
     public void Win()
@@ -71,6 +72,6 @@ public class GamePlayer : MonoBehaviour
             return;
 
         TurnManager.Instance.DiePlayer(this);
-        // firebase 기록도 여기서 해도 OK, 중복 발생 X
+        // firebase 데이터 저장
     }
 }

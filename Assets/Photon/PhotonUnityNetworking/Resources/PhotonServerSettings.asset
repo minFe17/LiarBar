@@ -49,6 +49,7 @@ MonoBehaviour:
   - RPC_ContinueGame
   - RPC_RemovePlayer
   - RPC_DiePlayer
+  - SpawnRemotePlayerVoice
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
