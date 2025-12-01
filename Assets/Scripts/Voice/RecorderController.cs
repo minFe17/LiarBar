@@ -8,6 +8,7 @@ public class RecorderController : MonoBehaviour
     void Start()
     {
         GameObject temp = PhotonNetwork.Instantiate("PlayerVoice", Vector3.zero, Quaternion.identity);
-        SimpleSingleton<VoiceManager>.Instance.Recorder = temp.GetComponent<Recorder>();
+        MonoSingleton<VoiceManager>.Instance.Recorder = temp.GetComponent<Recorder>();
+ 
     }
 }

@@ -160,7 +160,7 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
 
     public void OnClickVoiceToggle()
     {
-        SimpleSingleton<VoiceManager>.Instance.ChangeVoiceChat(_voiceToggle.isOn);
+        MonoSingleton<VoiceManager>.Instance.ChangeVoiceChat(_voiceToggle.isOn);
     }
     #endregion
 
