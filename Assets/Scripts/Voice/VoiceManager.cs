@@ -3,9 +3,10 @@ using Photon.Voice.PUN;
 using Photon.Pun;
 using UnityEngine;
 using Utils;
+using UnityEngine.InputSystem;
 
 
-public class VoiceManager : MonoBehaviourPunCallbacks
+public class VoiceManager : MonoBehaviour
 {
     bool _isOnVoice;
     Recorder _recorder;
@@ -22,35 +23,16 @@ public class VoiceManager : MonoBehaviourPunCallbacks
         _recorder.TransmitEnabled = _isOnVoice;
     }
 
-    public override void OnJoinedRoom()
+    private void Update()
     {
-        Debug.Log("VoiceManager OnJoinedRoom 호출됨!");
-        if (PunVoiceClient.Instance != null && !PunVoiceClient.Instance.Client.InRoom)
-        {
-            PunVoiceClient.Instance.ConnectAndJoinRoom();
-        }
+        //if(Keyboard.current.aKey.isPressed)
+        //{
+        //    Debug.Log("PunVoiceClient IsConnected: " + PunVoiceClient.Instance.Client.IsConnected);
+        //    Debug.Log("PunVoiceClient InRoom: " + PunVoiceClient.Instance.Client.InRoom);
+        //}
     }
-    public override void OnCreatedRoom()
+    private void Start()
     {
-        base.OnCreatedRoom();
-        Debug.Log("Room Created: " + PhotonNetwork.CurrentRoom.Name);
-
-        // Voice 연결
-        if (SimpleSingleton<VoiceManager>.Instance != null)
-        {
-            SimpleSingleton<VoiceManager>.Instance.OnJoinedRoom();
-        }
+       
     }
-    private void Awake()
-    {
-        DontDestroyOnLoad(gameObject);
-
-        // PunVoiceClient가 이미 있으면 연결
-        var voiceClient = PunVoiceClient.Instance;
-        if (voiceClient != null)
-        {
-            DontDestroyOnLoad(voiceClient.gameObject);
-        }
-    }
-
 }

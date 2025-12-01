@@ -16,13 +16,13 @@ public class MainCameraController : MonoBehaviour
     {
         _rotation = _transform.eulerAngles;
 
-        // A 누르는 동안
+        // Q 누르는 동안
         if (Keyboard.current.qKey.isPressed)
         {
             _rotation.y -= CAMERA_SPEED * Time.deltaTime;
             _transform.eulerAngles = _rotation;
         }
-        // d 누르는 동안
+        // E 누르는 동안
        if (Keyboard.current.eKey.isPressed)
         {
             _rotation.y += CAMERA_SPEED * Time.deltaTime;
