@@ -4,11 +4,16 @@ using UnityEngine.InputSystem;
 
 public class CameraFollow : MonoBehaviour
 {
+    private const float MAX_VALUE = 30f;
     private PhotonView _view;
     private Camera _camera;
     private Transform _head;
-    private float smoothSpeed = 1.0f;
-    private Vector3 _rotation = new Vector3(20,0,0);
+    private float _smoothSpeed = 1.0f;
+
+    private float _sens = 1f;
+    private float _pitch = 0f;
+    private float _yaw = 0f;
+
 
     private void Start()
     {
@@ -31,14 +36,24 @@ public class CameraFollow : MonoBehaviour
     private void Update()
     {
         if (_head == null || !_view.IsMine) return;
-        
 
+        Vector2 delta = Mouse.current.delta.ReadValue();
+        float mouseX = delta.x * _sens;
+        float mouseY = delta.y * _sens;
+
+        _yaw += mouseX;      // 좌우
+        _pitch -= mouseY;    // 상하 (반전)
+
+        _pitch = Mathf.Clamp(_pitch, -MAX_VALUE, MAX_VALUE); // 상하 제한
+
+        _camera.transform.rotation = Quaternion.Euler(_pitch, _yaw, 0f);
     }
+
     private void LateUpdate()
     {
         if (_head == null || !_view.IsMine) return;
 
-        _camera.transform.position = Vector3.Lerp(_camera.transform.position, _head.position, Time.deltaTime * smoothSpeed);
+        _camera.transform.position = Vector3.Lerp(_camera.transform.position, _head.position, Time.deltaTime * _smoothSpeed);
         //_camera.transform.rotation = Quaternion.Slerp(_camera.transform.rotation, _head.rotation, Time.deltaTime * smoothSpeed);
         //회전 들어가면 너무 어지러워서 그냥 끔
 
@@ -74,4 +89,5 @@ public class CameraFollow : MonoBehaviour
 
         return current;
     }
+
 }
