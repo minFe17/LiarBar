@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Photon.Pun;
@@ -10,6 +11,9 @@ public class TurnManager : MonoBehaviourPun
     List<GamePlayer> _players = new List<GamePlayer>();
     int _currentPlayerIndex = 0;
 
+    public Action OnEndRegisterPlayer;
+
+    public IReadOnlyList<GamePlayer> Players  { get => _players; }
     public int CurrentPlayerIndex { get => _currentPlayerIndex; }
 
     void Awake()
@@ -30,7 +34,11 @@ public class TurnManager : MonoBehaviourPun
         if (!_players.Contains(player))
             _players.Add(player);
 
-        _players = _players.OrderBy(p => p.TurnIndex).ToList();
+        if(_players.Count == 2)
+        {
+            _players = _players.OrderBy(p => p.TurnIndex).ToList();
+            OnEndRegisterPlayer?.Invoke();
+        }
     }
     #endregion
 

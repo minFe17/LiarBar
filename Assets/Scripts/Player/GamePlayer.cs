@@ -3,17 +3,13 @@ using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class GamePlayer : MonoBehaviour
+public class GamePlayer : MonoBehaviourPun
 {
-    PhotonView _photonView;
     public int TurnIndex { get; private set; }
 
-    public int ViewID => _photonView.ViewID;
+    public int ViewID => photonView.ViewID;
 
-    void Awake()
-    {
-        _photonView = GetComponent<PhotonView>();
-    }
+    public PhotonView PhotonView => photonView;
 
     void Start()
     {
@@ -24,7 +20,7 @@ public class GamePlayer : MonoBehaviour
 
     void Update()
     {
-        if (!_photonView.IsMine)
+        if (!photonView.IsMine)
             return;
 
         if (Mouse.current.leftButton.wasPressedThisFrame)
@@ -54,7 +50,7 @@ public class GamePlayer : MonoBehaviour
 
     public void StartTurn()
     {
-        if (!_photonView.IsMine)
+        if (!photonView.IsMine)
             return; 
         if(TurnManager.Instance.CurrentPlayerIndex != TurnIndex)
             return;
@@ -68,10 +64,15 @@ public class GamePlayer : MonoBehaviour
 
     public void Die()
     {
-        if (!_photonView.IsMine)
+        if (!photonView.IsMine)
             return;
 
         TurnManager.Instance.DiePlayer(this);
         // firebase 데이터 저장
+    }
+
+    public void AddCardToHand(ELiarBarCardType randomCard)
+    {
+        Debug.Log(randomCard);
     }
 }
