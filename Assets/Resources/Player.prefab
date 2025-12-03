@@ -403,7 +403,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 414930642552132695, guid: 3328ed956ad503e41883bddf16547622, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3812066661068405105, guid: 3328ed956ad503e41883bddf16547622, type: 3}
       propertyPath: m_IsActive
@@ -739,6 +739,9 @@ MonoBehaviour:
   - Type: 3
     SynchronizeType: 2
     Name: Status
+  - Type: 4
+    SynchronizeType: 2
+    Name: HeadMove
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -746,6 +749,8 @@ MonoBehaviour:
     LayerIndex: 1
   - SynchronizeType: 0
     LayerIndex: 2
+  - SynchronizeType: 0
+    LayerIndex: 3
 --- !u!114 &4688594868137936407
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -4,15 +4,25 @@ using UnityEngine.InputSystem;
 
 public class CameraFollow : MonoBehaviour
 {
-    private const float MAX_VALUE = 30f;
+    private const float MAX_PITCH = 30f;
+    private const float MAX_YAW = 60f;
+
     private PhotonView _view;
     private Camera _camera;
     private Transform _head;
     private float _smoothSpeed = 1.0f;
 
-    private float _sens = 1f;
+    private float _sens = 0.2f;
     private float _pitch = 0f;
     private float _yaw = 0f;
+    private float _startYaw = 0f;
+
+    private Vector2 _normalizeValue;
+
+    public Vector2 NormalizeValue
+    {
+        get { return _normalizeValue; }
+    }
 
 
     private void Start()
@@ -31,22 +41,19 @@ public class CameraFollow : MonoBehaviour
 
         _head = FindHeadInActiveModel(transform.Find("StandCharacter"));
         _camera.gameObject.SetActive(true);
+
+        _startYaw = transform.eulerAngles.y;
+        _yaw = _startYaw;
     }
 
     private void Update()
     {
-        if (_head == null || !_view.IsMine) return;
+        if (!_view.IsMine) return;
 
-        Vector2 delta = Mouse.current.delta.ReadValue();
-        float mouseX = delta.x * _sens;
-        float mouseY = delta.y * _sens;
+        if(_head == null)
+            _head = FindHeadInActiveModel(transform.Find("StandCharacter"));
 
-        _yaw += mouseX;      // 좌우
-        _pitch -= mouseY;    // 상하 (반전)
-
-        _pitch = Mathf.Clamp(_pitch, -MAX_VALUE, MAX_VALUE); // 상하 제한
-
-        _camera.transform.rotation = Quaternion.Euler(_pitch, _yaw, 0f);
+        SetCameraRotation();
     }
 
     private void LateUpdate()
@@ -54,9 +61,29 @@ public class CameraFollow : MonoBehaviour
         if (_head == null || !_view.IsMine) return;
 
         _camera.transform.position = Vector3.Lerp(_camera.transform.position, _head.position, Time.deltaTime * _smoothSpeed);
-        //_camera.transform.rotation = Quaternion.Slerp(_camera.transform.rotation, _head.rotation, Time.deltaTime * smoothSpeed);
-        //회전 들어가면 너무 어지러워서 그냥 끔
+        //_camera.transform.rotation = Quaternion.Slerp(_camera.transform.rotation, Quaternion.Euler(_pitch, _yaw, 0f), Time.deltaTime * 30);
+    }
 
+    private void SetCameraRotation()
+    {
+        Vector2 delta = Mouse.current.delta.ReadValue();
+        float mouseX = delta.x * _sens;
+        float mouseY = delta.y * _sens;
+
+        _yaw += mouseX;
+        _pitch -= mouseY;
+
+        _pitch = Mathf.Clamp(_pitch, -MAX_PITCH, MAX_PITCH); // 상하 제한
+        _yaw = Mathf.Clamp(_yaw, _startYaw - MAX_YAW, _startYaw + MAX_YAW); // 좌우 제한
+        _camera.transform.rotation = Quaternion.Euler(_pitch, _yaw, 0f);
+
+        SetNormalize();
+
+    }
+    private void SetNormalize()
+    {
+        _normalizeValue.x =  Mathf.Clamp((_yaw - _startYaw) / MAX_YAW, -1f, 1f);
+        _normalizeValue.y = Mathf.Clamp(_pitch / MAX_PITCH, -1f, 1f);
     }
 
     private Transform FindHeadInActiveModel(Transform parent)

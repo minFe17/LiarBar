@@ -12,6 +12,7 @@ public class PlayerModelController : MonoBehaviour
     PhotonView _view;
     int _index = 0;
     List<Vector3> _positions = new List<Vector3>();
+    
     private void Start()
     {
         _view = GetComponentInParent<PhotonView>();
