@@ -1,7 +1,7 @@
+using System.Collections.Generic;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -24,8 +24,9 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
     [Header("Voice")]
     [SerializeField] Toggle _voiceToggle;
 
-    PhotonManager _photonManager;
     bool _isReady = false;
+
+    PhotonManager _photonManager;
 
     void Start()
     {
@@ -33,7 +34,6 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
 
         CheckNickname();
         ShowRoomID();
-
         UpdateAllPlayerUI();
     }
 
@@ -68,7 +68,7 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
                 Nickname = GetCustomProperty(player, "Nickname", player.NickName),
                 IsReady = GetCustomProperty(player, "IsReady", false),
                 SelectedCharacterIndex = GetCustomProperty(player, "SelectedCharacterIndex", 0),
-                PositionIndex = GetCustomProperty(player,"PositionIndex",0),
+                PositionIndex = GetCustomProperty(player, "PositionIndex", 0),
                 ActorNumber = player.ActorNumber
             };
 
@@ -96,7 +96,6 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
             PlayerInfo info = new PlayerInfo
             {
                 IsReady = GetCustomProperty(player, "IsReady", false),
-               
             };
             if (!info.IsReady)
                 return;
@@ -138,7 +137,6 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
         _selectCharacterUI.SetActive(true);
         AssignRandomPositionIndex();
         UpdateAllPlayerUI(); //이거해줘야되나?
-
     }
 
     public void OnClickExitRoom()

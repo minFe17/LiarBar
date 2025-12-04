@@ -4,6 +4,7 @@ public class NotifyManager
 {
     // ╫л╠шео
     Dictionary<short, string> _errorCodeDict = new Dictionary<short, string>();
+
     NotifyUI _notifyUI;
 
     public NotifyUI NotifyUI { set => _notifyUI = value; }

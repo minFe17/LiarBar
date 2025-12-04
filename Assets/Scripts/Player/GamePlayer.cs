@@ -6,7 +6,6 @@ using UnityEngine.InputSystem;
 public class GamePlayer : MonoBehaviourPun
 {
     public int TurnIndex { get; private set; }
-
     public int ViewID => photonView.ViewID;
 
     public PhotonView PhotonView => photonView;
@@ -14,7 +13,6 @@ public class GamePlayer : MonoBehaviourPun
     void Start()
     {
         TurnManager.Instance.RegisterPlayer(this);
-
         SetTurnIndex();
     }
 
@@ -51,8 +49,8 @@ public class GamePlayer : MonoBehaviourPun
     public void StartTurn()
     {
         if (!photonView.IsMine)
-            return; 
-        if(TurnManager.Instance.CurrentPlayerIndex != TurnIndex)
+            return;
+        if (TurnManager.Instance.CurrentPlayerIndex != TurnIndex)
             return;
         // 턴 시작 로직
     }

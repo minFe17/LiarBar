@@ -6,7 +6,7 @@ SpriteAtlas:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: CardAtlas
+  m_Name: LiarBarCardAtlas
   m_EditorData:
     serializedVersion: 2
     textureSettings:
@@ -56,5 +56,5 @@ SpriteAtlas:
   - JokerCard
   - ACard
   m_RenderDataMap: {}
-  m_Tag: CardAtlas
+  m_Tag: LiarBarCardAtlas
   m_IsVariant: 0

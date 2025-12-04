@@ -26,13 +26,13 @@ public class FirebaseREST : MonoBehaviour
     public void CreateAccount(string email, string password)
     {
         string url = $"https://identitytoolkit.googleapis.com/v1/accounts:signUp?key={_apiKey}";
-        StartCoroutine(AuthRoutine(email, password, url, true)); 
+        StartCoroutine(AuthRoutine(email, password, url, true));
     }
 
     public void SingIn(string email, string password)
     {
         string url = $"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={_apiKey}";
-        StartCoroutine(AuthRoutine(email, password, url, false)); 
+        StartCoroutine(AuthRoutine(email, password, url, false));
     }
 
     public void SaveUserData()
@@ -136,7 +136,6 @@ public class FirebaseREST : MonoBehaviour
             {
                 // Firestore 문서를 FirestoreUser로 재구성
                 JObject json = JObject.Parse(www.downloadHandler.text);
-
                 JObject fields = json["fields"] as JObject;
 
                 if (fields != null)
@@ -208,7 +207,6 @@ public class FirebaseREST : MonoBehaviour
                         break;
                     }
                 }
-
                 onResult(!exists); // true면 사용 가능
             }
         }

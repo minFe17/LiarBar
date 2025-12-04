@@ -1,7 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Photon.Pun;
-using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class LiarBarCardManager : MonoBehaviourPun
 {
@@ -10,8 +11,11 @@ public class LiarBarCardManager : MonoBehaviourPun
     Dictionary<ELiarBarCardType, int> _cardCounts = new Dictionary<ELiarBarCardType, int>();
 
     int _startDealCardIndex;
-
     ELiarBarCardType _targetCard;
+
+    public Action OnSetTableAction;
+
+    public ELiarBarCardType TargetCard { get => _targetCard; }
 
     void Awake()
     {
@@ -25,9 +29,8 @@ public class LiarBarCardManager : MonoBehaviourPun
         DontDestroyOnLoad(gameObject);
     }
 
-    private void Start()
+    void Start()
     {
-        TurnManager.Instance.OnEndRegisterPlayer += SetTable;
         Init();
     }
 
@@ -68,11 +71,22 @@ public class LiarBarCardManager : MonoBehaviourPun
 
     public void SetTable()
     {
-        if(!PhotonNetwork.IsMasterClient)
+        if (!PhotonNetwork.IsMasterClient)
             return;
-        Debug.Log($"targetCard : {_targetCard}");
+
         _targetCard = (ELiarBarCardType)Random.Range(0, (int)ELiarBarCardType.JokerCard);
+
+        // 모든 클라이언트에 TargetCard 전달
+        photonView.RPC("RPC_SetTargetCard", RpcTarget.All, (int)_targetCard);
         DealCardsToPlayers();
+    }
+
+    #region RPC
+    [PunRPC]
+    void RPC_SetTargetCard(int cardType)
+    {
+        _targetCard = (ELiarBarCardType)cardType;
+        OnSetTableAction?.Invoke();
     }
 
     [PunRPC]
@@ -82,4 +96,5 @@ public class LiarBarCardManager : MonoBehaviourPun
         if (localPlayer != null)
             localPlayer.AddCardToHand((ELiarBarCardType)cardType);
     }
+    #endregion
 }

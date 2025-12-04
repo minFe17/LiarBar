@@ -10,10 +10,11 @@ public class TurnManager : MonoBehaviourPun
 
     List<GamePlayer> _players = new List<GamePlayer>();
     int _currentPlayerIndex = 0;
+    int _nextRoundStartIndex = 0;
 
     public Action OnEndRegisterPlayer;
 
-    public IReadOnlyList<GamePlayer> Players  { get => _players; }
+    public IReadOnlyList<GamePlayer> Players { get => _players; }
     public int CurrentPlayerIndex { get => _currentPlayerIndex; }
 
     void Awake()
@@ -34,7 +35,7 @@ public class TurnManager : MonoBehaviourPun
         if (!_players.Contains(player))
             _players.Add(player);
 
-        if(_players.Count == 2)
+        if (_players.Count == 2)
         {
             _players = _players.OrderBy(p => p.TurnIndex).ToList();
             OnEndRegisterPlayer?.Invoke();
@@ -57,9 +58,14 @@ public class TurnManager : MonoBehaviourPun
         photonView.RPC("RPC_NextTurn", RpcTarget.MasterClient);
     }
 
-    public void ContinueGame(int playerIndex)
+    public void ContinueGame()
     {
-        photonView.RPC("RPC_ContinueGame", RpcTarget.MasterClient, playerIndex);
+        photonView.RPC("RPC_ContinueGame", RpcTarget.MasterClient);
+    }
+
+    public void SetNextRoundStartPlayer(int playerIndex)
+    {
+        photonView.RPC("RPC_SetNextRoundStartPlayer", RpcTarget.MasterClient, playerIndex);
     }
     #endregion
 
@@ -71,10 +77,6 @@ public class TurnManager : MonoBehaviourPun
             return;
 
         _players.RemoveAt(deadIndex);
-
-        // 죽은 플레이어가 현재 턴 주인보다 앞에 있으면 인덱스 보정
-        if (deadIndex < _currentPlayerIndex)
-            _currentPlayerIndex--;
 
         // 죽은 플레이어가 현재 턴 주인이라면 다음 살아있는 플레이어로 이동
         if (_currentPlayerIndex >= _players.Count)
@@ -123,12 +125,14 @@ public class TurnManager : MonoBehaviourPun
     }
 
     [PunRPC]
-    void RPC_ContinueGame(int playerIndex)
+    void RPC_ContinueGame()
     {
-        if (_players.Count == 0 || playerIndex >= _players.Count)
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+        if (_players.Count == 0 || _nextRoundStartIndex >= _players.Count)
             return;
 
-        _currentPlayerIndex = playerIndex;
+        _currentPlayerIndex = _nextRoundStartIndex;
         photonView.RPC("RPC_SetCurrentTurn", RpcTarget.All, _currentPlayerIndex);
     }
 
@@ -146,6 +150,14 @@ public class TurnManager : MonoBehaviourPun
         GamePlayer player = PhotonView.Find(viewID).GetComponent<GamePlayer>();
         if (player != null && _players.Contains(player))
             _players.Remove(player);
+    }
+
+    [PunRPC]
+    void RPC_SetNextRoundStartPlayer(int playerIndex)
+    {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+        _nextRoundStartIndex = playerIndex;
     }
     #endregion
 }

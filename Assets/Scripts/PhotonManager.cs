@@ -3,7 +3,6 @@ using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Utils;
 
 public class PhotonManager : MonoBehaviourPunCallbacks
@@ -91,9 +90,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         if (PhotonNetwork.IsMasterClient)
-        {
             PhotonNetwork.LoadLevel("SelectCharacterScene");
-        }
     }
 
     public override void OnJoinRoomFailed(short returnCode, string message)

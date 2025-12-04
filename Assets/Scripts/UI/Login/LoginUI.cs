@@ -13,7 +13,7 @@ public class LoginUI : AuthUIBase
     {
         string nickname = _firebaseRest.User.GetField<string>("nickname");
 
-        if(string.IsNullOrEmpty(nickname))
+        if (string.IsNullOrEmpty(nickname))
         {
             gameObject.SetActive(false);
             _nicknameUI.SetActive(true);

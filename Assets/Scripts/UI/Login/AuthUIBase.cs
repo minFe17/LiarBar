@@ -10,7 +10,7 @@ public class AuthUIBase : MonoBehaviour
     protected string _email;
     protected string _password;
     protected FirebaseREST _firebaseRest;
-   
+
     void Start()
     {
         _firebaseRest = MonoSingleton<FirebaseREST>.Instance;

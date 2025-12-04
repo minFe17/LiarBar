@@ -51,6 +51,8 @@ MonoBehaviour:
   - RPC_DiePlayer
   - SpawnRemotePlayerVoice
   - RPC_AddCardToHand
+  - RPC_SetNextRoundStartPlayer
+  - RPC_SetTargetCard
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
