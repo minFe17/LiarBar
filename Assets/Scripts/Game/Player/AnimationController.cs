@@ -4,8 +4,7 @@ using UnityEngine.InputSystem;
 
 public class AnimationController : MonoBehaviour
 {
-    private const float MAX_CAMERA_YAW = 60f;
-    private const float MAX_CAMERA_PITCH = 30f;
+    private const float CORRECTION_VALUE = 0.5f;
     private Animator _animator;
     private PhotonView _view;
     private CameraFollow _camera;
@@ -26,17 +25,10 @@ public class AnimationController : MonoBehaviour
         {
             _animator.SetInteger("Status", 0);
         }
-        if(Keyboard.current.f1Key.wasPressedThisFrame)
-        {
-            _animator.SetBool("HeadMove", true);
-        }
-        if (Keyboard.current.f2Key.wasPressedThisFrame)
-        {
-            _animator.SetBool("HeadMove", false);
-        }
+
 
         _animator.SetFloat("LookX", _camera.NormalizeValue.x); 
-        _animator.SetFloat("LookY", _camera.NormalizeValue.y); 
+        _animator.SetFloat("LookY", _camera.NormalizeValue.y + CORRECTION_VALUE); 
     }
 
 

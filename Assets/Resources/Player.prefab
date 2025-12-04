@@ -566,6 +566,12 @@ MonoBehaviour:
   - Type: 3
     SynchronizeType: 2
     Name: Status
+  - Type: 1
+    SynchronizeType: 2
+    Name: LookY
+  - Type: 1
+    SynchronizeType: 2
+    Name: LookX
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -573,6 +579,8 @@ MonoBehaviour:
     LayerIndex: 1
   - SynchronizeType: 0
     LayerIndex: 2
+  - SynchronizeType: 0
+    LayerIndex: 3
 --- !u!114 &962040483937119159
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -613,6 +621,12 @@ MonoBehaviour:
   - Type: 3
     SynchronizeType: 2
     Name: Status
+  - Type: 1
+    SynchronizeType: 2
+    Name: LookY
+  - Type: 1
+    SynchronizeType: 2
+    Name: LookX
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -620,6 +634,8 @@ MonoBehaviour:
     LayerIndex: 1
   - SynchronizeType: 0
     LayerIndex: 2
+  - SynchronizeType: 0
+    LayerIndex: 3
 --- !u!114 &1447530295552178846
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -655,6 +671,12 @@ MonoBehaviour:
   - Type: 3
     SynchronizeType: 2
     Name: Status
+  - Type: 1
+    SynchronizeType: 2
+    Name: LookY
+  - Type: 1
+    SynchronizeType: 2
+    Name: LookX
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -662,6 +684,8 @@ MonoBehaviour:
     LayerIndex: 1
   - SynchronizeType: 0
     LayerIndex: 2
+  - SynchronizeType: 0
+    LayerIndex: 3
 --- !u!114 &1012651324512351091
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -697,6 +721,12 @@ MonoBehaviour:
   - Type: 3
     SynchronizeType: 2
     Name: Status
+  - Type: 1
+    SynchronizeType: 2
+    Name: LookY
+  - Type: 1
+    SynchronizeType: 2
+    Name: LookX
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -704,6 +734,8 @@ MonoBehaviour:
     LayerIndex: 1
   - SynchronizeType: 0
     LayerIndex: 2
+  - SynchronizeType: 0
+    LayerIndex: 3
 --- !u!114 &3600331987885934943
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -739,9 +771,12 @@ MonoBehaviour:
   - Type: 3
     SynchronizeType: 2
     Name: Status
-  - Type: 4
+  - Type: 1
     SynchronizeType: 2
-    Name: HeadMove
+    Name: LookY
+  - Type: 1
+    SynchronizeType: 2
+    Name: LookX
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -786,6 +821,12 @@ MonoBehaviour:
   - Type: 3
     SynchronizeType: 2
     Name: Status
+  - Type: 1
+    SynchronizeType: 2
+    Name: LookY
+  - Type: 1
+    SynchronizeType: 2
+    Name: LookX
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -793,6 +834,8 @@ MonoBehaviour:
     LayerIndex: 1
   - SynchronizeType: 0
     LayerIndex: 2
+  - SynchronizeType: 0
+    LayerIndex: 3
 --- !u!114 &5649558270082158584
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -828,6 +871,12 @@ MonoBehaviour:
   - Type: 3
     SynchronizeType: 2
     Name: Status
+  - Type: 1
+    SynchronizeType: 2
+    Name: LookY
+  - Type: 1
+    SynchronizeType: 2
+    Name: LookX
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -835,6 +884,8 @@ MonoBehaviour:
     LayerIndex: 1
   - SynchronizeType: 0
     LayerIndex: 2
+  - SynchronizeType: 0
+    LayerIndex: 3
 --- !u!114 &5069205107297988581
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -870,6 +921,12 @@ MonoBehaviour:
   - Type: 3
     SynchronizeType: 2
     Name: Status
+  - Type: 1
+    SynchronizeType: 2
+    Name: LookY
+  - Type: 1
+    SynchronizeType: 2
+    Name: LookX
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -877,6 +934,8 @@ MonoBehaviour:
     LayerIndex: 1
   - SynchronizeType: 0
     LayerIndex: 2
+  - SynchronizeType: 0
+    LayerIndex: 3
 --- !u!114 &8840328200385013870
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -912,6 +971,12 @@ MonoBehaviour:
   - Type: 3
     SynchronizeType: 2
     Name: Status
+  - Type: 1
+    SynchronizeType: 2
+    Name: LookY
+  - Type: 1
+    SynchronizeType: 2
+    Name: LookX
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -919,6 +984,8 @@ MonoBehaviour:
     LayerIndex: 1
   - SynchronizeType: 0
     LayerIndex: 2
+  - SynchronizeType: 0
+    LayerIndex: 3
 --- !u!114 &7264634204795873488
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -954,6 +1021,12 @@ MonoBehaviour:
   - Type: 3
     SynchronizeType: 2
     Name: Status
+  - Type: 1
+    SynchronizeType: 2
+    Name: LookY
+  - Type: 1
+    SynchronizeType: 2
+    Name: LookX
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -961,6 +1034,8 @@ MonoBehaviour:
     LayerIndex: 1
   - SynchronizeType: 0
     LayerIndex: 2
+  - SynchronizeType: 0
+    LayerIndex: 3
 --- !u!114 &333784488968070381
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1013,6 +1088,12 @@ MonoBehaviour:
   - Type: 3
     SynchronizeType: 2
     Name: Status
+  - Type: 1
+    SynchronizeType: 2
+    Name: LookY
+  - Type: 1
+    SynchronizeType: 2
+    Name: LookX
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1020,6 +1101,8 @@ MonoBehaviour:
     LayerIndex: 1
   - SynchronizeType: 0
     LayerIndex: 2
+  - SynchronizeType: 0
+    LayerIndex: 3
 --- !u!114 &5425519292203670310
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1055,6 +1138,12 @@ MonoBehaviour:
   - Type: 3
     SynchronizeType: 2
     Name: Status
+  - Type: 1
+    SynchronizeType: 2
+    Name: LookY
+  - Type: 1
+    SynchronizeType: 2
+    Name: LookX
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1062,6 +1151,8 @@ MonoBehaviour:
     LayerIndex: 1
   - SynchronizeType: 0
     LayerIndex: 2
+  - SynchronizeType: 0
+    LayerIndex: 3
 --- !u!114 &8539297606706967352
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1097,6 +1188,12 @@ MonoBehaviour:
   - Type: 3
     SynchronizeType: 2
     Name: Status
+  - Type: 1
+    SynchronizeType: 2
+    Name: LookY
+  - Type: 1
+    SynchronizeType: 2
+    Name: LookX
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1104,6 +1201,8 @@ MonoBehaviour:
     LayerIndex: 1
   - SynchronizeType: 0
     LayerIndex: 2
+  - SynchronizeType: 0
+    LayerIndex: 3
 --- !u!114 &5888238368256595262
 MonoBehaviour:
   m_ObjectHideFlags: 0

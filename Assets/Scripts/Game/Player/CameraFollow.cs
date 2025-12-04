@@ -83,7 +83,7 @@ public class CameraFollow : MonoBehaviour
     private void SetNormalize()
     {
         _normalizeValue.x =  Mathf.Clamp((_yaw - _startYaw) / MAX_YAW, -1f, 1f);
-        _normalizeValue.y = Mathf.Clamp(_pitch / MAX_PITCH, -1f, 1f);
+        _normalizeValue.y = -Mathf.Clamp(_pitch / MAX_PITCH, -1f, 1f);
     }
 
     private Transform FindHeadInActiveModel(Transform parent)
