@@ -160,8 +160,8 @@ public class FirebaseREST : MonoBehaviour
     {
         string url = $"https://firestore.googleapis.com/v1/projects/{_projectId}/databases/(default)/documents:runQuery";
 
-        // Firestore structuredQuery 생성
-        var query = new
+        // Firestore(Cloud Firestore) REST API용 쿼리 JSON 만들기
+        string json = JsonConvert.SerializeObject(new
         {
             structuredQuery = new
             {
@@ -176,9 +176,7 @@ public class FirebaseREST : MonoBehaviour
                     }
                 }
             }
-        };
-
-        string json = JsonConvert.SerializeObject(query);
+        });
 
         using (UnityWebRequest www = new UnityWebRequest(url, "POST"))
         {

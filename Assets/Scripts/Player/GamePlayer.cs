@@ -1,28 +1,28 @@
+using System;
+using System.Collections.Generic;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using Utils;
 
 public class GamePlayer : MonoBehaviourPun
 {
-    public int TurnIndex { get; private set; }
-    public int ViewID => photonView.ViewID;
+    List<ELiarBarCardType> _cards = new List<ELiarBarCardType>();
 
-    public PhotonView PhotonView => photonView;
+    bool _isMyTurn = false;
+
+    public Action OnStartTurn;
+
+    public IReadOnlyList<ELiarBarCardType> Cards { get => _cards; }
+    public PhotonView PhotonView { get => photonView; }
+    public int TurnIndex { get; private set; }
+    public int ViewID { get => photonView.ViewID; }
+    public bool IsMyTurn { get => _isMyTurn; }
 
     void Start()
     {
         TurnManager.Instance.RegisterPlayer(this);
         SetTurnIndex();
-    }
-
-    void Update()
-    {
-        if (!photonView.IsMine)
-            return;
-
-        if (Mouse.current.leftButton.wasPressedThisFrame)
-            TurnManager.Instance.EndTurn();
     }
 
     void SetTurnIndex()
@@ -52,7 +52,8 @@ public class GamePlayer : MonoBehaviourPun
             return;
         if (TurnManager.Instance.CurrentPlayerIndex != TurnIndex)
             return;
-        // 턴 시작 로직
+        _isMyTurn = true;
+        OnStartTurn?.Invoke();
     }
 
     public void Win()
@@ -72,5 +73,19 @@ public class GamePlayer : MonoBehaviourPun
     public void AddCardToHand(ELiarBarCardType randomCard)
     {
         Debug.Log(randomCard);
+        _cards.Add(randomCard);
+        if (_cards.Count == 5)
+            SimpleSingleton<MediatorManager>.Instance.Notify(EMediatorEventType.InitHandCard, this);
+    }
+
+    public void PlayCard(ELiarBarCardType card)
+    {
+        //TurnManager.Instance.EndTurn();
+        _isMyTurn = false;
+    }
+
+    public void CallLiar()
+    {
+        // 애니메이션
     }
 }
