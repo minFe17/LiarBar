@@ -23,6 +23,8 @@ public class VivoxController : MonoBehaviour
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
         await VivoxService.Instance.InitializeAsync();
 
+        OnLoginEndEvent += () => JoinVoiceChannel("test-channel");
+
         await LoginAsync();
         OnLoginEndEvent?.Invoke();
     }
@@ -37,7 +39,6 @@ public class VivoxController : MonoBehaviour
 
     public async void JoinVoiceChannel(string channelName)
     {
-        //음성채팅 채널에 접속
         await VivoxService.Instance.JoinGroupChannelAsync(channelName, ChatCapability.AudioOnly);
     }
 }
