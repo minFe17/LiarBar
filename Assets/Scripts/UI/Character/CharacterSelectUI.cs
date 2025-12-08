@@ -69,7 +69,8 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
                 IsReady = GetCustomProperty(player, "IsReady", false),
                 SelectedCharacterIndex = GetCustomProperty(player, "SelectedCharacterIndex", 0),
                 PositionIndex = GetCustomProperty(player, "PositionIndex", 0),
-                ActorNumber = player.ActorNumber
+                ActorNumber = player.ActorNumber,
+                IsAlive = GetCustomProperty(player, "IsAlive", true)
             };
 
             _playerSlots[i].SetSlot(info);

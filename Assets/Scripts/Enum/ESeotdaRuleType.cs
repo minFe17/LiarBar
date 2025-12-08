@@ -1,7 +1,10 @@
-public enum ESeotdaType
+using UnityEngine;
+
+public enum ESeotdaRuleType
 {
     SampalGwangDdang,
     GwangDdang,
+    JangDdang,
     Ddang,
     Ali,
     Docksa,
@@ -15,6 +18,6 @@ public enum ESeotdaType
     Goosa,
     MungtunggooriGoosa,
     Amhangusa,
-    Ddangjapyee
-
+    Ddangjapyee,
+    MAX
 }

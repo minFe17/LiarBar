@@ -1,12 +1,17 @@
 using Photon.Pun;
 using UnityEngine;
 using Utils;
+using static UnityEngine.Rendering.DebugUI.Table;
 
 public class InGameManager : MonoBehaviour
 {
     private void Start()
     {
         SetPositionAndSpawn();
+
+        if (!PhotonNetwork.IsMasterClient) return;
+       // PhotonNetwork.Instantiate("Seotda/SeotdaTable", Vector3.zero, Quaternion.identity);
+
     }
     private void Update()
     {

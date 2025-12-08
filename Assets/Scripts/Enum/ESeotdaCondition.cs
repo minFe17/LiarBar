@@ -1,4 +1,4 @@
-public enum ESeotdaType
+public enum ESeotdaCondition
 {
     Gwang,
     Same,

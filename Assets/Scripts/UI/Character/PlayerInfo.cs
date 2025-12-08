@@ -6,5 +6,5 @@ public class PlayerInfo
     public int PositionIndex { get; set; } 
     public int ActorNumber { get; set; }
     public bool IsLiar {  get; set; }
-    public bool IsDead { get; set; }
+    public bool IsAlive { get; set; }
 }

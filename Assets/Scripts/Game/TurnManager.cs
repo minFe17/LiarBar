@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Photon.Pun;
 using UnityEngine;
+using ExitGames.Client.Photon;
 
 public class TurnManager : MonoBehaviourPun
 {
@@ -77,6 +78,10 @@ public class TurnManager : MonoBehaviourPun
             return;
 
         _players.RemoveAt(deadIndex);
+
+        Hashtable props = new Hashtable();
+        props["IsAlive"] = false; //죽었을때 isAlive 꺼주기
+        PhotonNetwork.LocalPlayer.SetCustomProperties(props);
 
         // 죽은 플레이어가 현재 턴 주인이라면 다음 살아있는 플레이어로 이동
         if (_currentPlayerIndex >= _players.Count)

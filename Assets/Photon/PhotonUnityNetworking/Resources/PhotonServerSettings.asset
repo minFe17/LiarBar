@@ -53,6 +53,9 @@ MonoBehaviour:
   - RPC_AddCardToHand
   - RPC_SetNextRoundStartPlayer
   - RPC_SetTargetCard
+  - RPC_ReceiveCards
+  - SplitCards
+  - RPC_ReceiveCard
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
