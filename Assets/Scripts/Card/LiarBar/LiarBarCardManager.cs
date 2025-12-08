@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Photon.Pun;
+using UnityEngine;
+using UnityEngine.U2D;
 using Random = UnityEngine.Random;
 
 public class LiarBarCardManager : MonoBehaviourPun
@@ -10,6 +12,7 @@ public class LiarBarCardManager : MonoBehaviourPun
 
     Dictionary<ELiarBarCardType, int> _cardCounts = new Dictionary<ELiarBarCardType, int>();
 
+    SpriteAtlas _cardAtlas;
     int _startDealCardIndex;
     ELiarBarCardType _targetCard;
 
@@ -32,6 +35,7 @@ public class LiarBarCardManager : MonoBehaviourPun
     void Start()
     {
         Init();
+        _cardAtlas = Resources.Load<SpriteAtlas>("SpriteAtlas/LiarBarCardAtlas");
     }
 
     void Init()
@@ -79,6 +83,11 @@ public class LiarBarCardManager : MonoBehaviourPun
         // 모든 클라이언트에 TargetCard 전달
         photonView.RPC("RPC_SetTargetCard", RpcTarget.All, (int)_targetCard);
         DealCardsToPlayers();
+    }
+
+    public Sprite GetCardSprite(ELiarBarCardType type)
+    {
+        return _cardAtlas.GetSprite(type.ToString());
     }
 
     #region RPC

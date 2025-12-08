@@ -8,12 +8,17 @@ public class AnimationController : MonoBehaviour
     private Animator _animator;
     private PhotonView _view;
     private CameraFollow _camera;
+    private GamePlayer _player;
+
     private void Start()
     {
         _animator = GetComponent<Animator>();
         _view = GetComponentInParent<PhotonView>();
         _camera = GetComponentInParent<CameraFollow>();
+        _player = GetComponentInParent<GamePlayer>();
+        _player.Animator = _animator;
     }
+
     private void Update()
     {
         if (!_view.IsMine) return;
@@ -26,10 +31,19 @@ public class AnimationController : MonoBehaviour
             _animator.SetInteger("Status", 0);
         }
 
-
-        _animator.SetFloat("LookX", _camera.NormalizeValue.x); 
-        _animator.SetFloat("LookY", _camera.NormalizeValue.y + CORRECTION_VALUE); 
+        _animator.SetFloat("LookX", _camera.NormalizeValue.x);
+        _animator.SetFloat("LookY", _camera.NormalizeValue.y + CORRECTION_VALUE);
     }
 
+    #region Animation Event
+    public void EndCallLiar()
+    {
+        _player.EndCallLiar();
+    }
 
+    public void CreateCard()
+    {
+        _player.CreateCard();
+    }
+    #endregion
 }

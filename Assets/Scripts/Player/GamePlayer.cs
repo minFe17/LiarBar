@@ -8,13 +8,17 @@ using Utils;
 public class GamePlayer : MonoBehaviourPun
 {
     List<ELiarBarCardType> _cards = new List<ELiarBarCardType>();
-
+    List<ELiarBarCardType> _currentCardTypes = new List<ELiarBarCardType>();
+    Animator _animator;
+    Transform _handCardSlot;
     bool _isMyTurn = false;
 
     public Action OnStartTurn;
 
     public IReadOnlyList<ELiarBarCardType> Cards { get => _cards; }
     public PhotonView PhotonView { get => photonView; }
+    public Animator Animator { set => _animator = value; }
+    public Transform HandCardSlot { set => _handCardSlot = value; }
     public int TurnIndex { get; private set; }
     public int ViewID { get => photonView.ViewID; }
     public bool IsMyTurn { get => _isMyTurn; }
@@ -72,20 +76,49 @@ public class GamePlayer : MonoBehaviourPun
 
     public void AddCardToHand(ELiarBarCardType randomCard)
     {
-        Debug.Log(randomCard);
         _cards.Add(randomCard);
         if (_cards.Count == 5)
             SimpleSingleton<MediatorManager>.Instance.Notify(EMediatorEventType.InitHandCard, this);
     }
 
-    public void PlayCard(ELiarBarCardType card)
+    public void PlayCard(List<ELiarBarCardType> cardTypes)
     {
-        //TurnManager.Instance.EndTurn();
-        _isMyTurn = false;
+        _currentCardTypes.AddRange(cardTypes);
+        _animator.SetTrigger("doCard");
     }
 
     public void CallLiar()
     {
-        // 애니메이션
+        _animator.SetTrigger("doCallLiar");
+        LiarBarTable.Instance.NewRound();
+    }
+
+    public void EndCallLiar()
+    {
+        LiarBarTable.Instance.CheckLiar();
+    }
+
+    public void CreateCard()
+    {
+        List<LiarBarCard> cards = new List<LiarBarCard>();
+
+        float duration = 0.5f;
+
+        foreach (ELiarBarCardType type in _currentCardTypes)
+        {
+            // Photon 네트워크 동기화 생성
+            GameObject cardObj = PhotonNetwork.Instantiate("Card", _handCardSlot.position, _handCardSlot.rotation);
+
+            LiarBarCard card = cardObj.GetComponent<LiarBarCard>();
+            card.Init(type);
+            cards.Add(card);
+            card.MoveToTable(LiarBarTable.Instance.GetCenterPosition(), duration);
+            duration += 0.2f;
+        }
+
+        LiarBarTable.Instance.SavePlayedCards(cards);
+        _isMyTurn = false;
+        TurnManager.Instance.EndTurn();
+        _currentCardTypes.Clear();
     }
 }

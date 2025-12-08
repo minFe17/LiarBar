@@ -5,14 +5,12 @@ public class LiarBarCardInfoUI : MonoBehaviour
 {
     [SerializeField] SpriteRenderer _targetCardSprite;
 
-    SpriteAtlas _cardAtlas;
     Animator _animator;
 
     void Start()
     {
         _animator = GetComponent<Animator>();
         TurnManager.Instance.OnEndRegisterPlayer += StartCardInfoAnimation;
-        _cardAtlas = Resources.Load<SpriteAtlas>("SpriteAtlas/LiarBarCardAtlas");
         LiarBarCardManager.Instance.OnSetTableAction += ShowTableCard;
     }
 
@@ -24,7 +22,7 @@ public class LiarBarCardInfoUI : MonoBehaviour
     void ShowTableCard()
     {
         ELiarBarCardType targetCard = LiarBarCardManager.Instance.TargetCard;
-        _targetCardSprite.sprite = _cardAtlas.GetSprite(targetCard.ToString());
+        _targetCardSprite.sprite = LiarBarCardManager.Instance.GetCardSprite(targetCard);
         _animator.SetTrigger("doShowTargetCard");
     }
 
