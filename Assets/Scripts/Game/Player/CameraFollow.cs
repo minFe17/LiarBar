@@ -85,7 +85,6 @@ public class CameraFollow : MonoBehaviour
         _normalizeValue.x =  Mathf.Clamp((_yaw - _startYaw) / MAX_YAW, -1f, 1f);
         _normalizeValue.y = -Mathf.Clamp(_pitch / MAX_PITCH, -1f, 1f);
     }
-
     private Transform FindHeadInActiveModel(Transform parent)
     {
         foreach (Transform child in parent)
@@ -111,10 +110,11 @@ public class CameraFollow : MonoBehaviour
             if (current == null) return null;
             current = current.Find(part);
             if (current == null || !current.gameObject.activeInHierarchy)
-                return null; // 비활성화된 중간 뼈대가 있으면 null
+                return null;
         }
 
         return current;
     }
+
 
 }

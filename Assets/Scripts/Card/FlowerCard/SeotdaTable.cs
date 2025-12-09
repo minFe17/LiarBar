@@ -3,17 +3,22 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using System;
+using Photon.Pun;
+using Photon.Realtime;
 
 public class SeotdaTable : MonoBehaviour
 {
     const float SPACE_AREA = 0.4f;
     const float SMOOTH_SPEED = 1f;
+    const int MAX_RANGE = 2;
+
     private List<FlowerCard> _cards = new List<FlowerCard>();
     private bool _isMixed = false;
     private bool _isRotation = false;
     private bool _isSplit = false;
     private bool _isSplitEvent = true;
     private int _spaceCardNum = 0;
+    private List<bool> _isAlives = new List<bool>();
 
 
     private void Awake()
@@ -35,8 +40,9 @@ public class SeotdaTable : MonoBehaviour
         else if (!_isRotation)
             RotationCard();
         else if (!_isSplit)
-            SplitCard();
-        else if (!_isSplitEvent)
+            SplitCard(); //±»ÀÌ ³ÀµÖ¾ßµÇ³ª?
+
+        if (!_isSplitEvent)
             SplitCardToEvent();
     }
     private void SubscribeEvent()
@@ -50,17 +56,29 @@ public class SeotdaTable : MonoBehaviour
     private void OnSplitEvent()
     {
         _isSplitEvent = false;
+        _isAlives.Clear();
+        for(int i=0;i< PhotonNetwork.PlayerList.Length; i++)
+        {
+            _isAlives.Add(IsPlayerAlive(GetPlayerByPosition(i)));
+        }
     }
     private void SplitCardToEvent()
     {
         _isSplitEvent = true;
-        Vector3[] positionList = { new Vector3(4, 0, 0), new Vector3(-4, 0, 0), new Vector3(0, 0, 4), new Vector3(0, 0, -4) };
+        Vector3[] positionList = { new Vector3(0, 0, MAX_RANGE), new Vector3(0, 0, -MAX_RANGE), 
+            new Vector3(-MAX_RANGE, 0, 0), new Vector3(MAX_RANGE, 0, 0) };
 
         for (int i = 0; i < positionList.Length; i++)
         {
-            if (_cards[i+_spaceCardNum].transform.position == positionList[i]) continue;
+            if (!_isAlives[i] || !_cards[i].gameObject.activeSelf) continue;
+            if (_cards[i].transform.position == positionList[i])
+            {
+                _cards[i].gameObject.SetActive(false);
+                continue;
+            }
 
-            _cards[i+_spaceCardNum].transform.position = Vector3.Lerp(_cards[i+_spaceCardNum].transform.position, positionList[i], SMOOTH_SPEED * Time.deltaTime);
+
+            _cards[i+_spaceCardNum].transform.position = Vector3.Lerp(_cards[i+_spaceCardNum].transform.position, positionList[i] + this.gameObject.transform.position, SMOOTH_SPEED * Time.deltaTime * 2);
 
             if (Vector3.Distance(_cards[i+ _spaceCardNum].transform.position, positionList[i]) < 0.01f)
             {
@@ -70,19 +88,29 @@ public class SeotdaTable : MonoBehaviour
             _isSplitEvent = false;
         }
         if (_isSplitEvent)
-            _spaceCardNum+=4;
+        {
+            _spaceCardNum += 4;
+            EventManager.Instance.Invoke("SplitCard");
+        }
+            
 
     }
     private void SplitCard()
     {
         _isSplit = true;
-        Vector3[] positionList = { new Vector3(4, 0, 0), new Vector3(-4, 0, 0), new Vector3(0, 0, 4), new Vector3(0, 0, -4) };
-        
+        Vector3[] positionList = { new Vector3(0, 0, MAX_RANGE), new Vector3(0, 0, -MAX_RANGE), 
+            new Vector3(-MAX_RANGE, 0, 0), new Vector3(MAX_RANGE, 0, 0) };
+
         for (int i = 0; i < positionList.Length; i++)
         {
-            if (_cards[i].transform.position == positionList[i]) continue;
+            if (!_cards[i].gameObject.activeSelf) continue;
+            if (_cards[i].transform.position == positionList[i])
+            {
+                _cards[i].gameObject.SetActive(false);
+                continue;
+            }
 
-            _cards[i].transform.position = Vector3.Lerp(_cards[i].transform.position, positionList[i], SMOOTH_SPEED * Time.deltaTime);
+            _cards[i].transform.position = Vector3.Lerp(_cards[i].transform.position, positionList[i] + this.gameObject.transform.position, SMOOTH_SPEED * Time.deltaTime*2);
 
             if (Vector3.Distance(_cards[i].transform.position, positionList[i]) < 0.01f)
             {
@@ -92,7 +120,11 @@ public class SeotdaTable : MonoBehaviour
             _isSplit = false;
         }
         if (_isSplit)
-            _spaceCardNum+=4;
+        {
+            _spaceCardNum += 4;
+            EventManager.Instance.Invoke("SplitCard");
+            //OnSplitEvent();
+        }
 
     }
     private void RotationCard()
@@ -118,7 +150,7 @@ public class SeotdaTable : MonoBehaviour
         foreach(var card in _cards)
         {
             if (card.transform.position == Vector3.zero) continue;
-            card.transform.position = Vector3.Lerp(card.transform.position, Vector3.zero, SMOOTH_SPEED * Time.deltaTime);
+            card.transform.position = Vector3.Lerp(card.transform.position, this.gameObject.transform.position, SMOOTH_SPEED * Time.deltaTime);
 
             if (Vector3.Distance(card.transform.position, Vector3.zero) < 0.01f)
             {
@@ -154,5 +186,26 @@ public class SeotdaTable : MonoBehaviour
             _cards.Add(card);
             Debug.Log(card.Month +","+ card.Type);
         }
+    }
+
+    private bool IsPlayerAlive(Player player)
+    {
+        if (player.CustomProperties.TryGetValue("IsAlive", out object isAlive))
+            return (bool)isAlive;
+
+        return true; 
+    }
+    private Player GetPlayerByPosition(int positionIndex)
+    {
+        foreach (var player in PhotonNetwork.PlayerList)
+        {
+            if (player.CustomProperties.TryGetValue("PositionIndex", out object index))
+            {
+                if ((int)index == positionIndex)
+                    return player;
+            }
+        }
+
+        return null;
     }
 }

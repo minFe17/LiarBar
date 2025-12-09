@@ -60,12 +60,14 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     #region Player Info
     public void UpdateLocalPlayerInfo()
     {
+        //사용안되는중
         Hashtable props = new Hashtable
         {
             { "Nickname", PhotonNetwork.NickName },
             { "IsReady", false },
             { "SelectedCharacterIndex", 0 },
-            { "PositionIndex", 0 }
+            { "PositionIndex", 0 },
+            { "IsAlive", true }
         };
         PhotonNetwork.LocalPlayer.SetCustomProperties(props);
     }
@@ -83,6 +85,11 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public void SetPositionIndex(int index)
     {
         PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable { { "PositionIndex", index } });
+    }
+    public void SetAlive(bool isAlive)
+    {
+        Hashtable props = new Hashtable { { "IsAlive", isAlive } };
+        PhotonNetwork.LocalPlayer.SetCustomProperties(props);
     }
     #endregion
 

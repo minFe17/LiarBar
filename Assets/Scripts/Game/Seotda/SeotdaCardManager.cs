@@ -15,35 +15,40 @@ public class SeotdaCardManager : MonoBehaviourPun
     private List<SeotdaData> _data;
     private Dictionary<string, GameObject> _cardDic = new Dictionary<string, GameObject>();
     private Queue<string> _cards = new Queue<string>();
-    private List<FlowerCard> _myCards = new List<FlowerCard>();
+    private List<GameObject> _myCards = new List<GameObject>();
 
+    public List<GameObject> MyCards
+        { get { return _myCards; } }
     private void Awake()
     {
         DataManager.Instance.LoadData();
         _data = DataManager.Instance.Data;
         SetDictionary();
 
-       
     }
     private void Start()
     {
+
         SetCardGame(); //이거 GameManager같은걸로 빼서 관리하면될듯 이벤트이용해서 
-        SplitCard();
+        //SplitCard();
     }
-   
+
     private void OnEnable()
     {
         EventManager.Instance.Subscribe("SetSeotdaGame", SetCardGame);
-        EventManager.Instance.Subscribe("SplitThirdCard", SplitCard);
+        EventManager.Instance.Subscribe("SplitCard", SplitCard);
     }
     private void OnDisable()
     {
         EventManager.Instance.UnSubscribe("SetSeotdaGame", (Action)SetCardGame);
-        EventManager.Instance.UnSubscribe("SplitThirdCard", (Action)SplitCard);
+        EventManager.Instance.UnSubscribe("SplitCard", (Action)SplitCard);
     }
     private void Update()
     {
-        if (_cards.Count > 0) return;
+        if(Keyboard.current.pKey.wasPressedThisFrame)
+        {
+            SplitCard();
+        }
     }
     private void SetDictionary()
     {
@@ -55,19 +60,15 @@ public class SeotdaCardManager : MonoBehaviourPun
     private void SetCardGame()
     {
         _myCards.Clear();
+
         if (!PhotonNetwork.IsMasterClient)
             return;
-
-        foreach (var player in PhotonNetwork.PlayerList)
+        PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable
         {
-            Hashtable props = new Hashtable();
-            props["IsAlive"] = false;
-            player.SetCustomProperties(props);
-        }
+             { "IsAlive", false }
+        });
 
         MixCards();
-        SplitTwoCards();
-        //photonView.RPC("SplitCards", RpcTarget.All);
     }
 
     private void MixCards()
@@ -102,30 +103,22 @@ public class SeotdaCardManager : MonoBehaviourPun
     }
     private void SortAscending()
     {
-        _myCards.Sort((a, b) => a.Month.CompareTo(b.Month));
+        _myCards.Sort((a, b) =>
+        a.GetComponent<FlowerCard>().Month.CompareTo(
+        b.GetComponent<FlowerCard>().Month));
 
-        for(int i=0;i<_myCards.Count;i++)
+        for (int i=0;i<_myCards.Count;i++)
         {
             Debug.Log(_myCards[i].name);
         }
     }
-    private void SplitTwoCards()
-    {
-        Debug.Log("start");
-        foreach (var player in PhotonNetwork.PlayerList)
-        {
-            string c1 = GetCardName();
-            string c2 = GetCardName();
 
-            photonView.RPC("RPC_ReceiveCards", player, c1, c2);
-        }
-    }
     private void SplitCard()
     {
         if (!PhotonNetwork.IsMasterClient)
             return;
 
-        Debug.Log("third");
+        Debug.Log("split");
         foreach (var player in PhotonNetwork.PlayerList)
         {
             object obj = player.CustomProperties["IsAlive"];
@@ -136,17 +129,11 @@ public class SeotdaCardManager : MonoBehaviourPun
             photonView.RPC("RPC_ReceiveCard", player, c1);
         }
     }
-    [PunRPC]
-    public void RPC_ReceiveCards(string c1, string c2)
-    {
-        _myCards.Add(_cardDic[c1].GetComponent<FlowerCard>());
-        _myCards.Add(_cardDic[c2].GetComponent<FlowerCard>());
-        SortAscending();
-    }
+
     [PunRPC]
     public void RPC_ReceiveCard(string c1)
     {
-        _myCards.Add(_cardDic[c1].GetComponent<FlowerCard>());
+        _myCards.Add(_cardDic[c1].GetComponent<GameObject>());
         SortAscending();
     }
 }
