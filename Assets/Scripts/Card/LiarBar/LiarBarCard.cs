@@ -1,10 +1,13 @@
 using System.Collections;
+using Photon.Pun;
 using UnityEngine;
 
-public class LiarBarCard : MonoBehaviour
+public class LiarBarCard : MonoBehaviourPun
 {
     [SerializeField] SpriteRenderer _cardRenderer;
     ELiarBarCardType _cardType;
+
+    public ELiarBarCardType CardType { get => _cardType; }
 
     public void Init(ELiarBarCardType type)
     {
@@ -13,13 +16,26 @@ public class LiarBarCard : MonoBehaviour
 
     public void MoveToTable(Vector3 targetPosition, float duration = 0.5f)
     {
-        StartCoroutine(MoveCoroutine(targetPosition, duration));
+        if (photonView.IsMine)
+        {
+            // 모든 클라이언트에서 코루틴 실행
+            photonView.RPC("RPC_MoveToTable", RpcTarget.All, targetPosition, duration);
+            photonView.RPC("RPC_SetCardSprite", RpcTarget.AllBuffered, (int)_cardType);
+        }
     }
 
+    public void Flip(Vector3 targetPosition)
+    {
+        photonView.RPC("RPC_FlipCard", RpcTarget.All, targetPosition);
+    }
+
+    #region Coroutines
     IEnumerator MoveCoroutine(Vector3 target, float duration)
     {
         Vector3 startPos = transform.position;
         Quaternion startRot = transform.rotation;
+        Vector3 startScale = transform.localScale;
+        Vector3 targetScale = new Vector3(2f, 2f, 1f);
 
         float randomY = Random.Range(-40f, 40f);
         Quaternion targetRot = Quaternion.Euler(0f, randomY, 0f);
@@ -31,11 +47,73 @@ public class LiarBarCard : MonoBehaviour
             float t = elapsed / duration;
             transform.position = Vector3.Lerp(startPos, target, t);
             transform.rotation = Quaternion.Lerp(startRot, targetRot, t);
+            transform.localScale = Vector3.Lerp(startScale, targetScale, t);
             elapsed += Time.deltaTime;
             yield return null;
         }
 
         transform.position = target;
         transform.rotation = targetRot;
+        transform.localScale = targetScale;
     }
+
+    IEnumerator MoveAndFlipCoroutine(Vector3 targetPosition, float moveDuration = 0.5f)
+    {
+        Vector3 startPos = transform.position;
+        float elapsed = 0f;
+
+        while (elapsed < moveDuration)
+        {
+            float t = elapsed / moveDuration;
+            transform.position = Vector3.Lerp(startPos, targetPosition, t);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = targetPosition;
+        yield return StartCoroutine(FlipCoroutine());
+    }
+
+    IEnumerator FlipCoroutine(float duration = 0.5f)
+    {
+        float elapsed = 0f;
+
+        Quaternion startRot = transform.rotation;
+        Quaternion endRot = Quaternion.Euler(0f, 0f, 180f);
+
+        while (elapsed < duration)
+        {
+            float t = elapsed / duration;
+            transform.rotation = Quaternion.Lerp(startRot, endRot, t);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        transform.rotation = endRot;
+    }
+    #endregion
+
+    #region RPCs
+    [PunRPC]
+    void RPC_MoveToTable(Vector3 targetPosition, float duration)
+    {
+        StartCoroutine(MoveCoroutine(targetPosition, duration));
+    }
+
+    [PunRPC]
+    void RPC_FlipCard(Vector3 targetPosition)
+    {
+        StartCoroutine(MoveAndFlipCoroutine(targetPosition));
+    }
+
+    [PunRPC]
+    void RPC_SetCardSprite(int cardType)
+    {
+        _cardType = (ELiarBarCardType)cardType;
+        _cardRenderer.sprite = LiarBarCardManager.Instance.GetCardSprite(_cardType);
+        if (LiarBarCardManager.Instance.TargetCard == _cardType || _cardType == ELiarBarCardType.JokerCard)
+            _cardRenderer.color = Color.lightGreen;
+        else
+            _cardRenderer.color = Color.softRed;
+    }
+    #endregion
 }

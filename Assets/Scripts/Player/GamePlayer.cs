@@ -58,6 +58,7 @@ public class GamePlayer : MonoBehaviourPun
             return;
         _isMyTurn = true;
         OnStartTurn?.Invoke();
+        Debug.Log("내 턴 시작");
     }
 
     public void Win()
@@ -69,7 +70,7 @@ public class GamePlayer : MonoBehaviourPun
     {
         if (!photonView.IsMine)
             return;
-
+        _animator.SetTrigger("doDie");
         TurnManager.Instance.DiePlayer(this);
         // firebase 데이터 저장
     }
@@ -83,23 +84,32 @@ public class GamePlayer : MonoBehaviourPun
 
     public void PlayCard(List<ELiarBarCardType> cardTypes)
     {
+        if (!photonView.IsMine)
+            return;
         _currentCardTypes.AddRange(cardTypes);
         _animator.SetTrigger("doCard");
     }
 
     public void CallLiar()
     {
+        if (!photonView.IsMine)
+            return;
         _animator.SetTrigger("doCallLiar");
-        LiarBarTable.Instance.NewRound();
     }
 
+    #region Animation Controller Event
     public void EndCallLiar()
     {
+        if (!photonView.IsMine)
+            return;
         LiarBarTable.Instance.CheckLiar();
     }
 
     public void CreateCard()
     {
+        if (!photonView.IsMine)
+            return;
+
         List<LiarBarCard> cards = new List<LiarBarCard>();
 
         float duration = 0.5f;
@@ -121,4 +131,5 @@ public class GamePlayer : MonoBehaviourPun
         TurnManager.Instance.EndTurn();
         _currentCardTypes.Clear();
     }
+    #endregion
 }

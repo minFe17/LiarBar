@@ -106,7 +106,6 @@ public class TurnManager : MonoBehaviourPun
             photonView.RPC("RPC_DiePlayer", RpcTarget.MasterClient, player.ViewID);
             return;
         }
-
         HandleDeath(player);
     }
     #endregion

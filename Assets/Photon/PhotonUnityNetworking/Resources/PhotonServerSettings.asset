@@ -56,6 +56,14 @@ MonoBehaviour:
   - RPC_ReceiveCards
   - SplitCards
   - RPC_ReceiveCard
+  - RPC_AddIndex
+  - RPC_SetCardSprite
+  - RPC_ApplyTurnResult
+  - RPC_checkLiar
+  - RPC_SavePlayedCards
+  - RPC_CheckLiar
+  - RPC_FlipCard
+  - RPC_MoveToTable
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

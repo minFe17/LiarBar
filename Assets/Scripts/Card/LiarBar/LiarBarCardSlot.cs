@@ -38,7 +38,7 @@ public class LiarBarCardSlot : MonoBehaviour
     public void SetSelected(bool selected)
     {
         _isSelected = selected;
-        _image.color = selected ? Color.blue : Color.white;
+        _image.color = selected ? Color.lightBlue : Color.white;
     }
 
     public void SetPlayed(bool played)

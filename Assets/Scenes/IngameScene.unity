@@ -1343,7 +1343,7 @@ GameObject:
   m_Component:
   - component: {fileID: 699539509}
   - component: {fileID: 699539511}
-  - component: {fileID: 699539510}
+  - component: {fileID: 699539512}
   m_Layer: 5
   m_Name: Target Card UI
   m_TagString: Untagged
@@ -1372,36 +1372,6 @@ RectTransform:
   m_AnchoredPosition: {x: 10, y: 0}
   m_SizeDelta: {x: 300, y: 300}
   m_Pivot: {x: 0, y: 1}
---- !u!114 &699539510
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 699539508}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!222 &699539511
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1410,6 +1380,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 699539508}
   m_CullTransparentMesh: 1
+--- !u!114 &699539512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 699539508}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31d5872932c41e944ad976ec7651002a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cardText: {fileID: 313406097}
+  _cardImage: {fileID: 298111903}
 --- !u!1 &718756039
 GameObject:
   m_ObjectHideFlags: 0
@@ -1793,6 +1777,7 @@ GameObject:
   - component: {fileID: 1006516443}
   - component: {fileID: 1006516444}
   - component: {fileID: 1006516442}
+  - component: {fileID: 1006516445}
   m_Layer: 5
   m_Name: Card UI
   m_TagString: Untagged
@@ -1886,6 +1871,25 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1006516445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006516440}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c7785130d0359142bc12bc878053f30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cardSlots:
+  - {fileID: 2136308406}
+  - {fileID: 1286689415}
+  - {fileID: 1931046960}
+  - {fileID: 356133542}
+  - {fileID: 950107848}
+  _playerTurnUI: {fileID: 558403927}
 --- !u!1 &1042270354
 GameObject:
   m_ObjectHideFlags: 0
@@ -2592,16 +2596,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 356b644659bc10e4ea20aee7c2efaee1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cardText: {fileID: 313406097}
-  _cardImage: {fileID: 298111903}
-  _cardParent: {fileID: 1006516441}
-  _cardSlots:
-  - {fileID: 2136308406}
-  - {fileID: 1286689415}
-  - {fileID: 1931046960}
-  - {fileID: 356133542}
-  - {fileID: 950107848}
-  _playerTurnUI: {fileID: 558403927}
+  _targetCardUI: {fileID: 699539512}
+  _playerCardUI: {fileID: 1006516445}
 --- !u!114 &1348304735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3288,13 +3284,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 24736828550602738, guid: dbaa41db5d389864c8f576b4d4cdcdce, type: 3}
+      propertyPath: sceneViewId
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 4972782557608021928, guid: dbaa41db5d389864c8f576b4d4cdcdce, type: 3}
       propertyPath: m_Name
       value: LiarBarTable
       objectReference: {fileID: 0}
     - target: {fileID: 4972782557608021928, guid: dbaa41db5d389864c8f576b4d4cdcdce, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5641057390960596242, guid: dbaa41db5d389864c8f576b4d4cdcdce, type: 3}
       propertyPath: m_LocalScale.x
