@@ -25,22 +25,8 @@ public class GamePlayer : MonoBehaviourPun
 
     void Start()
     {
+        TurnIndex = (int)photonView.Owner.CustomProperties["PositionIndex"];
         TurnManager.Instance.RegisterPlayer(this);
-        SetTurnIndex();
-    }
-
-    void SetTurnIndex()
-    {
-        for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
-        {
-            Player player = PhotonNetwork.PlayerList[i];
-
-            if (player.ActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
-            {
-                TurnIndex = GetCustomProperty(player, "PositionIndex", 0);
-                break;
-            }
-        }
     }
 
     T GetCustomProperty<T>(Player player, string key, T defaultValue)
@@ -52,14 +38,13 @@ public class GamePlayer : MonoBehaviourPun
 
     public void StartTurn()
     {
-        if (!photonView.IsMine)
-            return;
-        if (TurnManager.Instance.CurrentPlayerIndex != TurnIndex)
-            return;
+        if (!photonView.IsMine) return;
+
         _isMyTurn = true;
         OnStartTurn?.Invoke();
-        Debug.Log("내 턴 시작");
+        Debug.Log($"내 턴 시작: TurnIndex={TurnIndex}, CurrentPlayerIndex={TurnManager.Instance.CurrentPlayerIndex}");
     }
+
 
     public void Win()
     {

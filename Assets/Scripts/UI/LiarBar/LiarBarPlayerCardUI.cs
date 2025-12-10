@@ -45,8 +45,8 @@ public class LiarBarPlayerCardUI : MonoBehaviour, IMediatorEvent
 
     public void ShowCard()
     {
-        //if (!_isReady)
-        //    return;
+        if (!_isReady)
+            return;
 
         if (_gamePlayer.IsMyTurn)
             return;
@@ -61,8 +61,8 @@ public class LiarBarPlayerCardUI : MonoBehaviour, IMediatorEvent
 
     public void SwitchCard(int direction)
     {
-        //if(!_gamePlayer.IsMyTurn)
-        //    return;
+        if (!_gamePlayer.IsMyTurn)
+            return;
 
         _cardSlots[_currentCardIndex].SetOutline(false);
 
@@ -82,8 +82,8 @@ public class LiarBarPlayerCardUI : MonoBehaviour, IMediatorEvent
 
     public void SelectCard()
     {
-        //if (!_gamePlayer.IsMyTurn)
-        //    return;
+        if (!_gamePlayer.IsMyTurn)
+            return;
 
         LiarBarCardSlot currentSlot = _cardSlots[_currentCardIndex];
         if (currentSlot.IsPlayed)
@@ -94,8 +94,8 @@ public class LiarBarPlayerCardUI : MonoBehaviour, IMediatorEvent
 
     public void ThrowCard()
     {
-        //if (!_gamePlayer.IsMyTurn)
-        //    return;
+        if (!_gamePlayer.IsMyTurn)
+            return;
 
         List<LiarBarCardSlot> selectedSlots = _cardSlots.Where(slot => slot.IsSelected).ToList();
 

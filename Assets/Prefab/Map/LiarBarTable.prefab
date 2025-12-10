@@ -1286,7 +1286,8 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 7018480770591848413}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -1304,13 +1305,14 @@ GameObject:
   - component: {fileID: 1048007805602754970}
   - component: {fileID: 3776327581412750672}
   - component: {fileID: 1990984847538672715}
+  - component: {fileID: 7018480770591848413}
   m_Layer: 5
   m_Name: CardInfo UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2554640569319212498
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1408,6 +1410,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _targetCardSprite: {fileID: 582604505822604393}
+  _turnUI: {fileID: 7690819754797625827}
 --- !u!95 &1990984847538672715
 Animator:
   serializedVersion: 7
@@ -1430,6 +1433,32 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &7018480770591848413
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5169926695401470412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters:
+  - Type: 4
+    SynchronizeType: 1
+    Name: isStartGame
+  - Type: 9
+    SynchronizeType: 1
+    Name: doShowTargetCard
+  m_SynchronizeLayers:
+  - SynchronizeType: 0
+    LayerIndex: 0
+  - SynchronizeType: 0
+    LayerIndex: 1
 --- !u!1 &5241186212471576443
 GameObject:
   m_ObjectHideFlags: 0
@@ -2108,13 +2137,14 @@ GameObject:
   m_Component:
   - component: {fileID: 8618466496936326440}
   - component: {fileID: 8812390507022633786}
+  - component: {fileID: 2827641230727391474}
   m_Layer: 0
   m_Name: 'TurnUI '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8618466496936326440
 Transform:
   m_ObjectHideFlags: 0
@@ -2186,6 +2216,18 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &2827641230727391474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7690819754797625827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d29ec1e2f9569e42a91c02ffc0e050e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7762531897581594371
 GameObject:
   m_ObjectHideFlags: 0

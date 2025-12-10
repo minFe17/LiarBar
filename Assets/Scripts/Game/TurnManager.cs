@@ -14,6 +14,7 @@ public class TurnManager : MonoBehaviourPun
     int _nextRoundStartIndex = 0;
 
     public Action OnEndRegisterPlayer;
+    public Action ShowNextTrunPlayer;
 
     public IReadOnlyList<GamePlayer> Players { get => _players; }
     public int CurrentPlayerIndex { get => _currentPlayerIndex; }
@@ -30,19 +31,37 @@ public class TurnManager : MonoBehaviourPun
         DontDestroyOnLoad(gameObject);
     }
 
+    void Start()
+    {
+        LiarBarCardManager.Instance.OnSetTableAction += StartGame;
+    }
+
     #region Player 등록
     public void RegisterPlayer(GamePlayer player)
     {
+        if (!PhotonNetwork.IsMasterClient) 
+            return;
+
         if (!_players.Contains(player))
             _players.Add(player);
 
-        if (_players.Count == 2)
+        if (_players.Count == PhotonNetwork.CurrentRoom.PlayerCount)
         {
             _players = _players.OrderBy(p => p.TurnIndex).ToList();
+
+            int[] viewIDs = _players.Select(p => p.ViewID).ToArray();
+            photonView.RPC("RPC_SetPlayersList", RpcTarget.All, viewIDs);
+
+            photonView.RPC("RPC_SetCurrentTurn", RpcTarget.All, 0);
             OnEndRegisterPlayer?.Invoke();
         }
     }
     #endregion
+
+    void StartGame()
+    {
+        photonView.RPC("RPC_SetCurrentTurn", RpcTarget.All, _currentPlayerIndex);
+    }
 
     #region Turn Control
     void NextTurn()
@@ -112,6 +131,12 @@ public class TurnManager : MonoBehaviourPun
 
     #region RPC
     [PunRPC]
+    void RPC_SetPlayersList(int[] viewIDs)
+    {
+        _players = viewIDs.Select(id => PhotonView.Find(id).GetComponent<GamePlayer>()).ToList();
+    }
+
+    [PunRPC]
     void RPC_NextTurn()
     {
         if (PhotonNetwork.IsMasterClient)
@@ -121,11 +146,14 @@ public class TurnManager : MonoBehaviourPun
     [PunRPC]
     void RPC_SetCurrentTurn(int playerIndex)
     {
+        Debug.Log(playerIndex + " Player Index");
         if (_players.Count == 0 || playerIndex >= _players.Count)
             return;
 
-        // 목표를 보도록 (TurnUI가)
+        _currentPlayerIndex = playerIndex;
+        ShowNextTrunPlayer?.Invoke();
         GamePlayer currentPlayer = _players[playerIndex];
+
         currentPlayer.StartTurn();
     }
 
