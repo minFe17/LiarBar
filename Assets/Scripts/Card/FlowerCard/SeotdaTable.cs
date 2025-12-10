@@ -10,7 +10,7 @@ public class SeotdaTable : MonoBehaviour
 {
     const float SPACE_AREA = 0.4f;
     const float SMOOTH_SPEED = 1f;
-    const int MAX_RANGE = 2;
+    const int MAX_RANGE = 3;
 
     private List<FlowerCard> _cards = new List<FlowerCard>();
     private bool _isMixed = false;
@@ -80,7 +80,7 @@ public class SeotdaTable : MonoBehaviour
 
             _cards[i+_spaceCardNum].transform.position = Vector3.Lerp(_cards[i+_spaceCardNum].transform.position, positionList[i] + this.gameObject.transform.position, SMOOTH_SPEED * Time.deltaTime * 2);
 
-            if (Vector3.Distance(_cards[i+ _spaceCardNum].transform.position, positionList[i]) < 0.01f)
+            if (Vector3.Distance(_cards[i+ _spaceCardNum].transform.position, positionList[i]) < 1)
             {
                 _cards[i+_spaceCardNum].transform.position = positionList[i];
             }
@@ -112,7 +112,7 @@ public class SeotdaTable : MonoBehaviour
 
             _cards[i].transform.position = Vector3.Lerp(_cards[i].transform.position, positionList[i] + this.gameObject.transform.position, SMOOTH_SPEED * Time.deltaTime*2);
 
-            if (Vector3.Distance(_cards[i].transform.position, positionList[i]) < 0.01f)
+            if (Vector3.Distance(_cards[i].transform.position, positionList[i]) < 1)
             {
                 _cards[i].transform.position = positionList[i];
             }

@@ -10,7 +10,7 @@ public class InGameManager : MonoBehaviour
         SetPositionAndSpawn();
 
         if (!PhotonNetwork.IsMasterClient) return;
-        //PhotonNetwork.Instantiate("Seotda/SeotdaTable", Vector3.zero, Quaternion.identity);
+        PhotonNetwork.Instantiate("Seotda/SeotdaTable", Vector3.zero, Quaternion.identity);
         //¿©±â ²ô±â
     }
     private void Update()

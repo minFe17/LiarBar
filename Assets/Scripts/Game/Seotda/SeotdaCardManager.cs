@@ -61,13 +61,13 @@ public class SeotdaCardManager : MonoBehaviourPun
     {
         _myCards.Clear();
 
-        if (!PhotonNetwork.IsMasterClient)
-            return;
         PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable
-        {
-             { "IsAlive", false }
-        });
+         {
+              { "IsAlive", true }
+         });
 
+        if (!PhotonNetwork.IsMasterClient)
+            return;   
         MixCards();
     }
 
@@ -111,6 +111,7 @@ public class SeotdaCardManager : MonoBehaviourPun
         {
             Debug.Log(_myCards[i].name);
         }
+        EventManager.Instance.Invoke("AddCard");
     }
 
     private void SplitCard()
@@ -133,7 +134,7 @@ public class SeotdaCardManager : MonoBehaviourPun
     [PunRPC]
     public void RPC_ReceiveCard(string c1)
     {
-        _myCards.Add(_cardDic[c1].GetComponent<GameObject>());
+        _myCards.Add(_cardDic[c1]);
         SortAscending();
     }
 }

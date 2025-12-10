@@ -9,29 +9,36 @@ public class MyPlayer : MonoBehaviour
 {
     public static MyPlayer local;
     public static List<(Player player, Transform hand)> playerLeftHands = new();
-
+    public static Player myPlayer;
 
     private Transform _head; //»©µµµÈ´Ù
     private Transform _leftHand;
-
+    
 
     public Transform Head
         { get { return _head; } }
     public Transform LeftHand
         { get { return _leftHand; } }
 
+
+    private void Awake()
+    {
+        
+    }
     private void Start()
     {
         PhotonView view = GetComponent<PhotonView>();
+        Transform leftHand = FindLeftHandInActiveModel(transform.Find("StandCharacter"));
 
+        playerLeftHands.Add((view.Owner, leftHand));
+
+
+        if (!view.IsMine) return;
+
+        local = this;
+        myPlayer = view.Owner;
+        _leftHand = leftHand;
         _head = FindHeadInActiveModel(transform.Find("StandCharacter"));
-        _leftHand = FindLeftHandInActiveModel(transform.Find("StandCharacter"));
-
-        playerLeftHands.Add((view.Owner, _leftHand));
-
-
-        if (view.IsMine)
-            local = this;
     }
     private Transform FindLeftHandInActiveModel(Transform parent)
     {
