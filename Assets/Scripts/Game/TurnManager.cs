@@ -124,6 +124,7 @@ public class TurnManager : MonoBehaviourPun
         if (_players.Count == 0 || playerIndex >= _players.Count)
             return;
 
+        // 목표를 보도록 (TurnUI가)
         GamePlayer currentPlayer = _players[playerIndex];
         currentPlayer.StartTurn();
     }

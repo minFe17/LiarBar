@@ -1238,7 +1238,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters: []
+  m_SynchronizeParameters:
+  - Type: 3
+    SynchronizeType: 0
+    Name: Status
+  - Type: 1
+    SynchronizeType: 0
+    Name: LookX
+  - Type: 1
+    SynchronizeType: 0
+    Name: LookY
+  - Type: 9
+    SynchronizeType: 1
+    Name: doCard
+  - Type: 9
+    SynchronizeType: 1
+    Name: doCallLiar
+  - Type: 9
+    SynchronizeType: 1
+    Name: doDie
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1248,6 +1266,8 @@ MonoBehaviour:
     LayerIndex: 2
   - SynchronizeType: 0
     LayerIndex: 3
+  - SynchronizeType: 0
+    LayerIndex: 4
 --- !u!114 &962040483937119159
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1294,7 +1314,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters: []
+  m_SynchronizeParameters:
+  - Type: 3
+    SynchronizeType: 0
+    Name: Status
+  - Type: 1
+    SynchronizeType: 0
+    Name: LookX
+  - Type: 1
+    SynchronizeType: 0
+    Name: LookY
+  - Type: 9
+    SynchronizeType: 1
+    Name: doCard
+  - Type: 9
+    SynchronizeType: 1
+    Name: doCallLiar
+  - Type: 9
+    SynchronizeType: 1
+    Name: doDie
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1304,6 +1342,8 @@ MonoBehaviour:
     LayerIndex: 2
   - SynchronizeType: 0
     LayerIndex: 3
+  - SynchronizeType: 0
+    LayerIndex: 4
 --- !u!114 &1447530295552178846
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1340,7 +1380,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters: []
+  m_SynchronizeParameters:
+  - Type: 3
+    SynchronizeType: 0
+    Name: Status
+  - Type: 1
+    SynchronizeType: 0
+    Name: LookX
+  - Type: 1
+    SynchronizeType: 0
+    Name: LookY
+  - Type: 9
+    SynchronizeType: 1
+    Name: doCard
+  - Type: 9
+    SynchronizeType: 1
+    Name: doCallLiar
+  - Type: 9
+    SynchronizeType: 1
+    Name: doDie
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1350,6 +1408,8 @@ MonoBehaviour:
     LayerIndex: 2
   - SynchronizeType: 0
     LayerIndex: 3
+  - SynchronizeType: 0
+    LayerIndex: 4
 --- !u!114 &1012651324512351091
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1386,7 +1446,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters: []
+  m_SynchronizeParameters:
+  - Type: 3
+    SynchronizeType: 0
+    Name: Status
+  - Type: 1
+    SynchronizeType: 0
+    Name: LookX
+  - Type: 1
+    SynchronizeType: 0
+    Name: LookY
+  - Type: 9
+    SynchronizeType: 1
+    Name: doCard
+  - Type: 9
+    SynchronizeType: 1
+    Name: doCallLiar
+  - Type: 9
+    SynchronizeType: 1
+    Name: doDie
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1396,6 +1474,8 @@ MonoBehaviour:
     LayerIndex: 2
   - SynchronizeType: 0
     LayerIndex: 3
+  - SynchronizeType: 0
+    LayerIndex: 4
 --- !u!114 &3600331987885934943
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1452,7 +1532,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters: []
+  m_SynchronizeParameters:
+  - Type: 3
+    SynchronizeType: 0
+    Name: Status
+  - Type: 1
+    SynchronizeType: 0
+    Name: LookX
+  - Type: 1
+    SynchronizeType: 0
+    Name: LookY
+  - Type: 9
+    SynchronizeType: 1
+    Name: doCard
+  - Type: 9
+    SynchronizeType: 1
+    Name: doCallLiar
+  - Type: 9
+    SynchronizeType: 1
+    Name: doDie
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1462,6 +1560,8 @@ MonoBehaviour:
     LayerIndex: 2
   - SynchronizeType: 0
     LayerIndex: 3
+  - SynchronizeType: 0
+    LayerIndex: 4
 --- !u!114 &4688594868137936407
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1493,7 +1593,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters: []
+  m_SynchronizeParameters:
+  - Type: 3
+    SynchronizeType: 0
+    Name: Status
+  - Type: 1
+    SynchronizeType: 0
+    Name: LookX
+  - Type: 1
+    SynchronizeType: 0
+    Name: LookY
+  - Type: 9
+    SynchronizeType: 1
+    Name: doCard
+  - Type: 9
+    SynchronizeType: 1
+    Name: doCallLiar
+  - Type: 9
+    SynchronizeType: 1
+    Name: doDie
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1503,6 +1621,8 @@ MonoBehaviour:
     LayerIndex: 2
   - SynchronizeType: 0
     LayerIndex: 3
+  - SynchronizeType: 0
+    LayerIndex: 4
 --- !u!114 &5649558270082158584
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1539,7 +1659,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters: []
+  m_SynchronizeParameters:
+  - Type: 3
+    SynchronizeType: 0
+    Name: Status
+  - Type: 1
+    SynchronizeType: 0
+    Name: LookX
+  - Type: 1
+    SynchronizeType: 0
+    Name: LookY
+  - Type: 9
+    SynchronizeType: 1
+    Name: doCard
+  - Type: 9
+    SynchronizeType: 1
+    Name: doCallLiar
+  - Type: 9
+    SynchronizeType: 1
+    Name: doDie
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1549,6 +1687,8 @@ MonoBehaviour:
     LayerIndex: 2
   - SynchronizeType: 0
     LayerIndex: 3
+  - SynchronizeType: 0
+    LayerIndex: 4
 --- !u!114 &5069205107297988581
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1585,7 +1725,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters: []
+  m_SynchronizeParameters:
+  - Type: 3
+    SynchronizeType: 0
+    Name: Status
+  - Type: 1
+    SynchronizeType: 0
+    Name: LookX
+  - Type: 1
+    SynchronizeType: 0
+    Name: LookY
+  - Type: 9
+    SynchronizeType: 1
+    Name: doCard
+  - Type: 9
+    SynchronizeType: 1
+    Name: doCallLiar
+  - Type: 9
+    SynchronizeType: 1
+    Name: doDie
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1595,6 +1753,8 @@ MonoBehaviour:
     LayerIndex: 2
   - SynchronizeType: 0
     LayerIndex: 3
+  - SynchronizeType: 0
+    LayerIndex: 4
 --- !u!114 &8840328200385013870
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1626,7 +1786,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters: []
+  m_SynchronizeParameters:
+  - Type: 3
+    SynchronizeType: 0
+    Name: Status
+  - Type: 1
+    SynchronizeType: 0
+    Name: LookX
+  - Type: 1
+    SynchronizeType: 0
+    Name: LookY
+  - Type: 9
+    SynchronizeType: 1
+    Name: doCard
+  - Type: 9
+    SynchronizeType: 1
+    Name: doCallLiar
+  - Type: 9
+    SynchronizeType: 1
+    Name: doDie
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1636,6 +1814,8 @@ MonoBehaviour:
     LayerIndex: 2
   - SynchronizeType: 0
     LayerIndex: 3
+  - SynchronizeType: 0
+    LayerIndex: 4
 --- !u!114 &7264634204795873488
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1672,7 +1852,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters: []
+  m_SynchronizeParameters:
+  - Type: 3
+    SynchronizeType: 0
+    Name: Status
+  - Type: 1
+    SynchronizeType: 0
+    Name: LookX
+  - Type: 1
+    SynchronizeType: 0
+    Name: LookY
+  - Type: 9
+    SynchronizeType: 1
+    Name: doCard
+  - Type: 9
+    SynchronizeType: 1
+    Name: doCallLiar
+  - Type: 9
+    SynchronizeType: 1
+    Name: doDie
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1682,6 +1880,8 @@ MonoBehaviour:
     LayerIndex: 2
   - SynchronizeType: 0
     LayerIndex: 3
+  - SynchronizeType: 0
+    LayerIndex: 4
 --- !u!114 &333784488968070381
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1730,7 +1930,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters: []
+  m_SynchronizeParameters:
+  - Type: 3
+    SynchronizeType: 0
+    Name: Status
+  - Type: 1
+    SynchronizeType: 0
+    Name: LookX
+  - Type: 1
+    SynchronizeType: 0
+    Name: LookY
+  - Type: 9
+    SynchronizeType: 1
+    Name: doCard
+  - Type: 9
+    SynchronizeType: 1
+    Name: doCallLiar
+  - Type: 9
+    SynchronizeType: 1
+    Name: doDie
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1740,6 +1958,8 @@ MonoBehaviour:
     LayerIndex: 2
   - SynchronizeType: 0
     LayerIndex: 3
+  - SynchronizeType: 0
+    LayerIndex: 4
 --- !u!114 &5425519292203670310
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1771,7 +1991,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters: []
+  m_SynchronizeParameters:
+  - Type: 3
+    SynchronizeType: 0
+    Name: Status
+  - Type: 1
+    SynchronizeType: 0
+    Name: LookX
+  - Type: 1
+    SynchronizeType: 0
+    Name: LookY
+  - Type: 9
+    SynchronizeType: 1
+    Name: doCard
+  - Type: 9
+    SynchronizeType: 1
+    Name: doCallLiar
+  - Type: 9
+    SynchronizeType: 1
+    Name: doDie
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1781,6 +2019,8 @@ MonoBehaviour:
     LayerIndex: 2
   - SynchronizeType: 0
     LayerIndex: 3
+  - SynchronizeType: 0
+    LayerIndex: 4
 --- !u!114 &8539297606706967352
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1817,7 +2057,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters: []
+  m_SynchronizeParameters:
+  - Type: 3
+    SynchronizeType: 0
+    Name: Status
+  - Type: 1
+    SynchronizeType: 0
+    Name: LookX
+  - Type: 1
+    SynchronizeType: 0
+    Name: LookY
+  - Type: 9
+    SynchronizeType: 1
+    Name: doCard
+  - Type: 9
+    SynchronizeType: 1
+    Name: doCallLiar
+  - Type: 9
+    SynchronizeType: 1
+    Name: doDie
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1827,6 +2085,8 @@ MonoBehaviour:
     LayerIndex: 2
   - SynchronizeType: 0
     LayerIndex: 3
+  - SynchronizeType: 0
+    LayerIndex: 4
 --- !u!114 &5888238368256595262
 MonoBehaviour:
   m_ObjectHideFlags: 0
