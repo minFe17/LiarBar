@@ -990,6 +990,30 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1485948700115599894, guid: 3328ed956ad503e41883bddf16547622, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 6dfd581ca905cb74b97753ed1550ba7c, type: 2}
+    - target: {fileID: 1625934771836263454, guid: 3328ed956ad503e41883bddf16547622, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 6dfd581ca905cb74b97753ed1550ba7c, type: 2}
+    - target: {fileID: 1725495267959741572, guid: 3328ed956ad503e41883bddf16547622, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 6dfd581ca905cb74b97753ed1550ba7c, type: 2}
+    - target: {fileID: 2206621485272251704, guid: 3328ed956ad503e41883bddf16547622, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 6dfd581ca905cb74b97753ed1550ba7c, type: 2}
+    - target: {fileID: 2395166165263752397, guid: 3328ed956ad503e41883bddf16547622, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 6dfd581ca905cb74b97753ed1550ba7c, type: 2}
+    - target: {fileID: 2828078323047640091, guid: 3328ed956ad503e41883bddf16547622, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 6dfd581ca905cb74b97753ed1550ba7c, type: 2}
     - target: {fileID: 3812066661068405105, guid: 3328ed956ad503e41883bddf16547622, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -998,6 +1022,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: StandCharacter
       objectReference: {fileID: 0}
+    - target: {fileID: 4074700741277646144, guid: 3328ed956ad503e41883bddf16547622, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 6dfd581ca905cb74b97753ed1550ba7c, type: 2}
+    - target: {fileID: 5232479037747794952, guid: 3328ed956ad503e41883bddf16547622, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 6dfd581ca905cb74b97753ed1550ba7c, type: 2}
     - target: {fileID: 6240640986404133944, guid: 3328ed956ad503e41883bddf16547622, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1038,10 +1070,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6255934878162250166, guid: 3328ed956ad503e41883bddf16547622, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 6dfd581ca905cb74b97753ed1550ba7c, type: 2}
+    - target: {fileID: 6746681750612517023, guid: 3328ed956ad503e41883bddf16547622, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 6dfd581ca905cb74b97753ed1550ba7c, type: 2}
+    - target: {fileID: 6795951373728225043, guid: 3328ed956ad503e41883bddf16547622, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 6dfd581ca905cb74b97753ed1550ba7c, type: 2}
+    - target: {fileID: 7624119873425709214, guid: 3328ed956ad503e41883bddf16547622, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 6dfd581ca905cb74b97753ed1550ba7c, type: 2}
     - target: {fileID: 8152469324676043948, guid: 3328ed956ad503e41883bddf16547622, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8518743744195967172, guid: 3328ed956ad503e41883bddf16547622, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 6dfd581ca905cb74b97753ed1550ba7c, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -1186,25 +1238,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 3
-    SynchronizeType: 2
-    Name: Status
-  - Type: 1
-    SynchronizeType: 2
-    Name: LookY
-  - Type: 1
-    SynchronizeType: 2
-    Name: LookX
-  - Type: 9
-    SynchronizeType: 0
-    Name: doCard
-  - Type: 9
-    SynchronizeType: 0
-    Name: doCallLiar
-  - Type: 9
-    SynchronizeType: 0
-    Name: doDrinkPotion
+  m_SynchronizeParameters: []
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1260,25 +1294,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 3
-    SynchronizeType: 2
-    Name: Status
-  - Type: 1
-    SynchronizeType: 2
-    Name: LookY
-  - Type: 1
-    SynchronizeType: 2
-    Name: LookX
-  - Type: 9
-    SynchronizeType: 0
-    Name: doCard
-  - Type: 9
-    SynchronizeType: 0
-    Name: doCallLiar
-  - Type: 9
-    SynchronizeType: 0
-    Name: doDrinkPotion
+  m_SynchronizeParameters: []
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1324,25 +1340,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 3
-    SynchronizeType: 2
-    Name: Status
-  - Type: 1
-    SynchronizeType: 2
-    Name: LookY
-  - Type: 1
-    SynchronizeType: 2
-    Name: LookX
-  - Type: 9
-    SynchronizeType: 0
-    Name: doCard
-  - Type: 9
-    SynchronizeType: 0
-    Name: doCallLiar
-  - Type: 9
-    SynchronizeType: 0
-    Name: doDrinkPotion
+  m_SynchronizeParameters: []
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1388,25 +1386,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 3
-    SynchronizeType: 2
-    Name: Status
-  - Type: 1
-    SynchronizeType: 2
-    Name: LookY
-  - Type: 1
-    SynchronizeType: 2
-    Name: LookX
-  - Type: 9
-    SynchronizeType: 0
-    Name: doCard
-  - Type: 9
-    SynchronizeType: 0
-    Name: doCallLiar
-  - Type: 9
-    SynchronizeType: 0
-    Name: doDrinkPotion
+  m_SynchronizeParameters: []
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1472,25 +1452,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 3
-    SynchronizeType: 2
-    Name: Status
-  - Type: 1
-    SynchronizeType: 2
-    Name: LookY
-  - Type: 1
-    SynchronizeType: 2
-    Name: LookX
-  - Type: 9
-    SynchronizeType: 1
-    Name: doCard
-  - Type: 9
-    SynchronizeType: 1
-    Name: doCallLiar
-  - Type: 9
-    SynchronizeType: 1
-    Name: doDrinkPotion
+  m_SynchronizeParameters: []
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1531,25 +1493,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 3
-    SynchronizeType: 2
-    Name: Status
-  - Type: 1
-    SynchronizeType: 2
-    Name: LookY
-  - Type: 1
-    SynchronizeType: 2
-    Name: LookX
-  - Type: 9
-    SynchronizeType: 0
-    Name: doCard
-  - Type: 9
-    SynchronizeType: 0
-    Name: doCallLiar
-  - Type: 9
-    SynchronizeType: 0
-    Name: doDrinkPotion
+  m_SynchronizeParameters: []
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1595,25 +1539,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 3
-    SynchronizeType: 2
-    Name: Status
-  - Type: 1
-    SynchronizeType: 2
-    Name: LookY
-  - Type: 1
-    SynchronizeType: 2
-    Name: LookX
-  - Type: 9
-    SynchronizeType: 0
-    Name: doCard
-  - Type: 9
-    SynchronizeType: 0
-    Name: doCallLiar
-  - Type: 9
-    SynchronizeType: 0
-    Name: doDrinkPotion
+  m_SynchronizeParameters: []
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1659,16 +1585,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 3
-    SynchronizeType: 2
-    Name: Status
-  - Type: 1
-    SynchronizeType: 2
-    Name: LookY
-  - Type: 1
-    SynchronizeType: 2
-    Name: LookX
+  m_SynchronizeParameters: []
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1709,25 +1626,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 3
-    SynchronizeType: 2
-    Name: Status
-  - Type: 1
-    SynchronizeType: 2
-    Name: LookY
-  - Type: 1
-    SynchronizeType: 2
-    Name: LookX
-  - Type: 9
-    SynchronizeType: 0
-    Name: doCard
-  - Type: 9
-    SynchronizeType: 0
-    Name: doCallLiar
-  - Type: 9
-    SynchronizeType: 0
-    Name: doDrinkPotion
+  m_SynchronizeParameters: []
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1773,25 +1672,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 3
-    SynchronizeType: 2
-    Name: Status
-  - Type: 1
-    SynchronizeType: 2
-    Name: LookY
-  - Type: 1
-    SynchronizeType: 2
-    Name: LookX
-  - Type: 9
-    SynchronizeType: 0
-    Name: doCard
-  - Type: 9
-    SynchronizeType: 0
-    Name: doCallLiar
-  - Type: 9
-    SynchronizeType: 0
-    Name: doDrinkPotion
+  m_SynchronizeParameters: []
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1849,16 +1730,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 3
-    SynchronizeType: 2
-    Name: Status
-  - Type: 1
-    SynchronizeType: 2
-    Name: LookY
-  - Type: 1
-    SynchronizeType: 2
-    Name: LookX
+  m_SynchronizeParameters: []
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1899,16 +1771,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 3
-    SynchronizeType: 2
-    Name: Status
-  - Type: 1
-    SynchronizeType: 2
-    Name: LookY
-  - Type: 1
-    SynchronizeType: 2
-    Name: LookX
+  m_SynchronizeParameters: []
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1954,25 +1817,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 3
-    SynchronizeType: 2
-    Name: Status
-  - Type: 1
-    SynchronizeType: 2
-    Name: LookY
-  - Type: 1
-    SynchronizeType: 2
-    Name: LookX
-  - Type: 9
-    SynchronizeType: 0
-    Name: doCard
-  - Type: 9
-    SynchronizeType: 0
-    Name: doCallLiar
-  - Type: 9
-    SynchronizeType: 0
-    Name: doDrinkPotion
+  m_SynchronizeParameters: []
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
