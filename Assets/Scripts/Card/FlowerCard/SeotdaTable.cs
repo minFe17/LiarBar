@@ -98,8 +98,8 @@ public class SeotdaTable : MonoBehaviour
     private void SplitCard()
     {
         _isSplit = true;
-        Vector3[] positionList = { new Vector3(0, 0, MAX_RANGE), new Vector3(0, 0, -MAX_RANGE), 
-            new Vector3(-MAX_RANGE, 0, 0), new Vector3(MAX_RANGE, 0, 0) };
+        Vector3[] positionList = { new Vector3(0, 0, MAX_RANGE), new Vector3(-MAX_RANGE, 0, 0),
+            new Vector3(0, 0, -MAX_RANGE), new Vector3(MAX_RANGE, 0, 0) };
 
         for (int i = 0; i < positionList.Length; i++)
         {

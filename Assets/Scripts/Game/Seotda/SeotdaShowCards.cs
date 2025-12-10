@@ -2,13 +2,15 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using Photon.Realtime;
+using Photon.Pun;
+using System;
 
 public class SeotdaShowCards : MonoBehaviour
 {
     [SerializeField]
     private FlowerCardDB db;
 
-    private const float SPACE_VALUE = 0.1f;
+    private const float SPACE_VALUE = 0.05f;
 
     private Transform _playerLeftHand;
     private List<GameObject> _myCards;
@@ -21,18 +23,23 @@ public class SeotdaShowCards : MonoBehaviour
     private void Start()
     {
         FindCards();
-        FindPlayerLeftHand();
+        
     }
-
+    private void OnEnable()
+    {
+        EventManager.Instance.Subscribe("AddCard",AddShowCard);
+    }
+    private void OnDisable()
+    {
+        EventManager.Instance.UnSubscribe("AddCard", (Action)AddShowCard);
+    }
     private void Update()
     {
-        if (_cardCount != _myCards.Count)
-             UpdateCards();
-
-        if(Keyboard.current.pKey.wasPressedThisFrame)
+        for(int i=0;i<_cardCount; i++)
         {
-            GameObject card = Instantiate(db.FlowerCardPrefabs[0]);
-            _myCards.Add(card);
+            Vector3 position = _myCards[i].transform.position;
+            position.y = _playerLeftHand.position.y + SPACE_VALUE;
+            _myCards[i].transform.position = position;
         }
     }
     private void UpdateCards()
@@ -50,30 +57,59 @@ public class SeotdaShowCards : MonoBehaviour
 
         Vector3[] addCardPosition =
         {
-            new Vector3()
+            new Vector3(-SPACE_VALUE*(_cardCount+1), 0, 0),
+             new Vector3(0, 0, -SPACE_VALUE*(_cardCount+1)),
+             new Vector3(SPACE_VALUE*(_cardCount+1), 0, 0),
+             new Vector3(0, 0, SPACE_VALUE*(_cardCount+1))
         };
 
+        for(int i=0;i<PhotonNetwork.PlayerList.Length;i++)
+        {
+            bool isAlive = (bool)_playerLeftHands[i].player.CustomProperties["IsAlive"];
+            if (!isAlive) continue;
 
-        Vector3 position = _playerLeftHand.position + new Vector3(SPACE_VALUE*(_cardCount+1), SPACE_VALUE, 0);
-        _myCards[_cardCount].gameObject.transform.localScale = _originalScale;
-        _myCards[_cardCount].gameObject.transform.position = position;
+            int index = (int)_playerLeftHands[i].player.CustomProperties["PositionIndex"];
 
-        Debug.Log(_myCards[_cardCount].gameObject.transform.position);
+            Vector3 position = _playerLeftHands[i].hand.transform.position + addCardPosition[index];
+            if (_playerLeftHands[i].player == MyPlayer.myPlayer)
+            {
+                GameObject card = Instantiate(_myCards[_cardCount]);
+                _myCards[_cardCount] = card;
 
-        _cardCount = _myCards.Count;
+                card.transform.localScale = _originalScale;
+                card.transform.position = position;
+                card.transform.rotation = rotations[index];
+            }
+            else
+            {
+                GameObject card = _dumyCards.Pop();
+                position.y += SPACE_VALUE;
+
+                card.transform.localScale = _originalScale;
+                card.transform.position = position;
+                card.transform.rotation = rotations[index];
+            }
+        }
+
+        _cardCount++;
     }
     private void FindPlayerLeftHand()
     {
         _playerLeftHand = MyPlayer.local.LeftHand;
         _playerLeftHands = MyPlayer.playerLeftHands;
     }
-
+    private void AddShowCard()
+    {
+        if (_cardCount == 0)
+            FindPlayerLeftHand();
+        UpdateCards();
+    }
     private void FindCards()
     {
         SeotdaCardManager manager = GetComponentInParent<SeotdaCardManager>();
         _myCards = manager.MyCards;
         _cardCount = _myCards.Count;
 
-        _dumyCards =  new PoolingManager()
+        _dumyCards = new PoolingManager(db.FlowerCardPrefabs[0], "SeotdaTable(clone)/ShowCards");
     }
 }
