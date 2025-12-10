@@ -87,7 +87,7 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
 
     void CheckAllPlayerReady()
     {
-        if (PhotonNetwork.PlayerList.Length != 2) //멀티 인원
+        if (PhotonNetwork.PlayerList.Length != 4) //멀티 인원
             return;
 
         for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)

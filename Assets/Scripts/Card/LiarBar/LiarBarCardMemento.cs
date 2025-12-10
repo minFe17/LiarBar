@@ -3,7 +3,7 @@ using System.Linq;
 using Photon.Pun;
 using UnityEngine;
 
-public class LiarBarCardMemento : MonoBehaviour
+public class LiarBarCardMemento
 {
     Stack<LiarBarCard> _cards = new Stack<LiarBarCard>();
 

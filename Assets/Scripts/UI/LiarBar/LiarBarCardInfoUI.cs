@@ -1,9 +1,9 @@
 using UnityEngine;
-using UnityEngine.U2D;
 
 public class LiarBarCardInfoUI : MonoBehaviour
 {
     [SerializeField] SpriteRenderer _targetCardSprite;
+    [SerializeField] GameObject _turnUI;
 
     Animator _animator;
 
@@ -30,6 +30,7 @@ public class LiarBarCardInfoUI : MonoBehaviour
     public void EndStartGameEvent()
     {
         LiarBarCardManager.Instance.SetTable();
+        _turnUI.SetActive(true);
     }
 
     public void EndTargetCardEvent()
