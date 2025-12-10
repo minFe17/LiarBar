@@ -35,13 +35,14 @@ public class InGameManager : MonoBehaviour
                 spawnPos = new Vector3(0, y, dist * ((index / 4) + 1));
                 break;
 
-            case 1: // ¾Æ·¡
+            case 1: // ¿Þ
+                spawnPos = new Vector3(-dist * ((index / 4) + 1), y, 0);
+                break;
+
+            case 2: // ¾Æ·¡
                 spawnPos = new Vector3(0, y, -dist * ((index / 4) + 1));
                 break;
 
-            case 2: // ¿Þ
-                spawnPos = new Vector3(-dist * ((index / 4) + 1), y, 0);
-                break;
 
             case 3: // ¿À¸¥
                 spawnPos = new Vector3(dist * ((index / 4) + 1), y, 0);

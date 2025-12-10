@@ -12,6 +12,7 @@ public class SeotdaShowCards : MonoBehaviour
 
     private Transform _playerLeftHand;
     private List<GameObject> _myCards;
+    private PoolingManager _dumyCards;
     private List<(Player player, Transform hand)> _playerLeftHands;
     private int _cardCount = 0;
 
@@ -39,10 +40,11 @@ public class SeotdaShowCards : MonoBehaviour
         //상하좌우 포지션 먼저 맞춰주기 (로테이션도) => 포지션 손위치에 걍 박으면됨 로테이션만 맞춰주기
         //카드 증가하는것도 상-> x감소 하->x증가 좌->z감소 우 ->z증가 이렇게 맞춰줘야됨.
 
+        //상좌하우 로 바꾸기
         Quaternion[] rotations = {
             Quaternion.Euler(0, 0, 0),
-            Quaternion.Euler(0, 180, 0),
             Quaternion.Euler(0, 270, 0),
+            Quaternion.Euler(0, 180, 0),
             Quaternion.Euler(0, 90, 0)
         };
 
@@ -71,5 +73,7 @@ public class SeotdaShowCards : MonoBehaviour
         SeotdaCardManager manager = GetComponentInParent<SeotdaCardManager>();
         _myCards = manager.MyCards;
         _cardCount = _myCards.Count;
+
+        _dumyCards =  new PoolingManager()
     }
 }
