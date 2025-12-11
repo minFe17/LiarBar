@@ -5,11 +5,13 @@ public class LiarBarUI : MonoBehaviour
 {
     [SerializeField] LiarBarTargetCardUI _targetCardUI;
     [SerializeField] LiarBarPlayerCardUI _playerCardUI;
+    [SerializeField] LiarBarPotionUI _potionUI;
 
     void Start()
     {
         _targetCardUI.Init();
         _playerCardUI.Init();
+        _potionUI.Init();
     }
 
     #region Input System

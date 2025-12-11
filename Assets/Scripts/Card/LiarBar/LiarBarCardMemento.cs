@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 
 public class LiarBarCardMemento
@@ -16,23 +18,28 @@ public class LiarBarCardMemento
             _cards.Push(cards[i]);
     }
 
-    public bool Restore(Vector3 tablePosition)
+    public void Restore(Vector3 tablePosition, Action<bool> onAllFlipped)
     {
         float spacing = 0.2f;
         float zHeight = 0.2f;
         bool isTruth = IsTurnTruth();
 
+        int flippedCount = 0;
+
         for (int i = 0; i < _cardCount; i++)
         {
             LiarBarCard card = _cards.Pop();
-
-            // 가운데 기준으로 좌우 분배
             float xOffset = (i - (_cardCount - 1) / 2f) * spacing;
             Vector3 cardPosition = tablePosition + new Vector3(xOffset, 0f, zHeight);
 
-            card.Flip(cardPosition);
+            // Flip 시작 (모든 카드 동시에)
+            card.Flip(cardPosition, () =>
+            {
+                flippedCount++;
+                if (flippedCount == _cardCount)
+                    onAllFlipped?.Invoke(isTruth); // 모든 카드 뒤집힌 후 호출
+            });
         }
-        return isTruth;
     }
 
     public void NewRound()

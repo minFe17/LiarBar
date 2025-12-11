@@ -1,11 +1,15 @@
+using System;
 using System.Collections;
 using Photon.Pun;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class LiarBarCard : MonoBehaviourPun
 {
     [SerializeField] SpriteRenderer _cardRenderer;
     ELiarBarCardType _cardType;
+
+    Action onComplete;
 
     public ELiarBarCardType CardType { get => _cardType; }
 
@@ -24,9 +28,10 @@ public class LiarBarCard : MonoBehaviourPun
         }
     }
 
-    public void Flip(Vector3 targetPosition)
+    public void Flip(Vector3 targetPosition, System.Action onComplete = null)
     {
-        photonView.RPC("RPC_FlipCard", RpcTarget.All, targetPosition);
+        this.onComplete = onComplete;
+        photonView.RPC("RPC_FlipCard", RpcTarget.All, targetPosition, onComplete != null);
     }
 
     #region Coroutines
@@ -57,10 +62,11 @@ public class LiarBarCard : MonoBehaviourPun
         transform.localScale = targetScale;
     }
 
-    IEnumerator MoveAndFlipCoroutine(Vector3 targetPosition, float moveDuration = 0.5f)
+    IEnumerator MoveAndFlipCoroutine(Vector3 targetPosition, bool hasCallback)
     {
         Vector3 startPos = transform.position;
         float elapsed = 0f;
+        float moveDuration = 0.5f;
 
         while (elapsed < moveDuration)
         {
@@ -71,13 +77,15 @@ public class LiarBarCard : MonoBehaviourPun
         }
 
         transform.position = targetPosition;
-        yield return StartCoroutine(FlipCoroutine());
+        yield return StartCoroutine(FlipCoroutine(hasCallback));
+
+        if (hasCallback)
+            onComplete?.Invoke(); // Flip 끝난 후 호출
     }
 
-    IEnumerator FlipCoroutine(float duration = 0.5f)
+    IEnumerator FlipCoroutine(bool hasCallback, float duration = 0.5f)
     {
         float elapsed = 0f;
-
         Quaternion startRot = transform.rotation;
         Quaternion endRot = Quaternion.Euler(0f, 0f, 180f);
 
@@ -88,7 +96,11 @@ public class LiarBarCard : MonoBehaviourPun
             elapsed += Time.deltaTime;
             yield return null;
         }
+
         transform.rotation = endRot;
+
+        if (hasCallback)
+            onComplete?.Invoke();
     }
     #endregion
 
@@ -100,9 +112,9 @@ public class LiarBarCard : MonoBehaviourPun
     }
 
     [PunRPC]
-    void RPC_FlipCard(Vector3 targetPosition)
+    void RPC_FlipCard(Vector3 targetPosition, bool hasCallback)
     {
-        StartCoroutine(MoveAndFlipCoroutine(targetPosition));
+        StartCoroutine(MoveAndFlipCoroutine(targetPosition, hasCallback));
     }
 
     [PunRPC]

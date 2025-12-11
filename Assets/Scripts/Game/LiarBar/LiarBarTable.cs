@@ -10,7 +10,7 @@ public class LiarBarTable : MonoBehaviourPun
     [SerializeField] Transform _tableCenter;
 
     LiarBarCardMemento _memento = new LiarBarCardMemento();
-
+    GamePlayer _callLiarPlayer;
     int _index = 0;
 
     void Awake()
@@ -28,10 +28,16 @@ public class LiarBarTable : MonoBehaviourPun
     void OnTurnEvaluated(bool isTruth)
     {
         if (isTruth)
-            Debug.Log("모두 초록: 라이어 말한 사람 포션 적용");
+            _callLiarPlayer.photonView.RPC("RPC_DoDrinkPotion", _callLiarPlayer.photonView.Owner);
         else
-            Debug.Log("빨간 카드 있음: 카드 낸 사람 포션 적용");
-        //photonView.RPC("RPC_ApplyTurnResult", RpcTarget.All, isTruth);
+        {
+            int index = TurnManager.Instance.CurrentPlayerIndex - 1;
+            if (index < 0)
+                index = TurnManager.Instance.Players.Count - 1;
+
+            GamePlayer lastPlayer = TurnManager.Instance.Players[index];
+            lastPlayer.photonView.RPC("RPC_DoDrinkPotion", lastPlayer.photonView.Owner);
+        }
     }
 
     public void SavePlayedCards(List<LiarBarCard> cards)
@@ -40,12 +46,12 @@ public class LiarBarTable : MonoBehaviourPun
         photonView.RPC("RPC_SavePlayedCards", RpcTarget.MasterClient, cardIds);
     }
 
-    public void CheckLiar()
+    public void CheckLiar(int viewId)
     {
         if (!PhotonNetwork.IsMasterClient)
-            photonView.RPC("RPC_CheckLiar", RpcTarget.MasterClient);
+            photonView.RPC("RPC_CheckLiar", RpcTarget.MasterClient, viewId);
         else
-            RPC_CheckLiar();
+            RPC_CheckLiar(viewId);
     }
 
     public Vector3 GetCenterPosition()
@@ -71,16 +77,13 @@ public class LiarBarTable : MonoBehaviourPun
     }
 
     [PunRPC]
-    public void RPC_CheckLiar()
+    void RPC_CheckLiar(int viewID)
     {
-        bool isTruth = _memento.Restore(_tableCenter.position);
-        OnTurnEvaluated(isTruth);
+        _callLiarPlayer = TurnManager.Instance.Players.FirstOrDefault(p => p.ViewID == viewID);
+        if (_callLiarPlayer == null)
+            return;
+
+        _memento.Restore(_tableCenter.position, (isTruth) => { OnTurnEvaluated(isTruth); });
         _index = 0;
     }
-
-    //[PunRPC]
-    //public void RPC_ApplyTurnResult(bool isTruth)
-    //{
-
-    //}
 }

@@ -20,6 +20,7 @@ public class LiarBarPlayerCardUI : MonoBehaviour, IMediatorEvent
     {
         _cardParent = GetComponent<RectTransform>();
         SimpleSingleton<MediatorManager>.Instance.Register(EMediatorEventType.InitHandCard, this);
+        _playerTurnUI.GetComponentInChildren<LiarBarTimerUI>().OnTimerFinished += TimeOver;
     }
 
     void InitCardUI()
@@ -32,6 +33,59 @@ public class LiarBarPlayerCardUI : MonoBehaviour, IMediatorEvent
             _cardSlots[i].Init(cardType, LiarBarCardManager.Instance.GetCardSprite(cardType));
         }
         _isReady = true;
+    }
+
+    #region Card Control
+    void TimeOver()
+    {
+        if (!_gamePlayer.IsMyTurn)
+            return;
+
+        List<LiarBarCardSlot> selectedSlots = _cardSlots.Where(slot => slot.IsSelected).ToList();
+
+        if (selectedSlots.Count == 0)
+            ThrowRandomCard();
+        else
+            ThrowCard();
+    }
+
+    void ThrowRandomCard()
+    {
+        if (!_gamePlayer.IsMyTurn)
+            return;
+        int cardsToThrow = Mathf.Min(Random.Range(1, 3), _cardSlots.Count(slot => !slot.IsPlayed));
+
+        // 아직 안 낸 카드 슬롯만 뽑기
+        List<LiarBarCardSlot> availableSlots = _cardSlots.Where(slot => !slot.IsPlayed).ToList();
+
+        // 랜덤으로 선택
+        List<LiarBarCardSlot> selectedSlots = new List<LiarBarCardSlot>();
+        for (int i = 0; i < cardsToThrow; i++)
+        {
+            if (availableSlots.Count == 0) 
+                break;
+            int index = Random.Range(0, availableSlots.Count);
+            selectedSlots.Add(availableSlots[index]);
+            availableSlots.RemoveAt(index);
+        }
+
+        // 카드 타입 리스트 생성
+        List<ELiarBarCardType> playedCards = selectedSlots.Select(slot => slot.CardType).ToList();
+        _gamePlayer.PlayCard(playedCards);
+
+        // UI 업데이트
+        foreach (LiarBarCardSlot slot in selectedSlots)
+            slot.SetPlayed(true);
+
+        int remainingHand = _cardSlots.Count(slot => !slot.IsPlayed);
+        if (remainingHand != 0)
+        {
+            _cardParentWidth -= _cardSize * selectedSlots.Count;
+            _cardParent.sizeDelta = new Vector2(_cardParentWidth, _cardParent.sizeDelta.y);
+        }
+
+        _cardParent.gameObject.SetActive(false);
+        _playerTurnUI.SetActive(false);
     }
 
     public void PlayerTurn()
@@ -120,6 +174,7 @@ public class LiarBarPlayerCardUI : MonoBehaviour, IMediatorEvent
         _cardParent.gameObject.SetActive(false);
         _playerTurnUI.SetActive(false);
     }
+    #endregion
 
     public void CallLiar()
     {

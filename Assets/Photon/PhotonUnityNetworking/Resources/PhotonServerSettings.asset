@@ -66,6 +66,8 @@ MonoBehaviour:
   - RPC_MoveToTable
   - RPC_SetPlayersList
   - RPC_RotateBar
+  - RPC_SetFill
+  - RPC_DoDrinkPotion
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

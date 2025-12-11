@@ -1257,6 +1257,9 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 2
     Name: doDie
+  - Type: 9
+    SynchronizeType: 2
+    Name: doDrinkPotion
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1333,6 +1336,9 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 2
     Name: doDie
+  - Type: 9
+    SynchronizeType: 2
+    Name: doDrinkPotion
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1399,6 +1405,9 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 2
     Name: doDie
+  - Type: 9
+    SynchronizeType: 2
+    Name: doDrinkPotion
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1465,6 +1474,9 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 2
     Name: doDie
+  - Type: 9
+    SynchronizeType: 2
+    Name: doDrinkPotion
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1551,6 +1563,9 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 2
     Name: doDie
+  - Type: 9
+    SynchronizeType: 2
+    Name: doDrinkPotion
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1612,6 +1627,9 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 2
     Name: doDie
+  - Type: 9
+    SynchronizeType: 2
+    Name: doDrinkPotion
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1678,6 +1696,9 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 2
     Name: doDie
+  - Type: 9
+    SynchronizeType: 2
+    Name: doDrinkPotion
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1744,6 +1765,9 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 2
     Name: doDie
+  - Type: 9
+    SynchronizeType: 2
+    Name: doDrinkPotion
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1805,6 +1829,9 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 2
     Name: doDie
+  - Type: 9
+    SynchronizeType: 2
+    Name: doDrinkPotion
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1871,6 +1898,9 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 2
     Name: doDie
+  - Type: 9
+    SynchronizeType: 2
+    Name: doDrinkPotion
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1949,6 +1979,9 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 2
     Name: doDie
+  - Type: 9
+    SynchronizeType: 2
+    Name: doDrinkPotion
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -2010,6 +2043,9 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 2
     Name: doDie
+  - Type: 9
+    SynchronizeType: 2
+    Name: doDrinkPotion
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -2076,6 +2112,9 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 2
     Name: doDie
+  - Type: 9
+    SynchronizeType: 2
+    Name: doDrinkPotion
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0

@@ -45,5 +45,15 @@ public class AnimationController : MonoBehaviour
     {
         _player.CreateCard();
     }
+
+    public void DrinkPotionEvent()
+    {
+        _player.DrinkPotionEvent();
+    }
+
+    public void ThrowPotionEvent()
+    {
+        _player.ThrowPotion();
+    }
     #endregion
 }

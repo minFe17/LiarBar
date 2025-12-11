@@ -1,9 +1,11 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 using Utils;
+using Random = UnityEngine.Random;
 
 public class GamePlayer : MonoBehaviourPun
 {
@@ -11,6 +13,11 @@ public class GamePlayer : MonoBehaviourPun
     List<ELiarBarCardType> _currentCardTypes = new List<ELiarBarCardType>();
     Animator _animator;
     Transform _handCardSlot;
+    LiarBarPotion _potion;
+
+    int _totalPotionCount = 6;
+    int _deadPotionIndex;
+    int _currentPotionIndex;
     bool _isMyTurn = false;
 
     public Action OnStartTurn;
@@ -27,6 +34,7 @@ public class GamePlayer : MonoBehaviourPun
     {
         TurnIndex = (int)photonView.Owner.CustomProperties["PositionIndex"];
         TurnManager.Instance.RegisterPlayer(this);
+        _deadPotionIndex = Random.Range(0, _totalPotionCount);
     }
 
     T GetCustomProperty<T>(Player player, string key, T defaultValue)
@@ -42,9 +50,7 @@ public class GamePlayer : MonoBehaviourPun
 
         _isMyTurn = true;
         OnStartTurn?.Invoke();
-        Debug.Log($"내 턴 시작: TurnIndex={TurnIndex}, CurrentPlayerIndex={TurnManager.Instance.CurrentPlayerIndex}");
     }
-
 
     public void Win()
     {
@@ -82,12 +88,27 @@ public class GamePlayer : MonoBehaviourPun
         _animator.SetTrigger("doCallLiar");
     }
 
+    public void DrinkPotion()
+    {
+        _animator.SetTrigger("doDrinkPotion"); 
+        if (!photonView.IsMine)
+            return;
+        StartCoroutine(SpawnPotionNextFrame());
+    }
+
+    IEnumerator SpawnPotionNextFrame()
+    {
+        yield return null;
+        _potion = PhotonNetwork.Instantiate("LiarBarPotion", _handCardSlot.position, Quaternion.identity).GetComponent<LiarBarPotion>();
+        _potion.Init(_handCardSlot);
+    }
+
     #region Animation Controller Event
     public void EndCallLiar()
     {
         if (!photonView.IsMine)
             return;
-        LiarBarTable.Instance.CheckLiar();
+        LiarBarTable.Instance.CheckLiar(ViewID);
     }
 
     public void CreateCard()
@@ -116,5 +137,30 @@ public class GamePlayer : MonoBehaviourPun
         TurnManager.Instance.EndTurn();
         _currentCardTypes.Clear();
     }
+
+    public void DrinkPotionEvent()
+    {
+        if (!photonView.IsMine)
+            return;
+        _potion.DrinkPotion();
+    }
+
+    public void ThrowPotion()
+    {
+        if (!photonView.IsMine)
+            return;
+        _potion.ThrowPotion();
+
+        if(_currentPotionIndex == _deadPotionIndex)
+            Die();
+        _currentPotionIndex++;
+        SimpleSingleton<MediatorManager>.Instance.Notify(EMediatorEventType.DrinkPotion);
+    }
     #endregion
+
+    [PunRPC]
+    void RPC_DoDrinkPotion()
+    {
+        DrinkPotion();
+    }
 }

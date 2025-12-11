@@ -330,7 +330,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: f2e671f3c2f3649ae900686eee7a12b6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3829c13dada4640fea96ae4e1f5bcb68, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -512,6 +512,7 @@ GameObject:
   m_Component:
   - component: {fileID: 329887123}
   - component: {fileID: 329887125}
+  - component: {fileID: 329887126}
   m_Layer: 5
   m_Name: Timer UI
   m_TagString: Untagged
@@ -548,6 +549,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 329887122}
   m_CullTransparentMesh: 1
+--- !u!114 &329887126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 329887122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a4469971612e4c4cb5e4462e2af843c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _timerText: {fileID: 420006552}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -878,6 +892,7 @@ GameObject:
   m_Component:
   - component: {fileID: 384278723}
   - component: {fileID: 384278724}
+  - component: {fileID: 384278725}
   m_Layer: 5
   m_Name: PotionUI
   m_TagString: Untagged
@@ -914,6 +929,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 384278722}
   m_CullTransparentMesh: 1
+--- !u!114 &384278725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 384278722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9363a71ce475aa4ebf610353569efca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _potiontext: {fileID: 361926245}
 --- !u!1 &394778055
 GameObject:
   m_ObjectHideFlags: 0
@@ -1242,7 +1270,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &558403928
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2598,6 +2626,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _targetCardUI: {fileID: 699539512}
   _playerCardUI: {fileID: 1006516445}
+  _potionUI: {fileID: 384278725}
 --- !u!114 &1348304735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3095,14 +3124,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.8940674, g: 0.9056604, b: 0.16660735, a: 1}
+  m_Color: {r: 0.90588236, g: 0.35283783, b: 0.16470589, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: d45c9e6dc70d34b42b49e4c0615e9568, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1cd21f5b1db804ac796e3ba60056c14e, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3294,7 +3323,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4972782557608021928, guid: dbaa41db5d389864c8f576b4d4cdcdce, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5169926695401470412, guid: dbaa41db5d389864c8f576b4d4cdcdce, type: 3}
       propertyPath: m_IsActive
@@ -3359,8 +3388,38 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7690819754797625827, guid: dbaa41db5d389864c8f576b4d4cdcdce, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1844900211}
   m_SourcePrefab: {fileID: 100100000, guid: dbaa41db5d389864c8f576b4d4cdcdce, type: 3}
+--- !u!1 &1844900210 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7690819754797625827, guid: dbaa41db5d389864c8f576b4d4cdcdce, type: 3}
+  m_PrefabInstance: {fileID: 1844900209}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1844900211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1844900210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 4
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &1858377656
 GameObject:
   m_ObjectHideFlags: 0
