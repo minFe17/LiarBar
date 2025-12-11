@@ -12,6 +12,8 @@ public class CameraFollow : MonoBehaviour
     private Transform _head;
     private float _smoothSpeed = 1.0f;
 
+    private ECameraMode _mode;
+
     private float _sens = 0.2f;
     private float _pitch = 0f;
     private float _yaw = 0f;
@@ -44,6 +46,8 @@ public class CameraFollow : MonoBehaviour
 
         _startYaw = transform.eulerAngles.y;
         _yaw = _startYaw;
+
+        _mode = ECameraMode.PlayerViewPoint;
     }
 
     private void Update()
@@ -53,14 +57,26 @@ public class CameraFollow : MonoBehaviour
         if(_head == null)
             _head = FindHeadInActiveModel(transform.Find("StandCharacter"));
 
-        SetCameraRotation();
+        switch (_mode)
+        {
+            case ECameraMode.PlayerViewPoint:
+                SetCameraRotation();
+                break;
+            case ECameraMode.PlayerDiwViewPoint:
+                //이거 씬에서 카메라 테이블에달아놓은거 찾아줘야됨
+                break;
+            case ECameraMode.WinnerViewPoint:
+                //이기면 카메라 각도 틀어줘야됨
+                break;
+        }
     }
 
     private void LateUpdate()
     {
-        if (_head == null || !_view.IsMine) return;
+        if (_head == null || !_view.IsMine || _mode!= ECameraMode.PlayerViewPoint) return;
 
         _camera.transform.position = Vector3.Lerp(_camera.transform.position, _head.position, Time.deltaTime * _smoothSpeed);
+
         //_camera.transform.rotation = Quaternion.Slerp(_camera.transform.rotation, Quaternion.Euler(_pitch, _yaw, 0f), Time.deltaTime * 30);
     }
 
@@ -87,6 +103,8 @@ public class CameraFollow : MonoBehaviour
     }
     private Transform FindHeadInActiveModel(Transform parent)
     {
+        // 이거 MyPlayer에 하면 그 로테이션 셋팅안된상태로 적용돼서 카메라 회전제대로 안잡힌다.
+        // 이부분 수정할 것. 
         foreach (Transform child in parent)
         {
             if (!child.gameObject.activeInHierarchy) continue;

@@ -4,6 +4,7 @@ using System.Linq;
 using Photon.Pun;
 using UnityEngine;
 using ExitGames.Client.Photon;
+using Photon.Realtime;
 
 public class TurnManager : MonoBehaviourPun
 {

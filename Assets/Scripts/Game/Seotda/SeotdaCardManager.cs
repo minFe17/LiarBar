@@ -103,9 +103,10 @@ public class SeotdaCardManager : MonoBehaviourPun
     }
     private void SortAscending()
     {
-        _myCards.Sort((a, b) =>
-        a.GetComponent<FlowerCard>().Month.CompareTo(
-        b.GetComponent<FlowerCard>().Month));
+        // _myCards.Sort((a, b) =>
+        // a.GetComponent<FlowerCard>().Month.CompareTo(
+        // b.GetComponent<FlowerCard>().Month));
+        // => 소팅하면, 카드 프리팹불러올때 버그발생함
 
         for (int i=0;i<_myCards.Count;i++)
         {

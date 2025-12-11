@@ -10,7 +10,7 @@ public class SeotdaShowCards : MonoBehaviour
     [SerializeField]
     private FlowerCardDB db;
 
-    private const float SPACE_VALUE = 0.05f;
+    private const float SPACE_VALUE = 0.06f;
 
     private Transform _playerLeftHand;
     private List<GameObject> _myCards;
@@ -57,10 +57,10 @@ public class SeotdaShowCards : MonoBehaviour
 
         Vector3[] addCardPosition =
         {
-            new Vector3(-SPACE_VALUE*(_cardCount+1), 0, 0),
-             new Vector3(0, 0, -SPACE_VALUE*(_cardCount+1)),
-             new Vector3(SPACE_VALUE*(_cardCount+1), 0, 0),
-             new Vector3(0, 0, SPACE_VALUE*(_cardCount+1))
+            new Vector3(-SPACE_VALUE*(_cardCount+1)-(SPACE_VALUE*0.5f), 0, 0),
+             new Vector3(0, 0, -SPACE_VALUE*(_cardCount+1)-(SPACE_VALUE*0.5f)),
+             new Vector3(SPACE_VALUE*(_cardCount+1)+(SPACE_VALUE*0.5f), 0, 0),
+             new Vector3(0, 0, SPACE_VALUE*(_cardCount+1)+(SPACE_VALUE*0.5f))
         };
 
         for(int i=0;i<PhotonNetwork.PlayerList.Length;i++)
@@ -73,7 +73,7 @@ public class SeotdaShowCards : MonoBehaviour
             Vector3 position = _playerLeftHands[i].hand.transform.position + addCardPosition[index];
             if (_playerLeftHands[i].player == MyPlayer.myPlayer)
             {
-                GameObject card = Instantiate(_myCards[_cardCount]);
+                GameObject card = Instantiate(_myCards[_cardCount],gameObject.transform);
                 _myCards[_cardCount] = card;
 
                 card.transform.localScale = _originalScale;
@@ -110,6 +110,6 @@ public class SeotdaShowCards : MonoBehaviour
         _myCards = manager.MyCards;
         _cardCount = _myCards.Count;
 
-        _dumyCards = new PoolingManager(db.FlowerCardPrefabs[0], "SeotdaTable(clone)/ShowCards");
+        _dumyCards = new PoolingManager(db.FlowerCardPrefabs[0], gameObject);
     }
 }
