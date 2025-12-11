@@ -19,6 +19,25 @@ public class SeotdaCardManager : MonoBehaviourPun
 
     public List<GameObject> MyCards
         { get { return _myCards; } }
+
+    public SeotdaData? FindData(FlowerCard card1, FlowerCard card2)
+    {
+        List<SeotdaData> list = DataManager.Instance.MatchData(card1.Month, card2.Month);
+
+        if(list.Count>0)
+        {
+            for(int i = 0; i<list.Count;i++)
+            {
+                if (list[i].condition == DataManager.Instance.GetCondition(card1,card2))
+                    return list[i];
+            }
+            //이건 condtion으로 분류해야됨
+            //만약 여기서 condition안맞았다? 그럼 끗임
+            return DataManager.Instance.GetKeut();
+        }
+        
+        return DataManager.Instance.GetKeut();
+    }
     private void Awake()
     {
         DataManager.Instance.LoadData();

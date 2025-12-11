@@ -18,7 +18,7 @@
             "type":"JangDdang",
             "name" : "장땡",
             "rank" : 3,
-            "condition" : "None",
+            "condition" : "Same"
             "cards" : [{ "first": 10, "second": 10 }]
         },
         {
