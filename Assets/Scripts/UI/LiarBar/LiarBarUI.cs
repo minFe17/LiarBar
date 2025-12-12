@@ -9,9 +9,10 @@ public class LiarBarUI : MonoBehaviour
 
     void Start()
     {
-        _targetCardUI.Init();
-        _playerCardUI.Init();
-        _potionUI.Init();
+         //_targetCardUI.Init();
+         //_playerCardUI.Init();
+         //_potionUI.Init();
+         //오류나서 주석처리
     }
 
     #region Input System

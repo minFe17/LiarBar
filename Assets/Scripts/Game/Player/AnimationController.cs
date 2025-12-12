@@ -1,4 +1,5 @@
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,6 +18,10 @@ public class AnimationController : MonoBehaviour
         _camera = GetComponentInParent<CameraFollow>();
         _player = GetComponentInParent<GamePlayer>();
         _player.Animator = _animator;
+
+        if (!_view.IsMine) return;
+        //_animator.SetBool("HoldCard", true);
+        //¿©±â ²ô±â
     }
 
     private void Update()

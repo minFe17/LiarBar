@@ -1260,6 +1260,9 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 2
     Name: doDrinkPotion
+  - Type: 4
+    SynchronizeType: 2
+    Name: HoldCard
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1339,6 +1342,9 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 2
     Name: doDrinkPotion
+  - Type: 4
+    SynchronizeType: 2
+    Name: HoldCard
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1408,6 +1414,9 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 2
     Name: doDrinkPotion
+  - Type: 4
+    SynchronizeType: 2
+    Name: HoldCard
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1477,6 +1486,9 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 2
     Name: doDrinkPotion
+  - Type: 4
+    SynchronizeType: 2
+    Name: HoldCard
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1566,6 +1578,9 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 2
     Name: doDrinkPotion
+  - Type: 4
+    SynchronizeType: 2
+    Name: HoldCard
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1630,6 +1645,9 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 2
     Name: doDrinkPotion
+  - Type: 4
+    SynchronizeType: 2
+    Name: HoldCard
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1699,6 +1717,9 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 2
     Name: doDrinkPotion
+  - Type: 4
+    SynchronizeType: 2
+    Name: HoldCard
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1768,6 +1789,9 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 2
     Name: doDrinkPotion
+  - Type: 4
+    SynchronizeType: 2
+    Name: HoldCard
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1832,6 +1856,9 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 2
     Name: doDrinkPotion
+  - Type: 4
+    SynchronizeType: 2
+    Name: HoldCard
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1901,6 +1928,9 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 2
     Name: doDrinkPotion
+  - Type: 4
+    SynchronizeType: 2
+    Name: HoldCard
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1982,6 +2012,9 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 2
     Name: doDrinkPotion
+  - Type: 4
+    SynchronizeType: 2
+    Name: HoldCard
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -2046,6 +2079,9 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 2
     Name: doDrinkPotion
+  - Type: 4
+    SynchronizeType: 2
+    Name: HoldCard
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -2115,6 +2151,9 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 2
     Name: doDrinkPotion
+  - Type: 4
+    SynchronizeType: 2
+    Name: HoldCard
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0

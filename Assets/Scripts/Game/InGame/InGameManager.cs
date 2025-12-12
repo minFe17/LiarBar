@@ -9,6 +9,7 @@ public class InGameManager : MonoBehaviour
     {
         SetPositionAndSpawn();
 
+
         if (!PhotonNetwork.IsMasterClient) return;
         //PhotonNetwork.Instantiate("Seotda/SeotdaTable", Vector3.zero, Quaternion.identity);
         //¿©±â ²ô±â
@@ -53,7 +54,9 @@ public class InGameManager : MonoBehaviour
         Vector3 dir = center - spawnPos;
         Quaternion rot = Quaternion.LookRotation(dir);
 
-       PhotonNetwork.Instantiate("Player", spawnPos, rot);
+        PhotonNetwork.Instantiate("Player", spawnPos, rot);
+
+
         Debug.Log("Áö±Ý »ý¼ºµÊ");
     }
 }
