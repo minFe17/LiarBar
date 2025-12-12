@@ -13,6 +13,11 @@ public class LiarBarCard : MonoBehaviourPun
 
     public ELiarBarCardType CardType { get => _cardType; }
 
+    void DestroyCard()
+    {
+        PhotonNetwork.Destroy(gameObject);
+    }
+
     public void Init(ELiarBarCardType type)
     {
         _cardType = type;
@@ -101,6 +106,7 @@ public class LiarBarCard : MonoBehaviourPun
 
         if (hasCallback)
             onComplete?.Invoke();
+        Invoke("DestroyCard", 1.3f);
     }
     #endregion
 

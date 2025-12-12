@@ -1246,6 +1246,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _tableCenter: {fileID: 6598200744609036581}
+  _turnUI: {fileID: 2827641230727391474}
 --- !u!64 &3077316068625460946
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -2138,13 +2139,14 @@ GameObject:
   - component: {fileID: 8618466496936326440}
   - component: {fileID: 8812390507022633786}
   - component: {fileID: 2827641230727391474}
+  - component: {fileID: 4663374316047449576}
   m_Layer: 0
   m_Name: 'TurnUI '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8618466496936326440
 Transform:
   m_ObjectHideFlags: 0
@@ -2228,6 +2230,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d29ec1e2f9569e42a91c02ffc0e050e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4663374316047449576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7690819754797625827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &7762531897581594371
 GameObject:
   m_ObjectHideFlags: 0

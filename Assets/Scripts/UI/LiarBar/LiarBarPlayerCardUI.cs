@@ -182,6 +182,14 @@ public class LiarBarPlayerCardUI : MonoBehaviour, IMediatorEvent
         _isReady = false;
     }
 
+    public void OffUI()
+    {
+        if(_playerTurnUI.activeSelf)
+            _playerTurnUI.SetActive(false);
+        if(gameObject.activeSelf)
+            gameObject.SetActive(false);
+    }
+
     #region Interface
     void IMediatorEvent.HandleEvent(object data)
     {

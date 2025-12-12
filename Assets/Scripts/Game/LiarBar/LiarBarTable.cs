@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Photon.Pun;
@@ -8,10 +9,13 @@ public class LiarBarTable : MonoBehaviourPun
     public static LiarBarTable Instance { get; private set; }
 
     [SerializeField] Transform _tableCenter;
+    [SerializeField] LiarBarTurnUI _turnUI;
 
     LiarBarCardMemento _memento = new LiarBarCardMemento();
     GamePlayer _callLiarPlayer;
     int _index = 0;
+
+    public LiarBarTurnUI TurnUI { get => _turnUI; }
 
     void Awake()
     {
@@ -63,6 +67,33 @@ public class LiarBarTable : MonoBehaviourPun
         return position;
     }
 
+    public void NewRound()
+    {
+        photonView.RPC("RPC_NewRound", RpcTarget.MasterClient);
+    }
+
+    IEnumerator NewRoundRoutine()
+    {
+        if (!PhotonNetwork.IsMasterClient)
+            yield break;
+
+        // 한 장씩 제거
+        while (_memento.Cards.Count > 0)
+        {
+            LiarBarCard card = _memento.Cards.Peek(); // 가장 위 카드 가져오기
+            _memento.DestroyCard(card);
+            _memento.Cards.Pop(); // 제거된 카드 Stack에서 제거
+            yield return null; // 한 프레임 대기
+        }
+
+        // 잠시 대기
+        yield return new WaitForSeconds(0.05f);
+
+        // 다음 라운드 준비
+        LiarBarCardManager.Instance.SetTable();
+        TurnManager.Instance.ContinueGame();
+    }
+
     [PunRPC]
     public void RPC_AddIndex(int index)
     {
@@ -84,6 +115,13 @@ public class LiarBarTable : MonoBehaviourPun
             return;
 
         _memento.Restore(_tableCenter.position, (isTruth) => { OnTurnEvaluated(isTruth); });
+        _index = 0;
+    }
+
+    [PunRPC]
+    void RPC_NewRound()
+    {
+        StartCoroutine(NewRoundRoutine());
         _index = 0;
     }
 }

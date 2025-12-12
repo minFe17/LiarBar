@@ -1,15 +1,17 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Photon.Pun;
-using Photon.Realtime;
 using UnityEngine;
 
-public class LiarBarCardMemento
+public class LiarBarCardMemento : MonoBehaviour
 {
     Stack<LiarBarCard> _cards = new Stack<LiarBarCard>();
 
     int _cardCount;
+
+    public Stack<LiarBarCard> Cards { get => _cards; }
 
     public void Save(List<LiarBarCard> cards)
     {
@@ -42,17 +44,15 @@ public class LiarBarCardMemento
         }
     }
 
-    public void NewRound()
-    {
-        foreach (LiarBarCard card in _cards)
-            PhotonNetwork.Destroy(card.gameObject);
-        _cards.Clear();
-    }
-
     public bool IsTurnTruth()
     {
         List<LiarBarCard> recentCards = _cards.Take(_cardCount).ToList();
         bool isTruth = recentCards.All(c => c.CardType == LiarBarCardManager.Instance.TargetCard || c.CardType == ELiarBarCardType.JokerCard);
         return isTruth;
+    }
+
+    public void DestroyCard(LiarBarCard card)
+    {
+        PhotonNetwork.Destroy(card.gameObject);
     }
 }

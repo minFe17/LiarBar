@@ -13,19 +13,19 @@ public class FirestoreUser
         Fields = new Dictionary<string, object>();
     }
 
-    // 값 저장
-    public void SetField<T>(string key, T value)
-    {
-        Fields[key] = ConvertToFirestoreValue(value);
-    }
-
-    private object ConvertToFirestoreValue<T>(T value)
+    object ConvertToFirestoreValue<T>(T value)
     {
         if (value is string s)
             return new Dictionary<string, object> { { "stringValue", s } };
         if (value is int i)
             return new Dictionary<string, object> { { "integerValue", i.ToString() } };
         return null;
+    }
+
+    // 값 저장
+    public void SetField<T>(string key, T value)
+    {
+        Fields[key] = ConvertToFirestoreValue(value);
     }
 
     // 값 가져오기

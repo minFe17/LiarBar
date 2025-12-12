@@ -46,10 +46,17 @@ public class GamePlayer : MonoBehaviourPun
 
     public void StartTurn()
     {
-        if (!photonView.IsMine) return;
+        if (!photonView.IsMine)
+            return;
 
         _isMyTurn = true;
         OnStartTurn?.Invoke();
+
+        // 마스터 클라에게 요청
+        if (!PhotonNetwork.IsMasterClient)
+            photonView.RPC("RPC_RequestTurnUI", PhotonNetwork.MasterClient, photonView.ViewID);
+        else
+            LiarBarTable.Instance.TurnUI.ShowNextPlayer(this);
     }
 
     public void Win()
@@ -90,7 +97,7 @@ public class GamePlayer : MonoBehaviourPun
 
     public void DrinkPotion()
     {
-        _animator.SetTrigger("doDrinkPotion"); 
+        _animator.SetTrigger("doDrinkPotion");
         if (!photonView.IsMine)
             return;
         StartCoroutine(SpawnPotionNextFrame());
@@ -147,14 +154,11 @@ public class GamePlayer : MonoBehaviourPun
 
     public void ThrowPotion()
     {
-        if (!photonView.IsMine)
-            return;
-        _potion.ThrowPotion();
-
-        if(_currentPotionIndex == _deadPotionIndex)
-            Die();
-        _currentPotionIndex++;
-        SimpleSingleton<MediatorManager>.Instance.Notify(EMediatorEventType.DrinkPotion);
+        if (PhotonNetwork.IsMasterClient)
+        {
+            TurnManager.Instance.SetNextRoundStartPlayer(TurnIndex); // 다음 라운드 시작 플레이어만 지정
+            LiarBarTable.Instance.NewRound(); // NewRoundRoutine 안에서 ContinueGame 호출됨
+        }
     }
     #endregion
 
@@ -162,5 +166,12 @@ public class GamePlayer : MonoBehaviourPun
     void RPC_DoDrinkPotion()
     {
         DrinkPotion();
+    }
+
+    [PunRPC]
+    void RPC_RequestTurnUI(int viewID)
+    {
+        GamePlayer player = PhotonView.Find(viewID).GetComponent<GamePlayer>();
+        LiarBarTable.Instance.TurnUI.ShowNextPlayer(player);
     }
 }

@@ -26,11 +26,13 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
 
     bool _isReady = false;
 
+    FirebaseREST _firebaseRest;
     PhotonManager _photonManager;
 
     void Start()
     {
         _photonManager = MonoSingleton<PhotonManager>.Instance;
+        _firebaseRest = MonoSingleton<FirebaseREST>.Instance;
 
         CheckNickname();
         ShowRoomID();
@@ -39,6 +41,7 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
 
     void CheckNickname()
     {
+        //PhotonNetwork.LocalPlayer.NickName = _firebaseRest.User.GetField<string>("nickname");
         if (string.IsNullOrEmpty(_photonManager.Nickname))
         {
             _nicknameInputField.SetActive(true);

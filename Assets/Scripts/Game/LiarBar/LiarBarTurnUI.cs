@@ -4,30 +4,34 @@ using UnityEngine;
 
 public class LiarBarTurnUI : MonoBehaviourPun
 {
-    void Start()
+    void Awake()
     {
-        TurnManager.Instance.ShowNextTrunPlayer += ShowNextPlayer;
+        gameObject.SetActive(false);
     }
 
-    void ShowNextPlayer()
+    void RotateToPlayer(GamePlayer player)
     {
+        Vector3 dir = player.transform.position - transform.position;
+        float angle = Mathf.Atan2(dir.z, dir.x) * Mathf.Rad2Deg;
+
+        // 모든 클라이언트에 회전 RPC
+        photonView.RPC("RPC_RotateBar", RpcTarget.All, angle);
+    }
+
+    public void ShowNextPlayer(GamePlayer player)
+    {
+        if (!gameObject.activeInHierarchy)
+            gameObject.SetActive(true);
+
         if (PhotonNetwork.IsMasterClient)
         {
-            GamePlayer target = TurnManager.Instance.Players[TurnManager.Instance.CurrentPlayerIndex];
+            // 마스터 클라에서만 계산
+            Vector3 dir = player.transform.position - transform.position;
+            float angle = Mathf.Atan2(dir.z, dir.x) * Mathf.Rad2Deg;
 
-            // 마스터 클라이언트가 각도 계산
-            Vector3 dir = target.transform.position - transform.position;
-            float angle = Mathf.Atan2(dir.z, dir.x) * Mathf.Rad2Deg; 
-
-            // 모든 클라이언트에 angle 전달
+            // 모든 클라이언트에게 전달
             photonView.RPC("RPC_RotateBar", RpcTarget.All, angle);
         }
-    }
-
-    [PunRPC]
-    void RPC_RotateBar(float angle)
-    {
-        StartCoroutine(RotateToAngleRoutine(angle));
     }
 
     IEnumerator RotateToAngleRoutine(float targetAngle, float duration = 0.5f)
@@ -44,5 +48,12 @@ public class LiarBarTurnUI : MonoBehaviourPun
         }
 
         transform.rotation = endRot;
+    }
+
+    [PunRPC]
+    void RPC_RotateBar(float angle)
+    {
+        StopAllCoroutines();
+        StartCoroutine(RotateToAngleRoutine(angle));
     }
 }

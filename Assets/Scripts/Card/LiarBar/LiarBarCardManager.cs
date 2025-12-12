@@ -78,6 +78,7 @@ public class LiarBarCardManager : MonoBehaviourPun
         if (!PhotonNetwork.IsMasterClient)
             return;
 
+        Init();
         _targetCard = (ELiarBarCardType)Random.Range(0, (int)ELiarBarCardType.JokerCard);
 
         // 모든 클라이언트에 TargetCard 전달

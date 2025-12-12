@@ -21,6 +21,8 @@ public class LiarBarCardInfoUI : MonoBehaviour
 
     void ShowTableCard()
     {
+        if (!gameObject.activeSelf)
+            gameObject.SetActive(true);
         ELiarBarCardType targetCard = LiarBarCardManager.Instance.TargetCard;
         _targetCardSprite.sprite = LiarBarCardManager.Instance.GetCardSprite(targetCard);
         _animator.SetTrigger("doShowTargetCard");
