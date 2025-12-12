@@ -4,6 +4,5 @@ public enum ESeotdaCondition
     Same,
     Drawing,
     None,
-    GwangAndDrawing,
     Max,
 }

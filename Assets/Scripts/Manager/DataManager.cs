@@ -7,7 +7,17 @@ using System.Linq;
 public class DataManager : SimpleSingleton<DataManager>
 {
     private List<SeotdaData> _data;
+    private SeotdaData _keut;
+    private SeotdaData _mangtong;
 
+    public SeotdaData Keut
+    {
+        get { return _keut; }
+    }
+    public SeotdaData Mangtong
+    {
+        get { return _mangtong; }
+    }
 
     public List<SeotdaData> Data
     {
@@ -22,15 +32,7 @@ public class DataManager : SimpleSingleton<DataManager>
 
         return null;
     }
-    public SeotdaData? GetKeut()
-    {
-        for(int i=0;i<_data.Count;i++)
-        {
-            if (_data[i].type != ESeotdaRuleType.Keut) continue;
-            return _data[i];
-        }
-        return null;
-    }
+
     public ESeotdaCondition GetCondition(FlowerCard card1, FlowerCard card2)
     {
         ESeotdaCondition condition = new ESeotdaCondition();
@@ -39,8 +41,6 @@ public class DataManager : SimpleSingleton<DataManager>
             condition = ESeotdaCondition.Gwang;
         else if (card1.Month == card2.Month)
             condition = ESeotdaCondition.Same;
-        else if ((card1.Type == EFlowerCardType.Gwang || card2.Type == EFlowerCardType.Gwang) && (card1.Type == EFlowerCardType.Drawing || card2.Type == EFlowerCardType.Drawing || card1.Type == EFlowerCardType.Gookjin || card2.Type == EFlowerCardType.Gookjin))
-            condition = ESeotdaCondition.GwangAndDrawing;
         else if (((card1.Type == EFlowerCardType.Drawing || card1.Type == EFlowerCardType.Gookjin) && (card2.Type == EFlowerCardType.Drawing || card2.Type == EFlowerCardType.Gookjin)))
             condition = ESeotdaCondition.Drawing;
         else
@@ -87,6 +87,13 @@ public class DataManager : SimpleSingleton<DataManager>
     public void LoadData()
     {
         LoadSeotdaData();
+        for (int i = 0; i < _data.Count; i++)
+        {
+            if (_data[i].type == ESeotdaRuleType.Keut)
+                _keut = _data[i];
+            else if (_data[i].type == ESeotdaRuleType.Mangtong)
+                _mangtong = _data[i];
+        }
     }
     private void LoadSeotdaData()
     {

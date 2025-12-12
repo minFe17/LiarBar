@@ -24,6 +24,7 @@ public class SeotdaTable : MonoBehaviour
     private void Awake()
     {
         FindCards();
+
     }
     private void OnEnable()
     {

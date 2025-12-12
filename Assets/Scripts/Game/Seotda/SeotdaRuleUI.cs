@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine.U2D;
 using TMPro;
+using UnityEditor.Experimental.GraphView;
 
 public class SeotdaRuleUI : MonoBehaviour
 {
@@ -84,19 +85,23 @@ public class SeotdaRuleUI : MonoBehaviour
 
 
         SeotdaData? data = _cardManager.FindData(card1, card2);
-
-        if (data != null)
+        _ruleText.text = "";
+        if (data.Value.type == ESeotdaRuleType.Keut)
         {
-            _ruleText.text = data.Value.name;
+            int sum = card1.Month + card2.Month;
+            if (sum > 10)
+                _ruleText.text = (sum - 10).ToString();
+            else
+                _ruleText.text = sum.ToString();
         }
-        else
-        {
+        else if (data.Value.type == ESeotdaRuleType.Ddang)
+            _ruleText.text = card1.Month.ToString();
 
-            Debug.Log("데이터 타입 안넘어옴 오류");
-        }
+        _ruleText.text += data.Value.name;
+    
 
 
-        _isSetting = true;
+    _isSetting = true;
     }
     private void FindCards()
     {

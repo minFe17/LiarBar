@@ -36,6 +36,14 @@ public class TurnManager : MonoBehaviourPun
     {
         LiarBarCardManager.Instance.OnSetTableAction += StartGame;
     }
+    private void OnEnable()
+    {
+        EventManager.Instance.Subscribe("StartTurn", StartGame);
+    }
+    private void OnDisable()
+    {
+        EventManager.Instance.UnSubscribe("StartTurn", (Action)StartGame);
+    }
 
     #region Player µî·Ï
     public void RegisterPlayer(GamePlayer player)

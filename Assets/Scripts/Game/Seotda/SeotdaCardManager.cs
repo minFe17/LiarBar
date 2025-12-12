@@ -28,15 +28,18 @@ public class SeotdaCardManager : MonoBehaviourPun
         {
             for(int i = 0; i<list.Count;i++)
             {
+                if (list[i].condition == ESeotdaCondition.None)
+                    return list[i];
                 if (list[i].condition == DataManager.Instance.GetCondition(card1,card2))
                     return list[i];
             }
-            //이건 condtion으로 분류해야됨
-            //만약 여기서 condition안맞았다? 그럼 끗임
-            return DataManager.Instance.GetKeut();
         }
-        
-        return DataManager.Instance.GetKeut();
+        if ((card1.Month + card2.Month) % 10 == 0)
+        {
+            return DataManager.Instance.Mangtong;
+        }
+
+        return DataManager.Instance.Keut;
     }
     private void Awake()
     {
@@ -47,7 +50,7 @@ public class SeotdaCardManager : MonoBehaviourPun
     }
     private void Start()
     {
-
+        
         SetCardGame(); //이거 GameManager같은걸로 빼서 관리하면될듯 이벤트이용해서 
         //SplitCard();
     }
@@ -62,9 +65,10 @@ public class SeotdaCardManager : MonoBehaviourPun
         EventManager.Instance.UnSubscribe("SetSeotdaGame", (Action)SetCardGame);
         EventManager.Instance.UnSubscribe("SplitCard", (Action)SplitCard);
     }
+
     private void Update()
     {
-        if(Keyboard.current.pKey.wasPressedThisFrame)
+        if (Keyboard.current.pKey.wasPressedThisFrame)
         {
             SplitCard();
         }
