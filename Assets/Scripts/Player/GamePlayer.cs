@@ -49,6 +49,8 @@ public class GamePlayer : MonoBehaviourPun
         if (!photonView.IsMine)
             return;
 
+        TurnManager.Instance.NotifyTurnStarted();
+
         _isMyTurn = true;
         OnStartTurn?.Invoke();
 

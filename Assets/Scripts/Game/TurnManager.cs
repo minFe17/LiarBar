@@ -1,10 +1,9 @@
+using ExitGames.Client.Photon;
+using Photon.Pun;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Photon.Pun;
 using UnityEngine;
-using ExitGames.Client.Photon;
-using Photon.Realtime;
 
 public class TurnManager : MonoBehaviourPun
 {
@@ -14,11 +13,13 @@ public class TurnManager : MonoBehaviourPun
     int _currentPlayerIndex = 0;
     int _nextRoundStartIndex = 0;
 
-    public Action OnEndRegisterPlayer;
-    public Action ShowNextTrunPlayer;
+    bool _isResolvingLiar = false;   // 라이어 판정 중
+    bool _isSettingTurn = false;     // 턴 중복 세팅 방지 락
 
-    public IReadOnlyList<GamePlayer> Players { get => _players; }
-    public int CurrentPlayerIndex { get => _currentPlayerIndex; }
+    public Action OnEndRegisterPlayer;
+
+    public IReadOnlyList<GamePlayer> Players => _players;
+    public int CurrentPlayerIndex => _currentPlayerIndex;
 
     void Awake()
     {
@@ -29,26 +30,26 @@ public class TurnManager : MonoBehaviourPun
             Destroy(gameObject);
             return;
         }
+
         DontDestroyOnLoad(gameObject);
     }
 
-    void Start()
+    void OnEnable()
     {
-        LiarBarCardManager.Instance.OnSetTableAction += StartGame;
+        if (LiarBarCardManager.Instance != null)
+            LiarBarCardManager.Instance.OnSetTableAction += StartGame;
     }
-    private void OnEnable()
+
+    void OnDisable()
     {
-        EventManager.Instance.Subscribe("StartTurn", StartGame);
-    }
-    private void OnDisable()
-    {
-        EventManager.Instance.UnSubscribe("StartTurn", (Action)StartGame);
+        if (LiarBarCardManager.Instance != null)
+            LiarBarCardManager.Instance.OnSetTableAction -= StartGame;
     }
 
     #region Player 등록
     public void RegisterPlayer(GamePlayer player)
     {
-        if (!PhotonNetwork.IsMasterClient) 
+        if (!PhotonNetwork.IsMasterClient)
             return;
 
         if (!_players.Contains(player))
@@ -60,8 +61,8 @@ public class TurnManager : MonoBehaviourPun
 
             int[] viewIDs = _players.Select(p => p.ViewID).ToArray();
             photonView.RPC("RPC_SetPlayersList", RpcTarget.All, viewIDs);
-
             photonView.RPC("RPC_SetCurrentTurn", RpcTarget.All, 0);
+
             OnEndRegisterPlayer?.Invoke();
         }
     }
@@ -75,6 +76,11 @@ public class TurnManager : MonoBehaviourPun
     #region Turn Control
     void NextTurn()
     {
+        if (_isSettingTurn)
+            return;
+
+        _isSettingTurn = true;
+
         _currentPlayerIndex++;
         if (_currentPlayerIndex >= _players.Count)
             _currentPlayerIndex = 0;
@@ -84,17 +90,46 @@ public class TurnManager : MonoBehaviourPun
 
     public void EndTurn()
     {
+        if (_isResolvingLiar)
+            return;
+
         photonView.RPC("RPC_NextTurn", RpcTarget.MasterClient);
     }
 
     public void ContinueGame()
     {
-        photonView.RPC("RPC_ContinueGame", RpcTarget.MasterClient);
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+
+        if (_isSettingTurn)
+            return;
+
+        _isSettingTurn = true;
+        _isResolvingLiar = false;
+
+        _currentPlayerIndex = _nextRoundStartIndex;
+        photonView.RPC("RPC_SetCurrentTurn", RpcTarget.All, _currentPlayerIndex);
     }
 
     public void SetNextRoundStartPlayer(int playerIndex)
     {
         photonView.RPC("RPC_SetNextRoundStartPlayer", RpcTarget.MasterClient, playerIndex);
+    }
+
+    public void BeginResolveLiar()
+    {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+
+        _isResolvingLiar = true;
+    }
+
+    public void NotifyTurnStarted()
+    {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+
+        _isSettingTurn = false;
     }
     #endregion
 
@@ -108,21 +143,18 @@ public class TurnManager : MonoBehaviourPun
         _players.RemoveAt(deadIndex);
 
         Hashtable props = new Hashtable();
-        props["IsAlive"] = false; //죽었을때 isAlive 꺼주기
+        props["IsAlive"] = false;
         PhotonNetwork.LocalPlayer.SetCustomProperties(props);
 
-        // 죽은 플레이어가 현재 턴 주인이라면 다음 살아있는 플레이어로 이동
         if (_currentPlayerIndex >= _players.Count)
             _currentPlayerIndex = 0;
 
-        // 다른 클라이언트에서도 제거 반영
         photonView.RPC("RPC_RemovePlayer", RpcTarget.Others, player.ViewID);
 
         if (_players.Count == 1)
         {
             GamePlayer winner = _players[0];
             Debug.Log($"Player {winner.TurnIndex} 승리!");
-            // 여기서 승리 UI 표시나 게임 종료 로직 호출
             winner.Win();
         }
     }
@@ -142,7 +174,10 @@ public class TurnManager : MonoBehaviourPun
     [PunRPC]
     void RPC_SetPlayersList(int[] viewIDs)
     {
-        _players = viewIDs.Select(id => PhotonView.Find(id).GetComponent<GamePlayer>()).ToList();
+        _players = viewIDs
+            .Select(id => PhotonView.Find(id).GetComponent<GamePlayer>())
+            .OrderBy(p => p.TurnIndex)
+            .ToList();
     }
 
     [PunRPC]
@@ -155,27 +190,12 @@ public class TurnManager : MonoBehaviourPun
     [PunRPC]
     void RPC_SetCurrentTurn(int playerIndex)
     {
-        Debug.Log(playerIndex + " Player Index");
-        if (_players.Count == 0 || playerIndex >= _players.Count)
-            return;
-
         _currentPlayerIndex = playerIndex;
-        ShowNextTrunPlayer?.Invoke();
+
         GamePlayer currentPlayer = _players[playerIndex];
 
-        currentPlayer.StartTurn();
-    }
-
-    [PunRPC]
-    void RPC_ContinueGame()
-    {
-        if (!PhotonNetwork.IsMasterClient)
-            return;
-        if (_players.Count == 0 || _nextRoundStartIndex >= _players.Count)
-            return;
-
-        _currentPlayerIndex = _nextRoundStartIndex;
-        photonView.RPC("RPC_SetCurrentTurn", RpcTarget.All, _currentPlayerIndex);
+        if (currentPlayer.photonView.IsMine)
+            currentPlayer.StartTurn();
     }
 
     [PunRPC]
@@ -199,6 +219,7 @@ public class TurnManager : MonoBehaviourPun
     {
         if (!PhotonNetwork.IsMasterClient)
             return;
+
         _nextRoundStartIndex = playerIndex;
     }
     #endregion
