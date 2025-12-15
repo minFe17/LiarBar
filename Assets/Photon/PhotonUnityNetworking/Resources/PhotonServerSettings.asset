@@ -72,6 +72,9 @@ MonoBehaviour:
   - RPC_NewRound
   - RPC_RequestRotate
   - RPC_RequestTurnUI
+  - RPC_ShowTurnUI
+  - RPC_RequestDestroy
+  - RPC_RequestCreateCard
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

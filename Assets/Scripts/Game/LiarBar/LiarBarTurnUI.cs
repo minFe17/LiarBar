@@ -53,6 +53,7 @@ public class LiarBarTurnUI : MonoBehaviourPun
     [PunRPC]
     void RPC_RotateBar(float angle)
     {
+        gameObject.SetActive(true);
         StopAllCoroutines();
         StartCoroutine(RotateToAngleRoutine(angle));
     }

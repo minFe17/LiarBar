@@ -29,6 +29,9 @@ public class LiarBarPlayerCardUI : MonoBehaviour, IMediatorEvent
 
         for (int i = 0; i < _gamePlayer.Cards.Count; i++)
         {
+            if (!_cardSlots[i].gameObject.activeSelf)
+                _cardSlots[i].gameObject.SetActive(true);
+
             ELiarBarCardType cardType = _gamePlayer.Cards[i];
             _cardSlots[i].Init(cardType, LiarBarCardManager.Instance.GetCardSprite(cardType));
         }

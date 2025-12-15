@@ -54,12 +54,16 @@ public class LiarBarCardManager : MonoBehaviourPun
         IReadOnlyList<GamePlayer> players = TurnManager.Instance.Players;
         for (int i = _startDealCardIndex; i < _startDealCardIndex + players.Count; i++)
         {
+            int previousCardIndex = -1;
             for (int j = 0; j < 5; j++)
             {
+                bool hasOtherCard = _cardCounts.Count(kv => kv.Value > 0) > 1;
+
                 int randomCard = Random.Range(0, (int)ELiarBarCardType.Max);
-                while (_cardCounts[(ELiarBarCardType)randomCard] <= 0)
+                while (_cardCounts[(ELiarBarCardType)randomCard] <= 0 ||
+                       (hasOtherCard && previousCardIndex == randomCard))
                 {
-                    randomCard = Random.Range(0, _cardCounts.Count);
+                    randomCard = Random.Range(0, (int)ELiarBarCardType.Max);
                 }
 
                 GamePlayer targetPlayer = players[i % players.Count];
@@ -68,6 +72,7 @@ public class LiarBarCardManager : MonoBehaviourPun
                 photonView.RPC("RPC_AddCardToHand", targetPlayer.photonView.Owner, randomCard);
 
                 _cardCounts[(ELiarBarCardType)randomCard]--;
+                previousCardIndex = randomCard;
             }
         }
         _startDealCardIndex = (_startDealCardIndex + 1) % players.Count;

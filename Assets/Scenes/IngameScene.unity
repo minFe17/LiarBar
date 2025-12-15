@@ -2519,6 +2519,7 @@ GameObject:
   - component: {fileID: 1348304730}
   - component: {fileID: 1348304734}
   - component: {fileID: 1348304735}
+  - component: {fileID: 1348304736}
   m_Layer: 5
   m_Name: LiarBarUI
   m_TagString: Untagged
@@ -2657,6 +2658,28 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &1348304736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1348304729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 4
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &1446379751
 GameObject:
   m_ObjectHideFlags: 0
@@ -3392,38 +3415,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7690819754797625827, guid: dbaa41db5d389864c8f576b4d4cdcdce, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1844900211}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dbaa41db5d389864c8f576b4d4cdcdce, type: 3}
---- !u!1 &1844900210 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7690819754797625827, guid: dbaa41db5d389864c8f576b4d4cdcdce, type: 3}
-  m_PrefabInstance: {fileID: 1844900209}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1844900211
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1844900210}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 4
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!1 &1858377656
 GameObject:
   m_ObjectHideFlags: 0

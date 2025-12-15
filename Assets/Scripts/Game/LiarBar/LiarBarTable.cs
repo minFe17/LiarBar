@@ -80,16 +80,14 @@ public class LiarBarTable : MonoBehaviourPun
         // 한 장씩 제거
         while (_memento.Cards.Count > 0)
         {
-            LiarBarCard card = _memento.Cards.Peek(); // 가장 위 카드 가져오기
+            LiarBarCard card = _memento.Cards.Pop(); 
             _memento.DestroyCard(card);
-            _memento.Cards.Pop(); // 제거된 카드 Stack에서 제거
             yield return null; // 한 프레임 대기
         }
 
         // 잠시 대기
         yield return new WaitForSeconds(0.05f);
 
-        // 다음 라운드 준비
         LiarBarCardManager.Instance.SetTable();
         TurnManager.Instance.ContinueGame();
     }
