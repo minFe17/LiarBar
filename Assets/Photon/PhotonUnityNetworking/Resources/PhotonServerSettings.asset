@@ -75,6 +75,14 @@ MonoBehaviour:
   - RPC_ShowTurnUI
   - RPC_RequestDestroy
   - RPC_RequestCreateCard
+  - RPC_CallNumUpdate
+  - RPC_ChangeTurn
+  - RPC_EndGame
+  - RPC_PlayerNumUpdate
+  - RPC_ReStart
+  - RPC_UpdateTurn
+  - RPC_UpdateTurnMode
+  - RPC_ClearHand
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

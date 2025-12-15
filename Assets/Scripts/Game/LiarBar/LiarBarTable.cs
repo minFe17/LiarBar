@@ -31,10 +31,19 @@ public class LiarBarTable : MonoBehaviourPun
 
     void OnTurnEvaluated(bool isTruth)
     {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+
+        TurnManager.Instance.BeginResolveLiar();
+
         if (isTruth)
+        {
+            // 라이어 선언한 사람이 틀렸으므로 포션 마심
             _callLiarPlayer.photonView.RPC("RPC_DoDrinkPotion", _callLiarPlayer.photonView.Owner);
+        }
         else
         {
+            // 실제로 라이어였으므로 마지막으로 카드 낸 사람이 포션 마심
             int index = TurnManager.Instance.CurrentPlayerIndex - 1;
             if (index < 0)
                 index = TurnManager.Instance.Players.Count - 1;
@@ -77,17 +86,17 @@ public class LiarBarTable : MonoBehaviourPun
         if (!PhotonNetwork.IsMasterClient)
             yield break;
 
-        // 한 장씩 제거
+        // 카드 제거
         while (_memento.Cards.Count > 0)
         {
-            LiarBarCard card = _memento.Cards.Pop(); 
+            LiarBarCard card = _memento.Cards.Pop();
             _memento.DestroyCard(card);
-            yield return null; // 한 프레임 대기
+            yield return null;
         }
 
-        // 잠시 대기
         yield return new WaitForSeconds(0.05f);
 
+        // 새 카드 분배 및 게임 재개
         LiarBarCardManager.Instance.SetTable();
         TurnManager.Instance.ContinueGame();
     }

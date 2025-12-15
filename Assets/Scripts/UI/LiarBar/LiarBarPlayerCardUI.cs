@@ -25,8 +25,20 @@ public class LiarBarPlayerCardUI : MonoBehaviour, IMediatorEvent
 
     void InitCardUI()
     {
+        // UI 완전 초기화
+        _cardParentWidth = 1130;
         _cardParent.sizeDelta = new Vector2(_cardParentWidth, _cardParent.sizeDelta.y);
 
+        // 모든 카드 슬롯 초기화
+        foreach (var slot in _cardSlots)
+        {
+            slot.gameObject.SetActive(false);
+            slot.SetPlayed(false);
+            slot.SetSelected(false);
+            slot.SetOutline(false);
+        }
+
+        // 새 카드로 UI 설정
         for (int i = 0; i < _gamePlayer.Cards.Count; i++)
         {
             if (!_cardSlots[i].gameObject.activeSelf)
@@ -35,7 +47,10 @@ public class LiarBarPlayerCardUI : MonoBehaviour, IMediatorEvent
             ELiarBarCardType cardType = _gamePlayer.Cards[i];
             _cardSlots[i].Init(cardType, LiarBarCardManager.Instance.GetCardSprite(cardType));
         }
+
         _isReady = true;
+        _cardParent.gameObject.SetActive(false); // 처음엔 숨김
+        _playerTurnUI.SetActive(false);
     }
 
     #region Card Control
@@ -65,7 +80,7 @@ public class LiarBarPlayerCardUI : MonoBehaviour, IMediatorEvent
         List<LiarBarCardSlot> selectedSlots = new List<LiarBarCardSlot>();
         for (int i = 0; i < cardsToThrow; i++)
         {
-            if (availableSlots.Count == 0) 
+            if (availableSlots.Count == 0)
                 break;
             int index = Random.Range(0, availableSlots.Count);
             selectedSlots.Add(availableSlots[index]);
@@ -93,6 +108,9 @@ public class LiarBarPlayerCardUI : MonoBehaviour, IMediatorEvent
 
     public void PlayerTurn()
     {
+        if (!_isReady)
+            return;
+
         _cardParent.gameObject.SetActive(true);
         _playerTurnUI.SetActive(true);
         _currentCardIndex = _cardSlots.FindIndex(slot => !slot.IsPlayed);
@@ -187,9 +205,9 @@ public class LiarBarPlayerCardUI : MonoBehaviour, IMediatorEvent
 
     public void OffUI()
     {
-        if(_playerTurnUI.activeSelf)
+        if (_playerTurnUI.activeSelf)
             _playerTurnUI.SetActive(false);
-        if(gameObject.activeSelf)
+        if (gameObject.activeSelf)
             gameObject.SetActive(false);
     }
 

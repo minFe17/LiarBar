@@ -15,7 +15,6 @@ public class LiarBarCardSlot : MonoBehaviour
 
     void Start()
     {
-        _image = GetComponent<Image>();
         _outline = GetComponent<Outline>();
     }
 
@@ -43,6 +42,11 @@ public class LiarBarCardSlot : MonoBehaviour
 
     public void SetPlayed(bool played)
     {
+        if (_image == null)
+            _image = GetComponent<Image>();
+        if (_outline == null)
+            _outline = GetComponent<Outline>();
+
         _isPlayed = played;
         _image.gameObject.SetActive(!played);
         _outline.enabled = false;

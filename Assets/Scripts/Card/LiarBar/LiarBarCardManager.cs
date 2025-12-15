@@ -11,13 +11,11 @@ public class LiarBarCardManager : MonoBehaviourPun
     public static LiarBarCardManager Instance { get; private set; }
 
     Dictionary<ELiarBarCardType, int> _cardCounts = new Dictionary<ELiarBarCardType, int>();
-
     SpriteAtlas _cardAtlas;
     int _startDealCardIndex;
     ELiarBarCardType _targetCard;
 
     public Action OnSetTableAction;
-
     public ELiarBarCardType TargetCard { get => _targetCard; }
 
     void Awake()
@@ -52,14 +50,21 @@ public class LiarBarCardManager : MonoBehaviourPun
             return;
 
         IReadOnlyList<GamePlayer> players = TurnManager.Instance.Players;
+
+        // 모든 플레이어의 손패 초기화 (각 클라이언트에서 실행)
+        foreach (GamePlayer player in players)
+        {
+            photonView.RPC("RPC_ClearHand", player.photonView.Owner);
+        }
+
         for (int i = _startDealCardIndex; i < _startDealCardIndex + players.Count; i++)
         {
             int previousCardIndex = -1;
             for (int j = 0; j < 5; j++)
             {
                 bool hasOtherCard = _cardCounts.Count(kv => kv.Value > 0) > 1;
-
                 int randomCard = Random.Range(0, (int)ELiarBarCardType.Max);
+
                 while (_cardCounts[(ELiarBarCardType)randomCard] <= 0 ||
                        (hasOtherCard && previousCardIndex == randomCard))
                 {
@@ -67,14 +72,12 @@ public class LiarBarCardManager : MonoBehaviourPun
                 }
 
                 GamePlayer targetPlayer = players[i % players.Count];
-
-                // RPC로 다른 클라이언트에도 카드 추가 요청
                 photonView.RPC("RPC_AddCardToHand", targetPlayer.photonView.Owner, randomCard);
-
                 _cardCounts[(ELiarBarCardType)randomCard]--;
                 previousCardIndex = randomCard;
             }
         }
+
         _startDealCardIndex = (_startDealCardIndex + 1) % players.Count;
     }
 
@@ -86,7 +89,6 @@ public class LiarBarCardManager : MonoBehaviourPun
         Init();
         _targetCard = (ELiarBarCardType)Random.Range(0, (int)ELiarBarCardType.JokerCard);
 
-        // 모든 클라이언트에 TargetCard 전달
         photonView.RPC("RPC_SetTargetCard", RpcTarget.All, (int)_targetCard);
         DealCardsToPlayers();
     }
@@ -110,6 +112,14 @@ public class LiarBarCardManager : MonoBehaviourPun
         GamePlayer localPlayer = TurnManager.Instance.Players.FirstOrDefault(p => p.photonView.IsMine);
         if (localPlayer != null)
             localPlayer.AddCardToHand((ELiarBarCardType)cardType);
+    }
+
+    [PunRPC]
+    void RPC_ClearHand()
+    {
+        GamePlayer localPlayer = TurnManager.Instance.Players.FirstOrDefault(p => p.photonView.IsMine);
+        if (localPlayer != null)
+            localPlayer.ClearHand();
     }
     #endregion
 }

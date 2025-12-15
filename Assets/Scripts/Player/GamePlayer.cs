@@ -1,8 +1,8 @@
+using Photon.Pun;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Photon.Pun;
 using UnityEngine;
 using Utils;
 using Random = UnityEngine.Random;
@@ -26,7 +26,7 @@ public class GamePlayer : MonoBehaviourPun
     public PhotonView PhotonView => photonView;
     public Animator Animator { set => _animator = value; }
     public Transform HandCardSlot { set => _handCardSlot = value; }
-    public int TurnIndex { get; private set; }       // 절대 변경하지 않음
+    public int TurnIndex { get; private set; }
     public int ViewID => photonView.ViewID;
     public bool IsMyTurn => _isMyTurn;
 
@@ -57,8 +57,14 @@ public class GamePlayer : MonoBehaviourPun
     {
         _cards.Add(randomCard);
 
-        if (_cards.Count == 5 && photonView.IsMine) // 자기 클라이언트일 때만 UI 갱신
+        if (_cards.Count == 5 && photonView.IsMine)
             SimpleSingleton<MediatorManager>.Instance.Notify(EMediatorEventType.InitHandCard, this);
+    }
+
+    // 새 라운드 시작 시 카드 초기화
+    public void ClearHand()
+    {
+        _cards.Clear();
     }
 
     public void PlayCard(List<ELiarBarCardType> cardTypes)
@@ -97,9 +103,7 @@ public class GamePlayer : MonoBehaviourPun
     {
         yield return null;
 
-        _potion = PhotonNetwork.Instantiate("LiarBarPotion", _handCardSlot.position, Quaternion.identity)
-            .GetComponent<LiarBarPotion>();
-
+        _potion = PhotonNetwork.Instantiate("LiarBarPotion", _handCardSlot.position, Quaternion.identity).GetComponent<LiarBarPotion>();
         _potion.Init(_handCardSlot);
     }
 
@@ -139,10 +143,9 @@ public class GamePlayer : MonoBehaviourPun
         if (!PhotonNetwork.IsMasterClient)
             return;
 
-        // 다음 라운드 시작 플레이어를 MasterClient에 저장
+        // 포션 마신 플레이어가 다음 라운드 시작
         TurnManager.Instance.SetNextRoundStartPlayer(TurnIndex);
 
-        // 한 프레임 대기 후 새 라운드 시작
         StartCoroutine(ContinueGameRoutine());
     }
 
@@ -160,11 +163,10 @@ public class GamePlayer : MonoBehaviourPun
         GamePlayer player = PhotonView.Find(viewID).GetComponent<GamePlayer>();
         LiarBarTable.Instance.TurnUI.ShowNextPlayer(player);
 
-        // 턴 여부 동기화
-        _isMyTurn = (player.ViewID == ViewID);
+        // 해당 플레이어만 턴 활성화
+        _isMyTurn = (viewID == ViewID);
 
-        // 자기 턴이면 이벤트 호출
-        if (_isMyTurn)
+        if (_isMyTurn && photonView.IsMine)
             OnStartTurn?.Invoke();
     }
 
@@ -197,8 +199,6 @@ public class GamePlayer : MonoBehaviourPun
         }
 
         LiarBarTable.Instance.SavePlayedCards(cards);
-
-        TurnManager.Instance.EndTurn();
     }
     #endregion
 }

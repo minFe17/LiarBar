@@ -58,6 +58,11 @@ public class TurnManager : MonoBehaviourPun
 
     void StartGame()
     {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+
+        _currentPlayerIndex = 0;
+        _isSettingTurn = true; 
         photonView.RPC(nameof(RPC_SetCurrentTurn), RpcTarget.All, _currentPlayerIndex);
     }
 
@@ -99,13 +104,20 @@ public class TurnManager : MonoBehaviourPun
         _isResolvingLiar = false;
         _isSettingTurn = true;
 
-        _currentPlayerIndex = _nextRoundStartIndex; // 다음 라운드 시작 플레이어
+        _currentPlayerIndex = _nextRoundStartIndex;  
         photonView.RPC(nameof(RPC_SetCurrentTurn), RpcTarget.All, _currentPlayerIndex);
     }
 
-    public void SetNextRoundStartPlayer(int playerIndex)
+    public void SetNextRoundStartPlayer(int turnIndex)
     {
-        photonView.RPC(nameof(RPC_SetNextRoundStartPlayer), RpcTarget.MasterClient, playerIndex);
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+
+        // TurnIndex를 리스트 인덱스로 변환
+        _nextRoundStartIndex = _players.FindIndex(p => p.TurnIndex == turnIndex);
+
+        if (_nextRoundStartIndex < 0)
+            _nextRoundStartIndex = _currentPlayerIndex;
     }
 
     public void NotifyTurnStarted()
@@ -161,13 +173,16 @@ public class TurnManager : MonoBehaviourPun
     }
 
     [PunRPC]
-    void RPC_SetCurrentTurn(int turnIndex)
+    void RPC_SetCurrentTurn(int playerIndex)  // TurnIndex가 아닌 playerIndex!
     {
-        _currentPlayerIndex = _players.FindIndex(p => p.TurnIndex == turnIndex);
+        _currentPlayerIndex = playerIndex;
+        _isSettingTurn = false;
 
-        foreach (GamePlayer player in _players)
+        // 리스트 인덱스로 직접 접근
+        for (int i = 0; i < _players.Count; i++)
         {
-            bool isTurn = (player.TurnIndex == turnIndex);
+            GamePlayer player = _players[i];
+            bool isTurn = (i == _currentPlayerIndex);
             player.SetMyTurn(isTurn);
 
             if (isTurn && player.photonView.IsMine)
