@@ -33,7 +33,7 @@ public class AnimationController : MonoBehaviour
         }
         if (Keyboard.current.xKey.wasPressedThisFrame)
         {
-            _animator.SetInteger("Status", 0);
+            //_animator.SetInteger("Status", 0);
         }
 
         _animator.SetFloat("LookX", _camera.NormalizeValue.x);
