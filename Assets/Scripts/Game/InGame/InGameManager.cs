@@ -5,13 +5,24 @@ using static UnityEngine.Rendering.DebugUI.Table;
 
 public class InGameManager : MonoBehaviour
 {
+    private EGameMode _mode = EGameMode.LiarBar;
+    public EGameMode Mode
+    { 
+        get { return _mode; } 
+    }
+    private void Awake()
+    {
+        //_mode = EGameMode.Seotda;
+        //¿©±â ²ô±â
+    }
     private void Start()
     {
         SetPositionAndSpawn();
 
 
         if (!PhotonNetwork.IsMasterClient) return;
-        PhotonNetwork.Instantiate("Seotda/SeotdaTable", Vector3.zero, Quaternion.identity);
+        //PhotonNetwork.Instantiate("Seotda/SeotdaTable", Vector3.zero, Quaternion.identity);
+ 
         //¿©±â ²ô±â
     }
     private void Update()

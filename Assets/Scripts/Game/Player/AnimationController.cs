@@ -20,7 +20,7 @@ public class AnimationController : MonoBehaviour
         _player.Animator = _animator;
 
         if (!_view.IsMine) return;
-        _animator.SetBool("HoldCard", true);
+        //_animator.SetBool("HoldCard", true);
         //¿©±â ²ô±â
     }
 
