@@ -33,6 +33,9 @@ public class GamePlayer : MonoBehaviourPun
 
     void Start()
     {
+        InGameManager manager = FindObjectOfType<InGameManager>();
+        if (manager.Mode != EGameMode.LiarBar) return;
+
         TurnIndex = (int)photonView.Owner.CustomProperties["PositionIndex"];
         TurnManager.Instance.RegisterPlayer(this);
         _deadPotionIndex = Random.Range(0, _totalPotionCount);
