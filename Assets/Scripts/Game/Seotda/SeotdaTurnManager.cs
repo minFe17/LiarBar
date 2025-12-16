@@ -49,15 +49,15 @@ public class SeotdaTurnManager : MonoBehaviourPun
     {
         photonView.RPC("RPC_EndGame", RpcTarget.All);
     }
-    public void ReStartGame()
+    public void StartGame()
     {
-        photonView.RPC("RPC_ReStart", RpcTarget.All);
+        photonView.RPC("RPC_Start", RpcTarget.All);
     }
     private void Start()
     {
         _view = GetComponent<PhotonView>();
         SetPlayerList();
-        ReStartGame();
+        StartGame();
     }
     private void SetPlayerList()
     {
@@ -102,7 +102,7 @@ public class SeotdaTurnManager : MonoBehaviourPun
         //이벤트 발생시켜주기
     }
     [PunRPC]
-    private void RPC_ReStart()
+    private void RPC_Start()
     {
         PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable
          {

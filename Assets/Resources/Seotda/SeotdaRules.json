@@ -17,7 +17,7 @@
         {
             "type":"JangDdang",
             "name" : "장땡",
-            "rank" : 3,
+            "rank" : 4,
             "condition" : "Same",
             "cards" : [{ "first": 10, "second": 10 }]
         },
@@ -89,7 +89,8 @@
                 { "first": 1, "second": 8 },
                 { "first": 2, "second": 7 },
                 { "first": 3, "second": 6 },
-                { "first": 4, "second": 5 }
+                { "first": 4, "second": 5 },
+                { "first": 9, "second": 10 }
         ]
         },
 
@@ -124,7 +125,7 @@
         {
             "type":"Ddangjapyee",
             "name" : "땡잡이",
-            "rank" : 4,
+            "rank" : 3,
             "condition" : "None",
             "cards" : [{ "first": 3, "second": 7 }]
         } ,
