@@ -36,21 +36,22 @@ public class LiarBarTable : MonoBehaviourPun
 
         TurnManager.Instance.BeginResolveLiar();
 
+        GamePlayer potionDrinker;
+
         if (isTruth)
-        {
-            // 라이어 선언한 사람이 틀렸으므로 포션 마심
-            _callLiarPlayer.photonView.RPC("RPC_DoDrinkPotion", _callLiarPlayer.photonView.Owner);
-        }
+            potionDrinker = _callLiarPlayer;
         else
         {
-            // 실제로 라이어였으므로 마지막으로 카드 낸 사람이 포션 마심
-            int index = TurnManager.Instance.CurrentPlayerIndex - 1;
-            if (index < 0)
-                index = TurnManager.Instance.Players.Count - 1;
+            int lastPlayerIndex = TurnManager.Instance.CurrentPlayerIndex - 1;
+            if (lastPlayerIndex < 0)
+                lastPlayerIndex = TurnManager.Instance.Players.Count - 1;
 
-            GamePlayer lastPlayer = TurnManager.Instance.Players[index];
-            lastPlayer.photonView.RPC("RPC_DoDrinkPotion", lastPlayer.photonView.Owner);
+            potionDrinker = TurnManager.Instance.Players[lastPlayerIndex];
         }
+
+        // 포션 마시는 사람에게 RPC 전송
+        potionDrinker.photonView.RPC("RPC_DoDrinkPotion", potionDrinker.photonView.Owner);
+        TurnManager.Instance.SetNextRoundStartPlayer(potionDrinker.TurnIndex);
     }
 
     public void SavePlayedCards(List<LiarBarCard> cards)
@@ -96,9 +97,12 @@ public class LiarBarTable : MonoBehaviourPun
 
         yield return new WaitForSeconds(0.05f);
 
-        // 새 카드 분배 및 게임 재개
-        LiarBarCardManager.Instance.SetTable();
+        // 먼저 턴 설정
         TurnManager.Instance.ContinueGame();
+
+        // 카드 분배 (StartGame 트리거 안 함)
+        yield return new WaitForSeconds(0.1f);
+        LiarBarCardManager.Instance.SetTable(false);
     }
 
     [PunRPC]

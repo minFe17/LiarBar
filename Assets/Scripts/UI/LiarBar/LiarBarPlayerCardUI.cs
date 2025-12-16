@@ -49,8 +49,17 @@ public class LiarBarPlayerCardUI : MonoBehaviour, IMediatorEvent
         }
 
         _isReady = true;
-        _cardParent.gameObject.SetActive(false); // Ã³À½¿£ ¼û±è
-        _playerTurnUI.SetActive(false);
+
+        // ³» ÅÏÀÌ¸é Áï½Ã UI Ç¥½Ã, ¾Æ´Ï¸é ¼û±è
+        if (_gamePlayer.IsMyTurn)
+        {
+            PlayerTurn();
+        }
+        else
+        {
+            _cardParent.gameObject.SetActive(false);
+            _playerTurnUI.SetActive(false);
+        }
     }
 
     #region Card Control

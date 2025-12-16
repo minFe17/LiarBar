@@ -83,13 +83,22 @@ public class LiarBarCardManager : MonoBehaviourPun
 
     public void SetTable()
     {
+        SetTable(true);
+    }
+
+    public void SetTable(bool triggerStartGame)
+    {
         if (!PhotonNetwork.IsMasterClient)
             return;
 
         Init();
         _targetCard = (ELiarBarCardType)Random.Range(0, (int)ELiarBarCardType.JokerCard);
 
-        photonView.RPC("RPC_SetTargetCard", RpcTarget.All, (int)_targetCard);
+        if (triggerStartGame)
+            photonView.RPC("RPC_SetTargetCardWithStart", RpcTarget.All, (int)_targetCard);
+        else
+            photonView.RPC("RPC_SetTargetCardOnly", RpcTarget.All, (int)_targetCard);
+
         DealCardsToPlayers();
     }
 
@@ -100,10 +109,17 @@ public class LiarBarCardManager : MonoBehaviourPun
 
     #region RPC
     [PunRPC]
-    void RPC_SetTargetCard(int cardType)
+    void RPC_SetTargetCardWithStart(int cardType)
     {
         _targetCard = (ELiarBarCardType)cardType;
         OnSetTableAction?.Invoke();
+    }
+
+    [PunRPC]
+    void RPC_SetTargetCardOnly(int cardType)
+    {
+        _targetCard = (ELiarBarCardType)cardType;
+        // OnSetTableAction 호출 안 함
     }
 
     [PunRPC]

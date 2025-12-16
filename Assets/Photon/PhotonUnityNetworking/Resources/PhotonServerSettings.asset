@@ -83,6 +83,8 @@ MonoBehaviour:
   - RPC_UpdateTurn
   - RPC_UpdateTurnMode
   - RPC_ClearHand
+  - RPC_SetTargetCardOnly
+  - RPC_SetTargetCardWithStart
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

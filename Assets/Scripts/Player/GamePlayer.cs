@@ -1,8 +1,9 @@
-using Photon.Pun;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Photon.Pun;
+using Unity.VisualScripting;
 using UnityEngine;
 using Utils;
 using Random = UnityEngine.Random;
@@ -86,8 +87,6 @@ public class GamePlayer : MonoBehaviourPun
 
     public void DrinkPotion()
     {
-        _animator.SetTrigger("doDrinkPotion");
-
         if (!photonView.IsMine)
             return;
 
@@ -103,7 +102,9 @@ public class GamePlayer : MonoBehaviourPun
     {
         yield return null;
 
-        _potion = PhotonNetwork.Instantiate("LiarBarPotion", _handCardSlot.position, Quaternion.identity).GetComponent<LiarBarPotion>();
+        _potion = PhotonNetwork.Instantiate("LiarBarPotion", _handCardSlot.position, Quaternion.identity)
+            .GetComponent<LiarBarPotion>();
+
         _potion.Init(_handCardSlot);
     }
 
@@ -123,6 +124,7 @@ public class GamePlayer : MonoBehaviourPun
 
         int[] cardInts = _currentCardTypes.Select(c => (int)c).ToArray();
         photonView.RPC(nameof(RPC_RequestCreateCard), RpcTarget.MasterClient, cardInts, ViewID);
+        photonView.RPC(nameof(RPC_UpdateThrowCardUI), RpcTarget.All, ViewID, _currentCardTypes.Count);
 
         _currentCardTypes.Clear();
         _isMyTurn = false;
@@ -143,9 +145,14 @@ public class GamePlayer : MonoBehaviourPun
         if (!PhotonNetwork.IsMasterClient)
             return;
 
-        // 포션 마신 플레이어가 다음 라운드 시작
-        TurnManager.Instance.SetNextRoundStartPlayer(TurnIndex);
-
+        SimpleSingleton<MediatorManager>.Instance.Notify(EMediatorEventType.DrinkPotion);
+        if(_deadPotionIndex == _currentPotionIndex)
+        {
+            Die();
+            return;
+        }
+        
+        _currentPotionIndex++;
         StartCoroutine(ContinueGameRoutine());
     }
 
@@ -199,6 +206,12 @@ public class GamePlayer : MonoBehaviourPun
         }
 
         LiarBarTable.Instance.SavePlayedCards(cards);
+    }
+
+    [PunRPC]
+    void RPC_UpdateThrowCardUI(int viewId, int count)
+    {
+        SimpleSingleton<MediatorManager>.Instance.Notify(EMediatorEventType.UpdateThrowCardUI, count);
     }
     #endregion
 }
