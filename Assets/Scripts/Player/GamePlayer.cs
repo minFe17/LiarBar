@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Photon.Pun;
-using Unity.VisualScripting;
 using UnityEngine;
 using Utils;
 using Random = UnityEngine.Random;
@@ -34,7 +33,8 @@ public class GamePlayer : MonoBehaviourPun
     void Start()
     {
         InGameManager manager = FindObjectOfType<InGameManager>();
-        if (manager.Mode != EGameMode.LiarBar) return;
+        if (manager.Mode != EGameMode.LiarBar) 
+            return;
 
         TurnIndex = (int)photonView.Owner.CustomProperties["PositionIndex"];
         TurnManager.Instance.RegisterPlayer(this);
@@ -149,12 +149,12 @@ public class GamePlayer : MonoBehaviourPun
             return;
 
         SimpleSingleton<MediatorManager>.Instance.Notify(EMediatorEventType.DrinkPotion);
-        if(_deadPotionIndex == _currentPotionIndex)
+        if (_deadPotionIndex == _currentPotionIndex)
         {
             Die();
             return;
         }
-        
+
         _currentPotionIndex++;
         StartCoroutine(ContinueGameRoutine());
     }

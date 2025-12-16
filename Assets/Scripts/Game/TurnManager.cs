@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Photon.Pun;
-using UnityEngine;
 
 public class TurnManager : MonoBehaviourPun
 {
@@ -105,7 +104,7 @@ public class TurnManager : MonoBehaviourPun
         _isSettingTurn = true;
 
         _currentPlayerIndex = _nextRoundStartIndex;
-        if(_currentPlayerIndex >= _players.Count)
+        if (_currentPlayerIndex >= _players.Count)
             _currentPlayerIndex = 0;
 
         photonView.RPC(nameof(RPC_SetCurrentTurn), RpcTarget.All, _currentPlayerIndex);
@@ -132,6 +131,7 @@ public class TurnManager : MonoBehaviourPun
         _isSettingTurn = false;
     }
 
+    #region Player Death
     void HandleDeath(GamePlayer player)
     {
         int deadIndex = _players.IndexOf(player);
@@ -158,9 +158,9 @@ public class TurnManager : MonoBehaviourPun
         }
         HandleDeath(player);
     }
+    #endregion
 
     #region RPCs
-
     [PunRPC]
     void RPC_SetPlayersList(int[] viewIDs)
     {

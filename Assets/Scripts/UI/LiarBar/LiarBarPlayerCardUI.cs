@@ -30,7 +30,7 @@ public class LiarBarPlayerCardUI : MonoBehaviour, IMediatorEvent
         _cardParent.sizeDelta = new Vector2(_cardParentWidth, _cardParent.sizeDelta.y);
 
         // 모든 카드 슬롯 초기화
-        foreach (var slot in _cardSlots)
+        foreach (LiarBarCardSlot slot in _cardSlots)
         {
             slot.gameObject.SetActive(false);
             slot.SetPlayed(false);

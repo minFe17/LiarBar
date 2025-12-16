@@ -13,14 +13,22 @@ public class LiarBarCurrentCardUI : MonoBehaviour, IMediatorEvent
         SimpleSingleton<MediatorManager>.Instance.Register(EMediatorEventType.UpdateThrowCardUI, this);
     }
 
-    void Update()
+    string GetNickname(GamePlayer player)
     {
-        
+        Player photonPlayer = player.PhotonView.Owner;
+
+        if (photonPlayer.CustomProperties.TryGetValue("Nickname", out object nickname))
+            return nickname.ToString();
+
+        // Nickname이 없으면 기본 NickName 반환
+        return photonPlayer.NickName;
     }
 
     void IMediatorEvent.HandleEvent(object data)
     {
         int count = (int)data;
+        if (!_cardText.gameObject.activeSelf)
+            _cardText.gameObject.SetActive(true);
 
         // 현재 턴 플레이어 (카드를 낸 사람)
         int currentIndex = TurnManager.Instance.CurrentPlayerIndex - 1;
@@ -32,17 +40,9 @@ public class LiarBarCurrentCardUI : MonoBehaviour, IMediatorEvent
         // 닉네임 가져오기
         string nickname = GetNickname(throwPlayer);
         _playerText.text = nickname;
-        //_cardText.text = $"{}";
-    }
 
-    string GetNickname(GamePlayer player)
-    {
-        Player photonPlayer = player.PhotonView.Owner;
-
-        if (photonPlayer.CustomProperties.TryGetValue("Nickname", out object nickname))
-            return nickname.ToString();
-
-        // Nickname이 없으면 기본 NickName 반환
-        return photonPlayer.NickName;
+        string cardType = LiarBarCardManager.Instance.TargetCard.ToString();
+        char cardName = cardType[0];
+        _cardText.text = $"{count} x {cardName} CARD";
     }
 }

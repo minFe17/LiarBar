@@ -85,6 +85,8 @@ MonoBehaviour:
   - RPC_ClearHand
   - RPC_SetTargetCardOnly
   - RPC_SetTargetCardWithStart
+  - RPC_UpdateThrowCardUI
+  - RPC_ChangeGameMode
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
