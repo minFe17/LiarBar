@@ -32,7 +32,7 @@ public class SeotdaGameManager : MonoBehaviourPun
     private SeotdaTurnManager _turn;
     private List<GameObject> _myCards;
     private List<GameObject> _summitCards = new List<GameObject>();
-    private List<List<GameObject>> _allCards = new List<List<GameObject>>();
+
 
     private Vector3 _originScale = Vector3.zero;
 
@@ -71,6 +71,7 @@ public class SeotdaGameManager : MonoBehaviourPun
         }
 
     }
+    
     private void OnUI()
     {
         switch (_turnMode)
@@ -207,10 +208,12 @@ public class SeotdaGameManager : MonoBehaviourPun
         {
             //서밋한 리스트 넘기기 
             //카드 들고있는거에서 빼줄까 좀 고민되네
-            List<GameObject> list = _summitCards;
+            photonView.RPC("RPC_SummitCard", RpcTarget.MasterClient, MyPlayer.local.PositionIndex, _summitCards[0].GetComponent<FlowerCard>().Name, 
+                _summitCards[1].GetComponent<FlowerCard>().Name);
+            
             _curIndex = 0;
             _summitNum++;
-            CheckEndGame();
+            CheckEndGame(); //이부분을 마스터클라이언트에서만 처리해줘야겠다
         }
     }
 
@@ -219,10 +222,10 @@ public class SeotdaGameManager : MonoBehaviourPun
         switch (_turnMode)
         {
             case ESeotdaTurnMode.PotMode:
-                AutoPotMoney();
+                //AutoPotMoney();
                 break;
             case ESeotdaTurnMode.SummitMode:
-                AutoSummit();
+                //AutoSummit();
                 break;
         }
     }
@@ -241,28 +244,40 @@ public class SeotdaGameManager : MonoBehaviourPun
     }
     private void CheckEndGame()
     {
-        //if(_summitNum == _curPlayer)
-        //게임종료
-        //else
-        //photonView.RPC("RPC_UpdateSummitNum", RpcTarget.All, _summitNum);
-        _turn.NextTurn();
+        if (_summitNum == _curPlayer)
+        {
+            int winner = EventManager.Instance.InvokeFunc<int>("GetWinner");
+            Debug.Log("게임 종료");
+            Debug.Log("위너 : " + winner);
+        }
+
+        else
+        {
+            photonView.RPC("RPC_UpdateSummitNum", RpcTarget.All, _summitNum);
+            _turn.NextTurn();
+        }
 
     }
 
-
+    #region RPC
     [PunRPC]
     private void RPC_PlayerNumUpdate(int num)
     {
         _curPlayer = num;
         Debug.Log("플레이어 수 :" + num);
-    }
+    } //쓰나?
     [PunRPC]
     private void RPC_UpdateTurnMode(ESeotdaTurnMode turnMode)
     {
         _turnMode = turnMode;
         Debug.Log("모드 : " + turnMode);
     }
-
+    [PunRPC]
+    private void RPC_UpdateSummitNum(int num)
+    {
+        _summitNum = num;
+        Debug.Log("서밋 수 : " + num);
+    }
     [PunRPC]
     private void RPC_UpdatePot(int stake ,int pot, int call)
     {
@@ -298,12 +313,7 @@ public class SeotdaGameManager : MonoBehaviourPun
 
         photonView.RPC("RPC_UpdatePot", RpcTarget.All, _stake, _pot+_stake, _callNum);
     }
-    [PunRPC]
-    private void RPC_SummitCard(List<GameObject> cards)
-    {
-        if(!PhotonNetwork.IsMasterClient) return;
 
-        //카드 서밋해서 다 들고있기
-        //서밋 수 늘려주기
-    }
+    
+    #endregion
 }

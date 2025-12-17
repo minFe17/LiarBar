@@ -39,6 +39,10 @@ public class DataManager : SimpleSingleton<DataManager>
 
         if (card1.Type == EFlowerCardType.Gwang && card2.Type == EFlowerCardType.Gwang)
             condition = ESeotdaCondition.Gwang;
+        else if ((card1.Type == EFlowerCardType.Gwang || card2.Type == EFlowerCardType.Gwang) &&
+            (card1.Type == EFlowerCardType.Drawing || card2.Type == EFlowerCardType.Drawing ||
+            card1.Type == EFlowerCardType.Gookjin || card2.Type == EFlowerCardType.Gookjin))
+            condition = ESeotdaCondition.GwangAndDrawing;
         else if (card1.Month == card2.Month)
             condition = ESeotdaCondition.Same;
         else if (((card1.Type == EFlowerCardType.Drawing || card1.Type == EFlowerCardType.Gookjin) && (card2.Type == EFlowerCardType.Drawing || card2.Type == EFlowerCardType.Gookjin)))

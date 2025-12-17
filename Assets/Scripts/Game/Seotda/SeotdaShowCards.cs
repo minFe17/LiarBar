@@ -28,14 +28,16 @@ public class SeotdaShowCards : MonoBehaviour
     private void OnEnable()
     {
         EventManager.Instance.Subscribe("AddCard",AddShowCard);
+        EventManager.Instance.Subscribe("ResetShowCards",ResetShowCards);
     }
     private void OnDisable()
     {
         EventManager.Instance.UnSubscribe("AddCard", (Action)AddShowCard);
+        EventManager.Instance.UnSubscribe("ResetShowCards", (Action)ResetShowCards);
     }
     private void Update()
     {
-        for(int i=0;i<_cardCount; i++)
+        for(int i=0;i<_myCards.Count; i++)
         {
             Vector3 position = _myCards[i].transform.position;
             position.y = _playerLeftHand.position.y + SPACE_VALUE;
@@ -92,6 +94,15 @@ public class SeotdaShowCards : MonoBehaviour
         }
 
         _cardCount++;
+    }
+    private void ResetShowCards()
+    {
+        _dumyCards.ResetObjects();
+        for (int i = 0; i < _myCards.Count; i++)
+        {
+            Destroy(_myCards[i]);
+        }
+        _cardCount = 0;
     }
     private void FindPlayerLeftHand()
     {

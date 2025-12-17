@@ -13,13 +13,14 @@ public class MyPlayer : MonoBehaviour
 
     private Transform _head; //»©µµµÈ´Ù
     private Transform _leftHand;
-    
+    private int _positionIndex;
 
     public Transform Head
         { get { return _head; } }
     public Transform LeftHand
         { get { return _leftHand; } }
-
+    public int PositionIndex
+    { get { return _positionIndex; } }    
 
     private void Awake()
     {
@@ -38,6 +39,7 @@ public class MyPlayer : MonoBehaviour
         local = this;
         myPlayer = view.Owner;
         _leftHand = leftHand;
+        _positionIndex = (int)myPlayer.CustomProperties["PositionIndex"];
         _head = FindHeadInActiveModel(transform.Find("StandCharacter"));
     }
     private Transform FindLeftHandInActiveModel(Transform parent)

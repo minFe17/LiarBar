@@ -91,6 +91,9 @@ MonoBehaviour:
   - RPC_Start
   - RPC_SummitCard
   - RPC_UpdatePot
+  - RPC_UpdateSummitNum
+  - RPC_ResetCards
+  - RPC_FindWinner
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

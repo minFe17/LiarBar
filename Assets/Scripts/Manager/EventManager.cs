@@ -24,11 +24,32 @@ ex) UnSubscribe("Key", (Action)Func) => 매개변수 없는 함수는 그냥 이렇게 해제 가
 ex) UnSubscribe("Key", (Action<Type>)Func) => 매개변수 있는 함수는 이런식으로 형변환해서 넘겨줘야됩니다.
 
 =================================================================================
+ 리턴값 있는 함수 사용 메뉴얼
+1. 이벤트 등록
+ex) SubscribeFunc<int>("key", Func); => 리턴받는 형식 템플릿으로 넘겨주시면됩니다.
+
+2. 이벤트 호출
+ex) InvokeFunc<int>("Key"); => 함수명만 달라졌으니, 유의해주시기바랍니다.
+
+3. 이벤트 등록 해제
+ex) UnSubscribqFunc<int>("Key", Func); => (Action) 생략하셔야됩니다. 
+ 
+//이거 아직 안돼서 사용하지말것.
+ 
  */
 
 public class EventManager : SimpleSingleton<EventManager>
 {
     private Dictionary<string, Delegate> _eventBus = new Dictionary<string, Delegate>();
+    private Dictionary<string, Delegate> _funcBus = new Dictionary<string, Delegate>();
+
+    public void SubscribeFunc<T>(string key, Func<T> callBack)
+    {
+        if (_funcBus.TryGetValue(key, out Delegate existing))
+            _funcBus[key] = Delegate.Combine(existing, callBack);
+        else
+            _funcBus[key] = callBack;
+    }
 
     public void Subscribe(string key, Action callBack)
     {
@@ -41,6 +62,18 @@ public class EventManager : SimpleSingleton<EventManager>
     public void Subscribe<T1, T2>(string key, Action<T1, T2> callBack)
     {
         AddDelegate(key, callBack);
+    }
+
+    public void UnSubscribeFunc<T>(string key, Func<T> callBack)
+    {
+        if (_funcBus.TryGetValue(key, out Delegate existing))
+        {
+            Delegate tempDelegate = Delegate.Remove(existing, callBack);
+            if (tempDelegate == null)
+                _funcBus.Remove(key);
+            else
+                _funcBus[key] = tempDelegate;
+        }
     }
 
     public void UnSubscribe(string key, Delegate callBack)
@@ -57,6 +90,15 @@ public class EventManager : SimpleSingleton<EventManager>
                 _eventBus[key] = tempDelegate;
             }
         }
+    }
+
+    public T InvokeFunc<T>(string key)
+    {
+        if (_funcBus.TryGetValue(key, out Delegate existing) && existing is Func<T> callBack)
+        {
+            return callBack.Invoke();
+        }
+        throw new Exception("Key not found or wrong type");
     }
 
     public void Invoke(string key)

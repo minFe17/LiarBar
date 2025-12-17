@@ -129,7 +129,16 @@ public class PoolingManager
 
         return closestObject;
     }
+    public void ResetObjects()
+    {
+        foreach (GameObject obj in _pooledObjects)
+        {
+            if (!obj.activeSelf) continue;
 
+            obj.SetActive(false);
+        }
+        _curIndex = 0;
+    }
     private int GetCurIndex()
     {
         if (_pooledObjects[_curIndex].activeSelf == false)
@@ -141,14 +150,5 @@ public class PoolingManager
 
         return GetCurIndex();
     }
-    private void ResetObjects()
-    {
-        foreach (GameObject obj in _pooledObjects)
-        {
-            if (!obj.activeSelf) continue;
-            
-            obj.SetActive(false);
-        }
-        _curIndex = 0;
-    }
+
 }

@@ -1235,6 +1235,7 @@ MonoBehaviour:
   _targetCardUI: {fileID: 0}
   _playerCardUI: {fileID: 0}
   _potionUI: {fileID: 0}
+  _gameResultUI: {fileID: 0}
 --- !u!1 &2110234504524364013
 GameObject:
   m_ObjectHideFlags: 0

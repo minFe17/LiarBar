@@ -112,15 +112,15 @@ public class SeotdaTurnManager : MonoBehaviourPun
         if (!PhotonNetwork.IsMasterClient) return;
         foreach (Player player in _playerList)
         {
-            photonView.RPC("RPC_UpdateTurn", player, (int)MyPlayer.myPlayer.CustomProperties["PositionIndex"]);
+            photonView.RPC("RPC_UpdateTurn", player, MyPlayer.local.PositionIndex);
         }
         
     }
     [PunRPC]
     private void RPC_UpdateTurn(int index)
     {
-        Debug.Log(MyPlayer.myPlayer.CustomProperties["PositionIndex"]);
-        if (index == (int)MyPlayer.myPlayer.CustomProperties["PositionIndex"])
+        Debug.Log(MyPlayer.local.PositionIndex);
+        if (index == MyPlayer.local.PositionIndex)
             _myTurn = true;
         else
             _myTurn = false;

@@ -17,7 +17,7 @@
         {
             "type":"JangDdang",
             "name" : "장땡",
-            "rank" : 4,
+            "rank" : 3,
             "condition" : "Same",
             "cards" : [{ "first": 10, "second": 10 }]
         },
@@ -41,49 +41,49 @@
         {
             "type":"Ali",
             "name" : "알리",
-            "rank" : 6,
+            "rank" : 7,
             "condition" : "None",
             "cards" : [{ "first": 1, "second": 2 }]
         },
         {
             "type":"Docksa",
             "name" : "독사",
-            "rank" : 7,
+            "rank" : 8,
             "condition" : "None",
             "cards" : [{ "first": 1, "second": 4 }]
         },
         {
             "type":"Goobbing",
             "name" : "구삥",
-            "rank" : 8,
+            "rank" : 9,
             "condition" : "None",
             "cards" : [{ "first": 1, "second": 9 }]
         },
         {
             "type":"Jangbbing",
             "name" : "장삥",
-            "rank" : 9,
+            "rank" : 10,
             "condition" : "None",
             "cards" : [{ "first": 1, "second": 10 }]
         },
         {
             "type":"Jangsa",
             "name" : "장사",
-            "rank" : 10,
+            "rank" : 11,
             "condition" : "None",
             "cards" : [{ "first": 4, "second": 10 }]
         },
         {
             "type":"Saeruke",
             "name" : "세륙",
-            "rank" : 11,
+            "rank" : 12,
             "condition" : "None",
             "cards" : [{ "first": 4, "second": 6 }]
         },
         {
             "type":"Gapoh",
             "name" : "갑오",
-            "rank" : 12,
+            "rank" : 13,
             "condition" : "None",
             "cards" : [
                 { "first": 1, "second": 8 },
@@ -97,42 +97,42 @@
         {
             "type":"Mangtong",
             "name" : "망통",
-            "rank" : 14,
+            "rank" : 15,
             "condition" : "None",
             "cards" : [{ "first": 2, "second": 8 },{ "first": 3, "second": 7 }]
         },
         {
             "type":"MungtunggooriGoosa",
             "name" : "멍텅구리구사",
-            "rank" : 15,
+            "rank" : 4,
             "condition" : "Drawing",
             "cards" : [{ "first": 4, "second": 9 }]
         },
         {
             "type":"Goosa",
             "name" : "구사",
-            "rank" : 15,
+            "rank" : 6,
             "condition" : "None",
             "cards" : [{ "first": 4, "second": 9 }]
         },
         {
             "type":"Amhangusa",
             "name" : "암행어사",
-            "rank" : 0,
+            "rank" : 15,
             "condition" : "Drawing",
             "cards" : [{ "first": 4, "second": 7 }]
         },
         {
             "type":"Ddangjapyee",
             "name" : "땡잡이",
-            "rank" : 3,
-            "condition" : "None",
+            "rank" : 15,
+            "condition" : "GwangAndDrawing",
             "cards" : [{ "first": 3, "second": 7 }]
         } ,
         {
             "type":"Keut",
             "name" : "끗",
-            "rank" : 13,
+            "rank" : 14,
             "condition" : "None",
             "cards" : []
         }

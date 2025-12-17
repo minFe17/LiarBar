@@ -32,10 +32,12 @@ public class SeotdaRuleUI : MonoBehaviour
     private void OnEnable()
     {
         EventManager.Instance.Subscribe("AddCard", UpdateRule);
+        EventManager.Instance.Subscribe("ResetRuleUI", ResetRuleUI);
     }
     private void OnDisable()
     {
         EventManager.Instance.UnSubscribe("AddCard", (Action)UpdateRule);
+        EventManager.Instance.UnSubscribe("ResetRuleUI", (Action)ResetRuleUI);
     }
     private void Update()
     {
@@ -60,7 +62,7 @@ public class SeotdaRuleUI : MonoBehaviour
         }
     }
 
-    private void Reset()
+    private void ResetRuleUI()
     {
         ObjectOff();
         _isSetting = false;
