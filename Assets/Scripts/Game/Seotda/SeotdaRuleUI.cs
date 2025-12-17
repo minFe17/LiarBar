@@ -78,8 +78,6 @@ public class SeotdaRuleUI : MonoBehaviour
         _secondImage.sprite = sprite;
 
 
-
-        //이름 알려주는 코드도 넣으면 끝!
         FlowerCard card1 = _myCards[index1].GetComponent<FlowerCard>();
         FlowerCard card2 = _myCards[index2].GetComponent<FlowerCard>();
 

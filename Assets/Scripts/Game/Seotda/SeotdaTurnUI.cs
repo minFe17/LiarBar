@@ -39,7 +39,7 @@ public class SeotdaTurnUI : MonoBehaviour
         if (!_isFlow) return;
         
         _time -= Time.deltaTime;
-        _timer.text = _time.ToString();
+        _timer.text = ((int)_time).ToString();
 
         if(_time<10)
             _timer.color = Color.red;
@@ -72,5 +72,6 @@ public class SeotdaTurnUI : MonoBehaviour
     {
         _isFlow = true;
         _time = MAX_TIME;
+        _timer.color = Color.white;
     }
 }
