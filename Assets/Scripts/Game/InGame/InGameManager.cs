@@ -1,20 +1,27 @@
+using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
-using Utils;
-using static UnityEngine.Rendering.DebugUI.Table;
 
 public class InGameManager : MonoBehaviour
 {
+    [SerializeField] List<GameObject> _liarBarObject;
     private EGameMode _mode = EGameMode.LiarBar;
+
     public EGameMode Mode
     { 
         get { return _mode; } 
     }
+
     private void Awake()
     {
-        //_mode = EGameMode.Seotda;
+        if (!PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("GameMode", out object gameModeObj))
+            return;
+        _mode = (EGameMode)gameModeObj;
+        if (_mode == EGameMode.LiarBar)
+            SetLiarBarMap();
         //여기 끄기
     }
+
     private void Start()
     {
         SetPositionAndSpawn();
@@ -25,10 +32,14 @@ public class InGameManager : MonoBehaviour
  
         //여기 끄기
     }
-    private void Update()
+
+    private void SetLiarBarMap()
     {
-        
+        RenderSettings.fog = true;
+        for(int i=0; i< _liarBarObject.Count; i++)
+            _liarBarObject[i].SetActive(true);
     }
+
     private void SetPositionAndSpawn()
     {
         int index = 0; // 기본값

@@ -33,9 +33,16 @@ public class GamePlayer : MonoBehaviourPun
     void Start()
     {
         InGameManager manager = FindObjectOfType<InGameManager>();
-        if (manager.Mode != EGameMode.LiarBar) 
+        if (manager.Mode != EGameMode.LiarBar)
             return;
 
+        if(photonView.IsMine)
+        {
+            Camera camera = GetComponentInChildren<Camera>();
+            camera.clearFlags = CameraClearFlags.SolidColor;
+            camera.backgroundColor = new Color32(92, 92, 92, 255);
+        }
+        
         TurnIndex = (int)photonView.Owner.CustomProperties["PositionIndex"];
         TurnManager.Instance.RegisterPlayer(this);
         _deadPotionIndex = Random.Range(0, _totalPotionCount);

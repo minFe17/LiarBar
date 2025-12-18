@@ -90,9 +90,18 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
 
     void CheckAllPlayerReady()
     {
+        // 1. 게임 모드가 선택되었는지 확인
+        if (!PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("GameMode", out object gameModeObj))
+        {
+            Debug.Log("게임 모드가 선택되지 않았습니다!");
+            return;
+        }
+
+        // 2. 인원 체크
         if (PhotonNetwork.PlayerList.Length != 4) //멀티 인원
             return;
 
+        // 3. 모든 플레이어 Ready 체크
         for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
         {
             Player player = PhotonNetwork.PlayerList[i];
@@ -104,9 +113,12 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
             if (!info.IsReady)
                 return;
         }
+
+        // 4. 모든 조건 만족 → 게임 시작
         if (PhotonNetwork.IsMasterClient)
             PhotonNetwork.LoadLevel("IngameScene");
     }
+
     void AssignRandomPositionIndex()
     {
         // 이미 다른 플레이어가 사용중인 인덱스 수집
