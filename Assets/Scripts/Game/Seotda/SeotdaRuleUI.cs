@@ -16,6 +16,7 @@ public class SeotdaRuleUI : MonoBehaviour
     private int _ruleNumber;
     [SerializeField]
     private TextMeshProUGUI _ruleText;
+    
 
 
     private SeotdaCardManager _cardManager;

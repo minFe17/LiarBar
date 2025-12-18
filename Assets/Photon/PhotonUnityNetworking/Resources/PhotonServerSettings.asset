@@ -94,6 +94,10 @@ MonoBehaviour:
   - RPC_UpdateSummitNum
   - RPC_ResetCards
   - RPC_FindWinner
+  - RPC_CheckEndGame
+  - RPC_OffResultPanel
+  - RPC_OnResultPanel
+  - RPC_ResetGameManager
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

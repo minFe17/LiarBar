@@ -8,8 +8,6 @@ using ExitGames.Client.Photon;
 
 public class SeotdaGameManager : MonoBehaviourPun
 {
-    // 카드 제출한거 없애고, 나머지 다 제출하면 카메라 한명씩 비추면서 보여주기(연출)
-
     //랭크 비교해서 가장 높은 애한테 상금 보내주기
 
     //상금 낼수있게 확인해서 걸기
@@ -28,6 +26,8 @@ public class SeotdaGameManager : MonoBehaviourPun
     private int _summitNum = 0;
 
     private bool _isUIOff = true;
+
+    private bool _isAllIn = false;
 
     private SeotdaTurnManager _turn;
     private List<GameObject> _myCards;
@@ -62,7 +62,7 @@ public class SeotdaGameManager : MonoBehaviourPun
 
         if (_turn.MyTurn && _isUIOff)
             OnUI();
-        else if(!_turn.MyTurn && !_isUIOff)
+        else if (!_turn.MyTurn && !_isUIOff)
             OffUI();
 
         if (_turn.MyTurn)
@@ -71,7 +71,23 @@ public class SeotdaGameManager : MonoBehaviourPun
         }
 
     }
-    
+
+    private void ResetGameManager()
+    {
+        ESeotdaTurnMode _turnMode = ESeotdaTurnMode.PotMode;
+        _pot = 0;
+        _stake = 10;
+        _callNum = 0;
+        _curPlayer = 0;
+        _curIndex = 0; //카드인덱스임
+        _summitNum = 0;
+
+        _isUIOff = true;
+        _isAllIn = false;
+
+        _summitCards.Clear();
+
+    }
     private void OnUI()
     {
         switch (_turnMode)
@@ -107,14 +123,14 @@ public class SeotdaGameManager : MonoBehaviourPun
 
     private void UpdateTurnMode()
     {
-         if (!PhotonNetwork.IsMasterClient) return;
+        if (!PhotonNetwork.IsMasterClient) return;
 
-         if (_callNum == _curPlayer)
-         {
-             photonView.RPC("RPC_UpdatePot", RpcTarget.All, _stake, _pot, 0);// 콜넘버 0으로 초기화
-             _turnMode = ESeotdaTurnMode.SummitMode;
-             photonView.RPC("RPC_UpdateTurnMode",RpcTarget.All, _turnMode);
-         }
+        if (_callNum == _curPlayer)
+        {
+            photonView.RPC("RPC_UpdatePot", RpcTarget.All, _stake, _pot, 0);// 콜넘버 0으로 초기화
+            _turnMode = ESeotdaTurnMode.SummitMode;
+            photonView.RPC("RPC_UpdateTurnMode", RpcTarget.All, _turnMode);
+        }
     }
     private void ClickButton()
     {
@@ -122,7 +138,7 @@ public class SeotdaGameManager : MonoBehaviourPun
         switch (_turnMode)
         {
             case ESeotdaTurnMode.PotMode:
-                
+
                 PotMoney();
                 break;
             case ESeotdaTurnMode.SummitMode:
@@ -131,28 +147,33 @@ public class SeotdaGameManager : MonoBehaviourPun
         }
 
         //타이머 초기화해주기
- 
+
     }
     private void PotMoney()
     {
+        //돈 있나없나 체크
         if (Keyboard.current.cKey.wasPressedThisFrame)
         {
             photonView.RPC("RPC_ChangeStake", RpcTarget.MasterClient, 0);
             Debug.Log("콜함");
-            //돈 있나없나 체크
+
         }
         else if (Keyboard.current.xKey.wasPressedThisFrame)
         {
             _turn.Die();
             return;
         }
-        else if (Keyboard.current.bKey.wasPressedThisFrame)
+        else if (Keyboard.current.bKey.wasPressedThisFrame && !_isAllIn)
         {
-            photonView.RPC("RPC_ChangeStake", RpcTarget.MasterClient,2);
+            photonView.RPC("RPC_ChangeStake", RpcTarget.MasterClient, 2);
         }
-        else if (Keyboard.current.hKey.wasPressedThisFrame)
+        else if (Keyboard.current.hKey.wasPressedThisFrame && !_isAllIn)
         {
             photonView.RPC("RPC_ChangeStake", RpcTarget.MasterClient, 1);
+        }
+        else if (Keyboard.current.hKey.wasPressedThisFrame && !_isAllIn)
+        {
+            photonView.RPC("RPC_ChangeStake", RpcTarget.MasterClient, 3);
         }
         else
             return;
@@ -208,12 +229,11 @@ public class SeotdaGameManager : MonoBehaviourPun
         {
             //서밋한 리스트 넘기기 
             //카드 들고있는거에서 빼줄까 좀 고민되네
-            photonView.RPC("RPC_SummitCard", RpcTarget.MasterClient, MyPlayer.local.PositionIndex, _summitCards[0].GetComponent<FlowerCard>().Name, 
+            photonView.RPC("RPC_SummitCard", RpcTarget.MasterClient, MyPlayer.local.PositionIndex, _summitCards[0].GetComponent<FlowerCard>().Name,
                 _summitCards[1].GetComponent<FlowerCard>().Name);
-            
+
             _curIndex = 0;
-            _summitNum++;
-            CheckEndGame(); //이부분을 마스터클라이언트에서만 처리해줘야겠다
+            CheckEndGame();
         }
     }
 
@@ -222,10 +242,10 @@ public class SeotdaGameManager : MonoBehaviourPun
         switch (_turnMode)
         {
             case ESeotdaTurnMode.PotMode:
-                //AutoPotMoney();
+                AutoPotMoney();
                 break;
             case ESeotdaTurnMode.SummitMode:
-                //AutoSummit();
+                AutoSummit();
                 break;
         }
     }
@@ -244,16 +264,15 @@ public class SeotdaGameManager : MonoBehaviourPun
     }
     private void CheckEndGame()
     {
+        photonView.RPC("RPC_UpdateSummitNum", RpcTarget.All, _summitNum + 1);
+
         if (_summitNum == _curPlayer)
-        {
-            int winner = EventManager.Instance.InvokeFunc<int>("GetWinner");
-            Debug.Log("게임 종료");
-            Debug.Log("위너 : " + winner);
+        {//게임멈추기
+            photonView.RPC("RPC_CheckEndGame", RpcTarget.MasterClient);
         }
 
         else
         {
-            photonView.RPC("RPC_UpdateSummitNum", RpcTarget.All, _summitNum);
             _turn.NextTurn();
         }
 
@@ -265,7 +284,7 @@ public class SeotdaGameManager : MonoBehaviourPun
     {
         _curPlayer = num;
         Debug.Log("플레이어 수 :" + num);
-    } //쓰나?
+    }
     [PunRPC]
     private void RPC_UpdateTurnMode(ESeotdaTurnMode turnMode)
     {
@@ -279,7 +298,7 @@ public class SeotdaGameManager : MonoBehaviourPun
         Debug.Log("서밋 수 : " + num);
     }
     [PunRPC]
-    private void RPC_UpdatePot(int stake ,int pot, int call)
+    private void RPC_UpdatePot(int stake, int pot, int call, bool isAllIn)
     {
         _stake = stake;
         Debug.Log("판돈 : " + _stake);
@@ -293,7 +312,7 @@ public class SeotdaGameManager : MonoBehaviourPun
     {
         if (!PhotonNetwork.IsMasterClient) return;
 
-        switch(num)
+        switch (num)
         {
             case 0:
                 _callNum++;
@@ -307,13 +326,43 @@ public class SeotdaGameManager : MonoBehaviourPun
                 _callNum = 1;
                 break;
             case 3: //올인
-                //올인하기  _stake = mymoney;
+                //_stake = mymoney; 데이터 가져와야됨
+                _isAllIn = true;
                 break;
         }
 
-        photonView.RPC("RPC_UpdatePot", RpcTarget.All, _stake, _pot+_stake, _callNum);
+        photonView.RPC("RPC_UpdatePot", RpcTarget.All, _stake, _pot + _stake, _callNum, _isAllIn);
+    }
+    [PunRPC]
+    private void RPC_CheckEndGame()
+    {
+        int winner;
+        List<(SeotdaData data, int index)> list;
+        GetComponent<SeotdaCardManager>().GetWinner(out winner, out list);
+
+        Debug.Log("게임 종료");
+        Debug.Log("위너 : " + winner);
+        Debug.Log("리스트 데이터: " + list[0].data.name);
+        Debug.Log("리스트 인덱스: " + list[0].index);
+
+        int[] types = new int[list.Count];
+        int[] indexes = new int[list.Count];
+
+        for (int i = 0; i < list.Count; i++)
+        {
+            types[i] = (int)list[i].data.type;
+            indexes[i] = list[i].index;
+        }
+
+        // RPC 호출
+        photonView.RPC("RPC_OnResultPanel", RpcTarget.All, types, indexes);
+    }
+    [PunRPC]
+    private void RPC_ResetGameManager()
+    {
+        ResetGameManager();
+        _originScale = Vector3.zero;
     }
 
-    
     #endregion
 }

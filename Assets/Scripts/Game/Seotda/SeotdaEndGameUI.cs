@@ -1,0 +1,82 @@
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+using System;
+using Photon.Pun;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+
+public class SeotdaEndGameUI : MonoBehaviourPun
+{
+    [SerializeField]
+    private GameObject _reGame;
+    [SerializeField]
+    private TextMeshProUGUI _name;
+    [SerializeField]
+    private GameObject _result;
+    [SerializeField]
+    private TextMeshProUGUI _resultText;
+    [SerializeField]
+    private Button _restartButton;
+    [SerializeField]
+    private Button _exitButton;
+
+    private bool _isClickPosible = false;
+    private bool _isShowReGame = false;
+
+    private void Start()
+    {
+        OffPanel();
+    }
+    private void Update()
+    {
+        if (!_isClickPosible) return;
+    }
+    private void OnEnable()
+    {
+        EventManager.Instance.Subscribe("OffEndGameUI", OffPanel);
+    }
+    private void OnDisable()
+    {
+        EventManager.Instance.UnSubscribe("OffEndGameUI", (Action)OffPanel);
+    }
+    private void OffPanel()
+    {
+        _reGame.SetActive(false);
+        _result.SetActive(false);
+    }
+    private int FindPlayer(int index)
+    {
+        for(int i = 0; i < PhotonNetwork.PlayerList.Length;i++)
+        {
+            if (index == (int)PhotonNetwork.PlayerList[i].CustomProperties["PositionIndex"])
+                return i;
+        }
+        return -1;
+    }
+    #region RPC
+    [PunRPC]
+    private void RPC_OnResultPanel(int[] types, int[] indexes)
+    {
+        _result.SetActive(true);
+        string str="";
+        for(int i=0;i< types.Length;i++)
+        {
+            str += i + 1 + "등 " + "플레이어 아이디" + FindPlayer(indexes[i]) +" " +DataManager.Instance.FindDataToType((ESeotdaRuleType)types[i]).Value.name+"\n";
+        }
+
+        _resultText.text = str;
+        _restartButton.gameObject.SetActive(false);
+        _exitButton.gameObject.SetActive(false);
+        if (!PhotonNetwork.IsMasterClient) return;
+        _isClickPosible = true;
+        _restartButton.gameObject.SetActive(true);
+        _exitButton.gameObject.SetActive(true);
+    }
+    [PunRPC]
+    private void RPC_OffResultPanel()
+    {
+        _result.SetActive(false);
+    }
+    #endregion
+}

@@ -46,6 +46,7 @@ public class SeotdaTable : MonoBehaviour
         if (!_isSplitEvent)
             SplitCardToEvent();
     }
+    //리셋 만들어주기
     private void SubscribeEvent()
     {
         EventManager.Instance.Subscribe("OnSplit", OnSplitEvent);
@@ -66,8 +67,8 @@ public class SeotdaTable : MonoBehaviour
     private void SplitCardToEvent()
     {
         _isSplitEvent = true;
-        Vector3[] positionList = { new Vector3(0, 0, MAX_RANGE), new Vector3(-MAX_RANGE, 0, 0),
-            new Vector3(0, 0, -MAX_RANGE), new Vector3(MAX_RANGE, 0, 0) };
+        Vector3[] positionList = { new Vector3(0, transform.position.y, MAX_RANGE), new Vector3(-MAX_RANGE, transform.position.y, 0),
+            new Vector3(0, transform.position.y, -MAX_RANGE), new Vector3(MAX_RANGE, transform.position.y, 0) };
 
         for (int i = 0; i < positionList.Length; i++)
         {
@@ -79,7 +80,7 @@ public class SeotdaTable : MonoBehaviour
             }
 
 
-            _cards[i+_spaceCardNum].transform.position = Vector3.Lerp(_cards[i+_spaceCardNum].transform.position, positionList[i] + this.gameObject.transform.position, SMOOTH_SPEED * Time.deltaTime * 2);
+            _cards[i+_spaceCardNum].transform.position = Vector3.Lerp(_cards[i+_spaceCardNum].transform.position, positionList[i] , SMOOTH_SPEED * Time.deltaTime * 2);
 
             if (Vector3.Distance(_cards[i+ _spaceCardNum].transform.position, positionList[i]) < 1)
             {
@@ -99,8 +100,8 @@ public class SeotdaTable : MonoBehaviour
     private void SplitCard()
     {
         _isSplit = true;
-        Vector3[] positionList = { new Vector3(0, 0, MAX_RANGE), new Vector3(-MAX_RANGE, 0, 0),
-            new Vector3(0, 0, -MAX_RANGE), new Vector3(MAX_RANGE, 0, 0) };
+        Vector3[] positionList = { new Vector3(0, transform.position.y, MAX_RANGE), new Vector3(-MAX_RANGE, transform.position.y, 0),
+            new Vector3(0, transform.position.y, -MAX_RANGE), new Vector3(MAX_RANGE, transform.position.y, 0) };
 
         for (int i = 0; i < positionList.Length; i++)
         {
@@ -111,7 +112,7 @@ public class SeotdaTable : MonoBehaviour
                 continue;
             }
 
-            _cards[i].transform.position = Vector3.Lerp(_cards[i].transform.position, positionList[i] + this.gameObject.transform.position, SMOOTH_SPEED * Time.deltaTime*2);
+            _cards[i].transform.position = Vector3.Lerp(_cards[i].transform.position, positionList[i] , SMOOTH_SPEED * Time.deltaTime*2);
 
             if (Vector3.Distance(_cards[i].transform.position, positionList[i]) < 1)
             {
@@ -148,14 +149,15 @@ public class SeotdaTable : MonoBehaviour
     private void MixCard()
     {
         _isMixed = true;
+        Vector3 pos = new Vector3(0, transform.position.y, 0);
         foreach(var card in _cards)
         {
-            if (card.transform.position == Vector3.zero) continue;
+            if (card.transform.position == pos) continue;
             card.transform.position = Vector3.Lerp(card.transform.position, this.gameObject.transform.position, SMOOTH_SPEED * Time.deltaTime);
 
-            if (Vector3.Distance(card.transform.position, Vector3.zero) < 0.01f)
+            if (Vector3.Distance(card.transform.position, pos) < 0.01f)
             {
-                card.transform.position = Vector3.zero;
+                card.transform.position = pos;
             }
             _isMixed = false;
         }
