@@ -127,7 +127,7 @@ public class SeotdaGameManager : MonoBehaviourPun
 
         if (_callNum == _curPlayer)
         {
-            photonView.RPC("RPC_UpdatePot", RpcTarget.All, _stake, _pot, 0);// 콜넘버 0으로 초기화
+            photonView.RPC("RPC_UpdatePot", RpcTarget.All, _stake, _pot, 0, false);// 콜넘버 0으로 초기화
             _turnMode = ESeotdaTurnMode.SummitMode;
             photonView.RPC("RPC_UpdateTurnMode", RpcTarget.All, _turnMode);
         }
@@ -306,6 +306,7 @@ public class SeotdaGameManager : MonoBehaviourPun
         Debug.Log("모인 돈 :" + _pot);
         _callNum = call;
         Debug.Log("콜 수 :" + _callNum);
+        _isAllIn = isAllIn;
     }
     [PunRPC]
     private void RPC_ChangeStake(int num)
@@ -355,7 +356,7 @@ public class SeotdaGameManager : MonoBehaviourPun
         }
 
         // RPC 호출
-        photonView.RPC("RPC_OnResultPanel", RpcTarget.All, types, indexes);
+        photonView.RPC("RPC_OnResultPanel", RpcTarget.MasterClient, types, indexes);
     }
     [PunRPC]
     private void RPC_ResetGameManager()

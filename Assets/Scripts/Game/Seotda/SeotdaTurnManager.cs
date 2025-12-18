@@ -21,6 +21,10 @@ public class SeotdaTurnManager : MonoBehaviourPun
         get { return _myTurn; }
     }    
 
+    public int Turn
+    {
+        get { return _curIndex; }
+    }
     public void Die()
     { 
         if((bool)MyPlayer.myPlayer.CustomProperties["IsAlive"] && _myTurn)

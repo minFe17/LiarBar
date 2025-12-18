@@ -17,7 +17,7 @@ public class SeotdaCardManager : MonoBehaviourPun
     private Dictionary<string, GameObject> _cardDic = new Dictionary<string, GameObject>();
     private Queue<string> _cards = new Queue<string>();
     private List<GameObject> _myCards = new List<GameObject>();
-    private List<SeotdaData?> _allCards = new List<SeotdaData?>();
+    private List<(SeotdaData? data, int month1, int month2)> _allCards = new List<(SeotdaData? data, int month1, int month2)> ();
     private List<SeotdaData> _data; //들고있을필요있나?
     private bool _isStart = false;
 
@@ -52,6 +52,16 @@ public class SeotdaCardManager : MonoBehaviourPun
 
         return DataManager.Instance.Keut;
     }
+    public int FindMonth(int index)
+    {
+        int month = _allCards[index].month1+ _allCards[index].month2;
+        if (_allCards[index].data.Value.type == ESeotdaRuleType.Keut)
+            return month - 10;
+        else if (_allCards[index].data.Value.type == ESeotdaRuleType.Ddang)
+            return (int)(month * 0.5f);
+
+        return -1;
+    }
     public void GetWinner(out int winner, out List<(SeotdaData data, int index)>list)
     {
         list = new List<(SeotdaData data, int index)>();
@@ -65,16 +75,16 @@ public class SeotdaCardManager : MonoBehaviourPun
         int ddangjap = -1;
         for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
         {
-            if (_allCards[i] == null) continue;
-            list.Add((_allCards[i].Value, i)); //i는 포지션인덱스임
+            if (_allCards[i].data == null) continue;
+            list.Add((_allCards[i].data.Value, i)); //i는 포지션인덱스임
             SortingList(list);
-            if (_allCards[i].Value.type == ESeotdaRuleType.Amhangusa)
+            if (_allCards[i].data.Value.type == ESeotdaRuleType.Amhangusa)
                 amhang = i;
-            else if (_allCards[i].Value.type == ESeotdaRuleType.Ddangjapyee)
+            else if (_allCards[i].data.Value.type == ESeotdaRuleType.Ddangjapyee)
                 ddangjap = i;
-            if (_allCards[i].Value.type == ESeotdaRuleType.Ddang)
+            if (_allCards[i].data.Value.type == ESeotdaRuleType.Ddang)
                 isDdang = true;
-            if (_allCards[i].Value.type == ESeotdaRuleType.GwangDdang)
+            if (_allCards[i].data.Value.type == ESeotdaRuleType.GwangDdang)
                 isGwangDdang = true;
         }
 
@@ -132,14 +142,40 @@ public class SeotdaCardManager : MonoBehaviourPun
     }
     private void SortingList(List<(SeotdaData data, int index)> list)
     {
-        list.Sort((a, b) => a.data.rank.CompareTo(b.data.rank));
+        list.Sort((a, b) =>
+        {
+            int rankCompare = a.data.rank.CompareTo(b.data.rank);
+            if (rankCompare != 0)
+                return rankCompare;
+
+            // rank가 같을 때만 여기로 옴
+            int aScore = CalcScore(a.data,a.index);
+            int bScore = CalcScore(b.data,b.index);
+
+            return bScore.CompareTo(aScore); // 높은 값이 앞으로 오게
+        });
+    }
+    private int CalcScore(SeotdaData data, int index)
+    {
+        int month = _allCards[index].month1 + _allCards[index].month2;
+        switch (data.type)
+        {
+            case ESeotdaRuleType.Ddang:
+                return (int)(month * 0.5f);
+
+            case ESeotdaRuleType.Keut:
+                return month-10;
+        }
+        //둘 재대결하게해야됨
+        return -1;
+
     }
     private void ClearSummitCards()
     {
         _allCards.Clear();
         for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
         {
-            _allCards.Add(null);
+            _allCards.Add((null,0,0));
         }
     }
     private void SetDictionary()
@@ -249,7 +285,8 @@ public class SeotdaCardManager : MonoBehaviourPun
     {
         if (!PhotonNetwork.IsMasterClient) return;
 
-        _allCards[positionIndex] = FindData(_cardDic[c1].GetComponent<FlowerCard>(), _cardDic[c2].GetComponent<FlowerCard>());
+        _allCards[positionIndex] = (FindData(_cardDic[c1].GetComponent<FlowerCard>(), _cardDic[c2].GetComponent<FlowerCard>()),
+            _cardDic[c1].GetComponent<FlowerCard>().Month, _cardDic[c2].GetComponent<FlowerCard>().Month);
         Debug.Log("제출");
     }
     [PunRPC]

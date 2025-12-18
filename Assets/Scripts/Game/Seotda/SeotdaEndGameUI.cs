@@ -58,21 +58,34 @@ public class SeotdaEndGameUI : MonoBehaviourPun
     [PunRPC]
     private void RPC_OnResultPanel(int[] types, int[] indexes)
     {
+        if (!PhotonNetwork.IsMasterClient) return;
         _result.SetActive(true);
         string str="";
         for(int i=0;i< types.Length;i++)
         {
-            str += i + 1 + "등 " + "플레이어 아이디" + FindPlayer(indexes[i]) +" " +DataManager.Instance.FindDataToType((ESeotdaRuleType)types[i]).Value.name+"\n";
+            str += i + 1 + "등 " + "플레이어 아이디" + FindPlayer(indexes[i]) + " ";
+            if ((ESeotdaRuleType)types[i] == ESeotdaRuleType.Keut || (ESeotdaRuleType)types[i] == ESeotdaRuleType.Ddang)
+                str += GetComponent<SeotdaCardManager>().FindMonth(indexes[i]);
+            str += DataManager.Instance.FindDataToType((ESeotdaRuleType)types[i]).Value.name + "\n";
         }
 
         _resultText.text = str;
-        _restartButton.gameObject.SetActive(false);
-        _exitButton.gameObject.SetActive(false);
-        if (!PhotonNetwork.IsMasterClient) return;
         _isClickPosible = true;
         _restartButton.gameObject.SetActive(true);
         _exitButton.gameObject.SetActive(true);
+
+        EventManager.Instance.Invoke("OffBottle");
+        photonView.RPC("RPC_SetEndPanel", RpcTarget.Others, str);
     }
+    [PunRPC]
+    private void RPC_SetEndPanel(string str)
+    {
+        _result.SetActive(true);
+        _resultText.text = str;
+        _restartButton.gameObject.SetActive(false);
+        _exitButton.gameObject.SetActive(false);
+        EventManager.Instance.Invoke("OffBottle");
+    }    
     [PunRPC]
     private void RPC_OffResultPanel()
     {

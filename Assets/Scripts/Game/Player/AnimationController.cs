@@ -19,9 +19,8 @@ public class AnimationController : MonoBehaviour
         _player = GetComponentInParent<GamePlayer>();
         _player.Animator = _animator;
 
-        if (!_view.IsMine) return;
-        //_animator.SetBool("HoldCard", true);
-        //¿©±â ²ô±â
+        if (!_view.IsMine && FindFirstObjectByType<InGameManager>().Mode != EGameMode.Seotda) return;
+        _animator.SetBool("HoldCard", true);
     }
 
     private void Update()

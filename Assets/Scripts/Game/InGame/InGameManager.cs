@@ -19,7 +19,6 @@ public class InGameManager : MonoBehaviour
         _mode = (EGameMode)gameModeObj;
         if (_mode == EGameMode.LiarBar)
             SetLiarBarMap();
-        //¿©±â ²ô±â
     }
 
     private void Start()
@@ -27,10 +26,10 @@ public class InGameManager : MonoBehaviour
         SetPositionAndSpawn();
 
 
-        if (!PhotonNetwork.IsMasterClient) return;
-        //PhotonNetwork.Instantiate("Seotda/SeotdaTable", Vector3.zero, Quaternion.identity);
+        if (!PhotonNetwork.IsMasterClient || _mode != EGameMode.Seotda) return;
+        Vector3 pos = new Vector3(0, -1.4f, 0);
+        PhotonNetwork.Instantiate("Seotda/SeotdaTable", pos, Quaternion.identity);
  
-        //¿©±â ²ô±â
     }
 
     private void SetLiarBarMap()
@@ -55,20 +54,20 @@ public class InGameManager : MonoBehaviour
         switch (index % 4)
         {
             case 0: // À§
-                spawnPos = new Vector3(0, y, dist * ((index / 4) + 1));
+                spawnPos = new Vector3(0, y, dist);
                 break;
 
             case 1: // ¿Þ
-                spawnPos = new Vector3(-dist * ((index / 4) + 1), y, 0);
+                spawnPos = new Vector3(-dist, y, 0);
                 break;
 
             case 2: // ¾Æ·¡
-                spawnPos = new Vector3(0, y, -dist * ((index / 4) + 1));
+                spawnPos = new Vector3(0, y, -dist);
                 break;
 
 
             case 3: // ¿À¸¥
-                spawnPos = new Vector3(dist * ((index / 4) + 1), y, 0);
+                spawnPos = new Vector3(dist, y, 0);
                 break;
         }
 
