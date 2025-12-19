@@ -44,7 +44,7 @@ public class SeotdaBottleController : MonoBehaviour
             _rotation,
             Time.deltaTime * SMOOTH_SPEED
         );
-        if (Quaternion.Angle(transform.rotation, _rotation) < 0.1f)
+        if (Quaternion.Angle(transform.rotation, _rotation) < 0.001f)
         {
             transform.rotation = _rotation; 
             _isMove = false;

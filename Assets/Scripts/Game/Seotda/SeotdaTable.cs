@@ -93,6 +93,8 @@ public class SeotdaTable : MonoBehaviour
         {
             _spaceCardNum += 4;
             EventManager.Instance.Invoke("SplitCard");
+            EventManager.Instance.Invoke("SplitCard");
+            EventManager.Instance.Invoke("SplitCard");
         }
             
 
@@ -124,6 +126,8 @@ public class SeotdaTable : MonoBehaviour
         if (_isSplit)
         {
             _spaceCardNum += 4;
+            EventManager.Instance.Invoke("SplitCard");
+            EventManager.Instance.Invoke("SplitCard");
             EventManager.Instance.Invoke("SplitCard");
             //OnSplitEvent();
         }
