@@ -13,12 +13,11 @@ public class SeotdaTable : MonoBehaviour
     const int MAX_RANGE = 3;
 
     private List<FlowerCard> _cards = new List<FlowerCard>();
-    private bool _isMixed = false;
-    private bool _isRotation = false;
-    private bool _isSplit = false;
+
     private bool _isSplitEvent = true;
-    private int _spaceCardNum = 0;
     private List<bool> _isAlives = new List<bool>();
+
+    private Vector3 _originPos;
 
 
     private void Awake()
@@ -34,15 +33,13 @@ public class SeotdaTable : MonoBehaviour
     {
         UnSubscribeEvent();
     }
+    private void Start()
+    {
+        MixCard();
+        RotationCard();
+    }
     private void Update()
     {
-        if (!_isMixed)
-            MixCard();
-        else if (!_isRotation)
-            RotationCard();
-        else if (!_isSplit)
-            SplitCard(); //±»ÀÌ ³ÀµÖ¾ßµÇ³ª?
-
         if (!_isSplitEvent)
             SplitCardToEvent();
     }
@@ -76,94 +73,42 @@ public class SeotdaTable : MonoBehaviour
             if (_cards[i].transform.position == positionList[i])
             {
                 _cards[i].gameObject.SetActive(false);
+                _cards[i].gameObject.transform.position = _originPos;
                 continue;
             }
-
-
-            _cards[i+_spaceCardNum].transform.position = Vector3.Lerp(_cards[i+_spaceCardNum].transform.position, positionList[i] , SMOOTH_SPEED * Time.deltaTime * 2);
-
-            if (Vector3.Distance(_cards[i+ _spaceCardNum].transform.position, positionList[i]) < 1)
+            _cards[i].transform.position = Vector3.Lerp(_cards[i].transform.position, positionList[i] , SMOOTH_SPEED * Time.deltaTime * 2);
+            if (Vector3.Distance(_cards[i].transform.position, positionList[i]) < 1)
             {
-                _cards[i+_spaceCardNum].transform.position = positionList[i];
+                _cards[i].transform.position = positionList[i];
             }
-
             _isSplitEvent = false;
         }
         if (_isSplitEvent)
         {
-            _spaceCardNum += 4;
-            EventManager.Instance.Invoke("SplitCard");
-            EventManager.Instance.Invoke("SplitCard");
+            for (int i = 0; i < positionList.Length; i++)
+            {
+                _cards[i].gameObject.SetActive(true);
+            }
             EventManager.Instance.Invoke("SplitCard");
         }
             
 
     }
-    private void SplitCard()
-    {
-        _isSplit = true;
-        Vector3[] positionList = { new Vector3(0, transform.position.y, MAX_RANGE), new Vector3(-MAX_RANGE, transform.position.y, 0),
-            new Vector3(0, transform.position.y, -MAX_RANGE), new Vector3(MAX_RANGE, transform.position.y, 0) };
 
-        for (int i = 0; i < positionList.Length; i++)
-        {
-            if (!_cards[i].gameObject.activeSelf) continue;
-            if (_cards[i].transform.position == positionList[i])
-            {
-                _cards[i].gameObject.SetActive(false);
-                continue;
-            }
-
-            _cards[i].transform.position = Vector3.Lerp(_cards[i].transform.position, positionList[i] , SMOOTH_SPEED * Time.deltaTime*2);
-
-            if (Vector3.Distance(_cards[i].transform.position, positionList[i]) < 1)
-            {
-                _cards[i].transform.position = positionList[i];
-            }
-
-            _isSplit = false;
-        }
-        if (_isSplit)
-        {
-            _spaceCardNum += 4;
-            EventManager.Instance.Invoke("SplitCard");
-            EventManager.Instance.Invoke("SplitCard");
-            EventManager.Instance.Invoke("SplitCard");
-            //OnSplitEvent();
-        }
-
-    }
     private void RotationCard()
     {
-        _isRotation = true;
         Quaternion rotation = Quaternion.Euler(new Vector3(90, 180, 0));
         foreach (var card in _cards)
         {
-            if (card.transform.rotation.x == rotation.x) continue;
-            card.transform.rotation = Quaternion.Lerp(card.transform.rotation, rotation, SMOOTH_SPEED * Time.deltaTime * 2);
-
-            if (Quaternion.Angle(card.transform.rotation, rotation) < 0.5f)
-            {
-                card.transform.rotation = rotation;
-                continue;
-            }
-            _isRotation = false;
+            card.transform.rotation = rotation;
         }
     }
     private void MixCard()
     {
-        _isMixed = true;
-        Vector3 pos = new Vector3(0, transform.position.y, 0);
+        _originPos = new Vector3(0, transform.position.y-0.01f, 0);
         foreach(var card in _cards)
         {
-            if (card.transform.position == pos) continue;
-            card.transform.position = Vector3.Lerp(card.transform.position, this.gameObject.transform.position, SMOOTH_SPEED * Time.deltaTime);
-
-            if (Vector3.Distance(card.transform.position, pos) < 0.01f)
-            {
-                card.transform.position = pos;
-            }
-            _isMixed = false;
+            card.transform.position = _originPos;
         }
     }
     private void FindCards()

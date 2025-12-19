@@ -242,10 +242,10 @@ public class SeotdaGameManager : MonoBehaviourPun
         switch (_turnMode)
         {
             case ESeotdaTurnMode.PotMode:
-                AutoPotMoney();
+                //AutoPotMoney();
                 break;
             case ESeotdaTurnMode.SummitMode:
-                AutoSummit();
+                //AutoSummit();
                 break;
         }
     }
@@ -356,7 +356,15 @@ public class SeotdaGameManager : MonoBehaviourPun
         }
 
         // RPC 호출
-        photonView.RPC("RPC_OnResultPanel", RpcTarget.MasterClient, types, indexes);
+        if (winner == 0)
+            photonView.RPC("RPC_OnResultPanel", RpcTarget.MasterClient, types, indexes);
+        else if (winner == -1) // 재시작해주기
+            return;
+        else if (winner == -2)//재시작해주기 (순위같은애들만)
+            return;
+        else //특별한 위너~!
+            photonView.RPC("RPC_OnResultPanelToSpecial", RpcTarget.MasterClient, types, indexes, winner);
+            return;
     }
     [PunRPC]
     private void RPC_ResetGameManager()

@@ -65,7 +65,7 @@ public class SeotdaCardManager : MonoBehaviourPun
     public void GetWinner(out int winner, out List<(SeotdaData data, int index)>list)
     {
         list = new List<(SeotdaData data, int index)>();
-        winner = -1;
+        winner = 0;
         if (!PhotonNetwork.IsMasterClient) return;
 
         int rank = 0;
@@ -133,7 +133,8 @@ public class SeotdaCardManager : MonoBehaviourPun
     {
         if (Keyboard.current.pKey.wasPressedThisFrame)
         {
-            SplitCard();
+            EventManager.Instance.Invoke("OnSplit");
+            //SplitCard();
         }
         if (Keyboard.current.f12Key.wasPressedThisFrame && PhotonNetwork.IsMasterClient)
         {

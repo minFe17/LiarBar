@@ -99,6 +99,7 @@ MonoBehaviour:
   - RPC_OnResultPanel
   - RPC_ResetGameManager
   - RPC_SetEndPanel
+  - RPC_OnResultPanelToSpecial
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

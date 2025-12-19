@@ -37,20 +37,20 @@ public class DataManager : SimpleSingleton<DataManager>
     {
         ESeotdaCondition condition = new ESeotdaCondition();
 
-        if (card1.Type == EFlowerCardType.Gwang && card2.Type == EFlowerCardType.Gwang)
+        if (card1.Month == card2.Month)
+            condition = ESeotdaCondition.Same;
+        else if (card1.Type == EFlowerCardType.Gwang && card2.Type == EFlowerCardType.Gwang)
             condition = ESeotdaCondition.Gwang;
         else if ((card1.Type == EFlowerCardType.Gwang || card2.Type == EFlowerCardType.Gwang) &&
             (card1.Type == EFlowerCardType.Drawing || card2.Type == EFlowerCardType.Drawing ||
             card1.Type == EFlowerCardType.Gookjin || card2.Type == EFlowerCardType.Gookjin))
             condition = ESeotdaCondition.GwangAndDrawing;
-        else if (card1.Month == card2.Month)
-            condition = ESeotdaCondition.Same;
         else if (((card1.Type == EFlowerCardType.Drawing || card1.Type == EFlowerCardType.Gookjin) && (card2.Type == EFlowerCardType.Drawing || card2.Type == EFlowerCardType.Gookjin)))
             condition = ESeotdaCondition.Drawing;
         else
             condition = ESeotdaCondition.None;
 
-
+        Debug.Log("card1.Month " + card1.Month+ "card2.Month "+card2.Month + "condition" +  condition);
             return condition;
     }
     public List<SeotdaData> MatchData(int month)
@@ -77,17 +77,22 @@ public class DataManager : SimpleSingleton<DataManager>
         {
             for (int j = 0; j < _data[i].cards.Count; j++)
             {
-                if (_data[i].cards[j].first != month1 && _data[i].cards[j].second != month1) continue;
-                if (_data[i].cards[j].first !=month2 && _data[i].cards[j].second !=month2) continue;
+                int a = _data[i].cards[j].first;
+                int b = _data[i].cards[j].second;
 
-                list.Add(_data[i]);
+                // 정확히 같은 쌍 (순서 무관)
+                if ((a == month1 && b == month2) ||
+                    (a == month2 && b == month1))
+                {
+                    list.Add(_data[i]);
+                }
             }
         }
 
         return list;
-
     }
-  
+
+
     public void LoadData()
     {
         LoadSeotdaData();
