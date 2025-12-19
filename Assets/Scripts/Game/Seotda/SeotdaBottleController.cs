@@ -8,11 +8,9 @@ public class SeotdaBottleController : MonoBehaviour
     private SeotdaTurnManager _turn;
     private bool _isMove = false;
     private Quaternion _rotation;
-    private Quaternion _baseRotation;
 
     private void Start()
     {
-        _baseRotation = transform.rotation;
         _turn = GetComponentInParent<SeotdaTurnManager>();
         _curTurnIndex = _turn.Turn;
     }
@@ -44,7 +42,7 @@ public class SeotdaBottleController : MonoBehaviour
             _rotation,
             Time.deltaTime * SMOOTH_SPEED
         );
-        if (Quaternion.Angle(transform.rotation, _rotation) < 0.001f)
+        if (Quaternion.Angle(transform.rotation, _rotation) < 0.01f)
         {
             transform.rotation = _rotation; 
             _isMove = false;
@@ -53,17 +51,18 @@ public class SeotdaBottleController : MonoBehaviour
     private void ChangeRotation()
     {
         _curTurnIndex = _turn.Turn;
-        float targetAngle = 90f * _turn.Turn;
+        Vector3[] rotations = {new Vector3(0,270,90), new Vector3(0,360,90), new Vector3(0,90,90), new Vector3(0,0,90)};
 
-        _rotation = _baseRotation * Quaternion.Euler(0, targetAngle, 0);
+        _rotation = Quaternion.Euler(rotations[_curTurnIndex]);
 
-        Vector3 cross = Vector3.Cross(transform.forward, _rotation * Vector3.forward);
+        // Vector3 cross = Vector3.Cross(transform.forward, _rotation * Vector3.forward);
+        // 
+        // if (cross.y > 0f)
+        // {
+        //     _rotation =  Quaternion.Euler(new Vector3(0, rotations[_curTurnIndex].y - 360f, rotations[_curTurnIndex].z));
+        // }
 
-        if (cross.y > 0f)
-        {
-            _rotation = _baseRotation * Quaternion.Euler(0, targetAngle - 360f, 0);
-        }
-
+        Debug.Log(transform.rotation.z);
         _isMove = true;
     }
     private void OnBottle()
