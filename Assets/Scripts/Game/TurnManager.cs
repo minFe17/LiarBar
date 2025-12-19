@@ -8,16 +8,21 @@ public class TurnManager : MonoBehaviourPun
     public static TurnManager Instance { get; private set; }
 
     List<GamePlayer> _players = new List<GamePlayer>();
+    Dictionary<int, int> _playerRankings = new Dictionary<int, int>();
     int _currentPlayerIndex = 0;
     int _nextRoundStartIndex = 0;
+    int _currentRank;
 
     bool _isResolvingLiar = false;
     bool _isSettingTurn = false;
+    bool _isFirstGame = true; // 추가!
 
     public Action OnEndRegisterPlayer;
+    public Action OnGameEnd;
 
     public IReadOnlyList<GamePlayer> Players => _players;
     public int CurrentPlayerIndex => _currentPlayerIndex;
+    public IReadOnlyDictionary<int, int> PlayerRankings => _playerRankings;
 
     void Awake()
     {
@@ -33,7 +38,16 @@ public class TurnManager : MonoBehaviourPun
 
     void Start()
     {
-        LiarBarCardManager.Instance.OnSetTableAction += StartGame;
+        LiarBarCardManager.Instance.OnSetTableAction += OnSetTableAction;
+    }
+
+    void OnSetTableAction()
+    {
+        if (_isFirstGame)
+        {
+            _isFirstGame = false;
+            StartGame();
+        }
     }
 
     public void RegisterPlayer(GamePlayer player)
@@ -61,6 +75,9 @@ public class TurnManager : MonoBehaviourPun
             return;
 
         _currentPlayerIndex = 0;
+        _currentRank = PhotonNetwork.CurrentRoom.PlayerCount;
+        _playerRankings.Clear();
+
         _isSettingTurn = true;
         photonView.RPC(nameof(RPC_SetCurrentTurn), RpcTarget.All, _currentPlayerIndex);
     }
@@ -115,10 +132,8 @@ public class TurnManager : MonoBehaviourPun
         if (!PhotonNetwork.IsMasterClient)
             return;
 
-        // TurnIndex를 _players 리스트의 인덱스로 변환
         _nextRoundStartIndex = _players.FindIndex(p => p.TurnIndex == turnIndex);
 
-        // 찾지 못한 경우 현재 플레이어 인덱스 유지
         if (_nextRoundStartIndex < 0)
             _nextRoundStartIndex = _currentPlayerIndex;
     }
@@ -131,12 +146,21 @@ public class TurnManager : MonoBehaviourPun
         _isSettingTurn = false;
     }
 
+    public int GetPlayerRank(int viewID)
+    {
+        return _playerRankings.TryGetValue(viewID, out int rank) ? rank : -1;
+    }
+
     #region Player Death
     void HandleDeath(GamePlayer player)
     {
         int deadIndex = _players.IndexOf(player);
         if (deadIndex < 0)
             return;
+
+        _playerRankings[player.ViewID] = _currentRank;
+        photonView.RPC(nameof(RPC_UpdateRanking), RpcTarget.All, player.ViewID, _currentRank);
+        _currentRank--;
 
         _players.RemoveAt(deadIndex);
 
@@ -146,7 +170,11 @@ public class TurnManager : MonoBehaviourPun
         photonView.RPC(nameof(RPC_RemovePlayer), RpcTarget.Others, player.ViewID);
 
         if (_players.Count == 1)
+        {
+            _playerRankings[_players[0].ViewID] = 1;
+            photonView.RPC(nameof(RPC_UpdateRanking), RpcTarget.All, _players[0].ViewID, 1);
             _players[0].Win();
+        }
     }
 
     public void DiePlayer(GamePlayer player)
@@ -180,14 +208,12 @@ public class TurnManager : MonoBehaviourPun
         _currentPlayerIndex = playerIndex;
         _isSettingTurn = false;
 
-        // 모든 플레이어의 턴 상태를 업데이트
         for (int i = 0; i < _players.Count; i++)
         {
             GamePlayer player = _players[i];
             bool isTurn = (i == _currentPlayerIndex);
             player.SetMyTurn(isTurn);
 
-            // 자기 턴이면서 자신의 플레이어인 경우에만 StartTurn 호출
             if (isTurn && player.photonView.IsMine)
                 player.StartTurn();
         }
@@ -210,6 +236,23 @@ public class TurnManager : MonoBehaviourPun
         GamePlayer player = PhotonView.Find(viewID).GetComponent<GamePlayer>();
         if (player != null)
             _players.Remove(player);
+    }
+
+    [PunRPC]
+    void RPC_UpdateRanking(int viewID, int rank)
+    {
+        _playerRankings[viewID] = rank;
+
+        GamePlayer player = PhotonView.Find(viewID)?.GetComponent<GamePlayer>();
+        if (player != null)
+        {
+            player.SetRank(rank);
+        }
+
+        if (_playerRankings.Count == PhotonNetwork.CurrentRoom.PlayerCount)
+        {
+            OnGameEnd?.Invoke();
+        }
     }
     #endregion
 }

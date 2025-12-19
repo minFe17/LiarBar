@@ -18,6 +18,7 @@ public class GamePlayer : MonoBehaviourPun
     int _totalPotionCount = 6;
     int _deadPotionIndex;
     int _currentPotionIndex;
+    int _rank = -1; // 순위 추가
     bool _isMyTurn = false;
 
     public Action OnStartTurn;
@@ -29,6 +30,7 @@ public class GamePlayer : MonoBehaviourPun
     public int TurnIndex { get; private set; }
     public int ViewID => photonView.ViewID;
     public bool IsMyTurn => _isMyTurn;
+    public int Rank => _rank; // 순위 프로퍼티 추가
 
     void Start()
     {
@@ -36,13 +38,13 @@ public class GamePlayer : MonoBehaviourPun
         if (manager.Mode != EGameMode.LiarBar)
             return;
 
-        if(photonView.IsMine)
+        if (photonView.IsMine)
         {
             Camera camera = GetComponentInChildren<Camera>();
             camera.clearFlags = CameraClearFlags.SolidColor;
             camera.backgroundColor = new Color32(92, 92, 92, 255);
         }
-        
+
         TurnIndex = (int)photonView.Owner.CustomProperties["PositionIndex"];
         TurnManager.Instance.RegisterPlayer(this);
         _deadPotionIndex = Random.Range(0, _totalPotionCount);
@@ -62,6 +64,13 @@ public class GamePlayer : MonoBehaviourPun
 
         _animator.SetTrigger("doDie");
         TurnManager.Instance.DiePlayer(this);
+    }
+
+    // 순위 설정 메서드 추가
+    public void SetRank(int rank)
+    {
+        _rank = rank;
+        Debug.Log($"{photonView.Owner.NickName} 순위: {rank}등");
     }
 
     public void AddCardToHand(ELiarBarCardType randomCard)
@@ -100,6 +109,7 @@ public class GamePlayer : MonoBehaviourPun
         if (!photonView.IsMine)
             return;
 
+        _animator.SetTrigger("doDrinkPotion");
         StartCoroutine(SpawnPotionNextFrame());
     }
 
@@ -112,8 +122,7 @@ public class GamePlayer : MonoBehaviourPun
     {
         yield return null;
 
-        _potion = PhotonNetwork.Instantiate("LiarBarPotion", _handCardSlot.position, Quaternion.identity)
-            .GetComponent<LiarBarPotion>();
+        _potion = PhotonNetwork.Instantiate("LiarBarPotion", _handCardSlot.position, Quaternion.identity).GetComponent<LiarBarPotion>();
 
         _potion.Init(_handCardSlot);
     }
@@ -148,6 +157,7 @@ public class GamePlayer : MonoBehaviourPun
             return;
 
         _potion.DrinkPotion();
+        SimpleSingleton<MediatorManager>.Instance.Notify(EMediatorEventType.DrinkPotion);
     }
 
     public void ThrowPotion()
@@ -155,7 +165,7 @@ public class GamePlayer : MonoBehaviourPun
         if (!PhotonNetwork.IsMasterClient)
             return;
 
-        SimpleSingleton<MediatorManager>.Instance.Notify(EMediatorEventType.DrinkPotion);
+        _potion.ThrowPotion();
         if (_deadPotionIndex == _currentPotionIndex)
         {
             Die();

@@ -7,38 +7,56 @@ using UnityEngine;
 
 public class VivoxController : MonoBehaviour
 {
-    public event Action OnLoginEndEvent;
-
     public static VivoxController Instance { get; private set; }
 
-    private void Awake()
+    private bool _initialized;
+    private bool _loggedIn;
+
+    private async void Awake()
     {
-        DontDestroyOnLoad(gameObject);
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         Instance = this;
+        DontDestroyOnLoad(gameObject);
+
+        await InitializeAsync();
     }
 
-    private async void Start()
+    private async Task InitializeAsync()
     {
+        // 1. Unity Services
         await UnityServices.InitializeAsync();
-        await AuthenticationService.Instance.SignInAnonymouslyAsync();
+
+        // 2. Auth
+        if (!AuthenticationService.Instance.IsSignedIn)
+            await AuthenticationService.Instance.SignInAnonymouslyAsync();
+
+        // 3. Vivox Init
         await VivoxService.Instance.InitializeAsync();
+        _initialized = true;
 
-        OnLoginEndEvent += () => JoinVoiceChannel("test-channel");
-
-        await LoginAsync();
-        OnLoginEndEvent?.Invoke();
-    }
-
-    private async Task LoginAsync()
-    {
-        LoginOptions options = new LoginOptions();
-        options.DisplayName = Guid.NewGuid().ToString();
+        // 4. Vivox Login
+        LoginOptions options = new LoginOptions
+        {
+            DisplayName = Guid.NewGuid().ToString()
+        };
 
         await VivoxService.Instance.LoginAsync(options);
+        _loggedIn = true;
+
+        // 5. Join Channel
+        await JoinVoiceChannelAsync("test-channel");
     }
 
-    public async void JoinVoiceChannel(string channelName)
+    public async Task JoinVoiceChannelAsync(string channelName)
     {
+        if (!_initialized || !_loggedIn)
+            return;
+
         await VivoxService.Instance.JoinGroupChannelAsync(channelName, ChatCapability.AudioOnly);
     }
 }

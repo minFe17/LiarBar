@@ -3,7 +3,6 @@ using ExitGames.Client.Photon;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
-using Utils;
 
 public class GameSelectUI : MonoBehaviourPunCallbacks
 {
@@ -15,7 +14,7 @@ public class GameSelectUI : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsMasterClient)
             return;
-        for(int i=0; i< _buttons.Count; i++)
+        for (int i = 0; i < _buttons.Count; i++)
         {
             _buttons[i].enabled = false;
             _images.Add(_buttons[i].GetComponent<Image>());
@@ -50,13 +49,12 @@ public class GameSelectUI : MonoBehaviourPunCallbacks
             { "GameMode", gameMode }
         };
         PhotonNetwork.CurrentRoom.SetCustomProperties(roomProps);
-
-        // UI 업데이트
-        UpdateUI(gameMode);
     }
 
     void UpdateUI(int selectedMode)
     {
+        if (PhotonNetwork.IsMasterClient)
+            return;
         for (int i = 0; i < _buttons.Count; i++)
         {
             if (i == selectedMode)

@@ -41,7 +41,9 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
 
     void CheckNickname()
     {
+        // 주석 제거 필요
         //PhotonNetwork.LocalPlayer.NickName = _firebaseRest.User.GetField<string>("nickname");
+
         if (string.IsNullOrEmpty(_photonManager.Nickname))
         {
             _nicknameInputField.SetActive(true);
@@ -92,10 +94,7 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
     {
         // 1. 게임 모드가 선택되었는지 확인
         if (!PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("GameMode", out object gameModeObj))
-        {
-            Debug.Log("게임 모드가 선택되지 않았습니다!");
             return;
-        }
 
         // 2. 인원 체크
         if (PhotonNetwork.PlayerList.Length != 4) //멀티 인원

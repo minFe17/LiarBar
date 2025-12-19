@@ -14,6 +14,13 @@ public class LiarBarUI : MonoBehaviourPun
         _targetCardUI.Init();
         _playerCardUI.Init();
         _potionUI.Init();
+
+        TurnManager.Instance.OnGameEnd += ShowGameResult;
+    }
+
+    void ShowGameResult()
+    {
+        _gameResultUI.gameObject.SetActive(true);
     }
 
     #region Input System

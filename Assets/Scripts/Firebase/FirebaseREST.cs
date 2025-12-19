@@ -129,9 +129,7 @@ public class FirebaseREST : MonoBehaviour
             yield return www.SendWebRequest();
 
             if (www.result != UnityWebRequest.Result.Success)
-            {
                 Debug.LogError($"LoadUserData Error: {www.error}");
-            }
             else
             {
                 // Firestore 문서를 FirestoreUser로 재구성
