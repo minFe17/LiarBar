@@ -51,7 +51,7 @@ public class SeotdaBottleController : MonoBehaviour
     private void ChangeRotation()
     {
         _curTurnIndex = _turn.Turn;
-        Vector3[] rotations = {new Vector3(0,270,90), new Vector3(0,360,90), new Vector3(0,90,90), new Vector3(0,180,90)};
+        Vector3[] rotations = {new Vector3(0, 90, 90), new Vector3(0,360,90), new Vector3(0,270,90), new Vector3(0,180,90)};
 
         _rotation = Quaternion.Euler(rotations[_curTurnIndex]);
 
