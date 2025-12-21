@@ -6,7 +6,7 @@ using System;
 using Photon.Pun;
 using Photon.Realtime;
 
-public class SeotdaTable : MonoBehaviour
+public class SeotdaTable : MonoBehaviourPun
 {
     const float SPACE_AREA = 0.4f;
     const float SMOOTH_SPEED = 1f;
@@ -18,12 +18,12 @@ public class SeotdaTable : MonoBehaviour
     private List<bool> _isAlives = new List<bool>();
 
     private Vector3 _originPos;
-
+    private float _timer = 0f;
+    private int _splitNum = 0;
 
     private void Awake()
     {
         FindCards();
-
     }
     private void OnEnable()
     {
@@ -37,32 +37,56 @@ public class SeotdaTable : MonoBehaviour
     {
         MixCard();
         RotationCard();
+
     }
     private void Update()
     {
         if (!_isSplitEvent)
             SplitCardToEvent();
+
+        if(_timer>2.0f && _splitNum==0)
+            ResetSeotdaTable();
+        else if(_timer>3.0f && _splitNum == 1)
+        {
+            OnSplitEvent();
+            GetComponent<SeotdaTurnManager>().StartGame();
+            return;
+        }
+        else if(_timer<=3.0f)
+            _timer += Time.deltaTime;
     }
     //리셋 만들어주기
     private void SubscribeEvent()
     {
         EventManager.Instance.Subscribe("OnSplit", OnSplitEvent);
+        EventManager.Instance.Subscribe<bool>("ResetSeotdaTable", ResetSeotdaTable);
     }
     private void UnSubscribeEvent()
     {
         EventManager.Instance.UnSubscribe("OnSplit",(Action)OnSplitEvent);
+        EventManager.Instance.UnSubscribe("ResetSeotdaTable", (Action<bool>)ResetSeotdaTable);
+    }
+    private void ResetSeotdaTable(bool isRestart = false)
+    {
+        _timer = 0f;
+        EventManager.Instance.Invoke("OffEndGameUI");
+        EventManager.Instance.Invoke("ResetGameManager");
+        EventManager.Instance.Invoke("OffEndGameUI");
+        if (!PhotonNetwork.IsMasterClient) return;
+        OnSplitEvent();
+        photonView.RPC("RPC_ResetCards", RpcTarget.All);
+        if(isRestart)
+            GetComponent<SeotdaTurnManager>().ReStartGame();
+        else
+            GetComponent<SeotdaTurnManager>().StartGame();
     }
     private void OnSplitEvent()
     {
-        _isSplitEvent = false;
-        _isAlives.Clear();
-        for(int i=0;i< PhotonNetwork.PlayerList.Length; i++)
-        {
-            _isAlives.Add(IsPlayerAlive(GetPlayerByPosition(i)));
-        }
+        if (!PhotonNetwork.IsMasterClient) return;
+        photonView.RPC("RPC_OnSplitEvent", RpcTarget.All);
     }
     private void SplitCardToEvent()
-    {
+    { 
         _isSplitEvent = true;
         Vector3[] positionList = { new Vector3(0, transform.position.y, MAX_RANGE), new Vector3(-MAX_RANGE, transform.position.y, 0),
             new Vector3(0, transform.position.y, -MAX_RANGE), new Vector3(MAX_RANGE, transform.position.y, 0) };
@@ -159,5 +183,17 @@ public class SeotdaTable : MonoBehaviour
         }
 
         return null;
+    }
+
+    [PunRPC]
+    private void RPC_OnSplitEvent()
+    {
+        _splitNum++;
+        _isSplitEvent = false;
+        _isAlives.Clear();
+        for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+        {
+            _isAlives.Add(IsPlayerAlive(GetPlayerByPosition(i)));
+        }
     }
 }

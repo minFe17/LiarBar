@@ -131,6 +131,7 @@ public class SeotdaCardManager : MonoBehaviourPun
 
     private void Update()
     {
+        
         if (Keyboard.current.pKey.wasPressedThisFrame)
         {
             EventManager.Instance.Invoke("OnSplit");
@@ -264,7 +265,7 @@ public class SeotdaCardManager : MonoBehaviourPun
             if (obj is bool isAlive)
                 if (!isAlive)
                 {
-                    EventManager.Instance.Invoke("AddCard");
+                    //EventManager.Instance.Invoke("AddCard");
                     continue;
                 }
 

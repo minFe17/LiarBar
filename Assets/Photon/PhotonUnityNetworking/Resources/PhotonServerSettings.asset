@@ -103,6 +103,9 @@ MonoBehaviour:
   - RPC_UpdateRanking
   - RPC_CheckPotionResult
   - RPC_Die
+  - RPC_Stop
+  - RPC_OnSplitEvent
+  - RPC_ReStartTurn
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

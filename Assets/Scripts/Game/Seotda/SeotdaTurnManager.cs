@@ -14,8 +14,13 @@ public class SeotdaTurnManager : MonoBehaviourPun
     private int _curIndex = 0;
     private PhotonView _view;
     private bool _myTurn = false;
+    private bool _isStop = false;
 
 
+    public bool IsStop
+    {
+        get { return _isStop; }
+    }    
     public bool MyTurn
     {
         get { return _myTurn; }
@@ -42,7 +47,7 @@ public class SeotdaTurnManager : MonoBehaviourPun
     }
     public void NextTurn()
     {
-        if (_myTurn) 
+        if (_myTurn && !_isStop) 
         {
             //마스터 클라이언트한테 턴 넘긴거 보내기
             photonView.RPC("RPC_ChangeTurn", RpcTarget.MasterClient, _curIndex);
@@ -51,17 +56,21 @@ public class SeotdaTurnManager : MonoBehaviourPun
     }
     public void EndGame()
     {
-        photonView.RPC("RPC_EndGame", RpcTarget.All);
+        photonView.RPC("RPC_Stop", RpcTarget.All);
     }
     public void StartGame()
     {
         photonView.RPC("RPC_Start", RpcTarget.All);
     }
+    public void ReStartGame()
+    {
+        photonView.RPC("RPC_ReStartTurn", RpcTarget.All);
+    }
     private void Start()
     {
         _view = GetComponent<PhotonView>();
         SetPlayerList();
-        StartGame();
+        //StartGame();
     }
     private void SetPlayerList()
     {
@@ -75,7 +84,7 @@ public class SeotdaTurnManager : MonoBehaviourPun
     [PunRPC]
     private void RPC_ChangeTurn(int index)
     {
-        if (!PhotonNetwork.IsMasterClient) return;
+        if (!PhotonNetwork.IsMasterClient || _isStop) return;
         AddTurn();
 
         while(true)
@@ -89,7 +98,7 @@ public class SeotdaTurnManager : MonoBehaviourPun
                 AddTurn();
                 if (index == _curIndex) //게임 끝 추가해주기
                 {
-                    photonView.RPC("RPC_EndGame", RpcTarget.All); //이건 다죽었을때 기준임 All부분 빼주기
+                    photonView.RPC("RPC_Stop", RpcTarget.All); //이건 다죽었을때 기준임 All부분 빼주기
                 }
             }
             else
@@ -101,9 +110,13 @@ public class SeotdaTurnManager : MonoBehaviourPun
         }
     }
     [PunRPC]
-    private void RPC_EndGame()
+    private void RPC_Stop()
     {
         //이벤트 발생시켜주기
+        _isStop = true;
+        _myTurn = false;
+        _curIndex = 0;
+        EventManager.Instance.Invoke("OffBottle");
     }
     [PunRPC]
     private void RPC_Start()
@@ -113,12 +126,26 @@ public class SeotdaTurnManager : MonoBehaviourPun
               { "IsAlive", true }
          });
         _myTurn = false;
+        _isStop = false;
+
         if (!PhotonNetwork.IsMasterClient) return;
         foreach (Player player in _playerList)
         {
             photonView.RPC("RPC_UpdateTurn", player, MyPlayer.local.PositionIndex);
         }
         
+    }
+    [PunRPC]
+    private void RPC_ReStartTurn()
+    {
+        _myTurn = false;
+        _isStop = false;
+
+        if (!PhotonNetwork.IsMasterClient) return;
+        foreach (Player player in _playerList)
+        {
+            photonView.RPC("RPC_UpdateTurn", player, MyPlayer.local.PositionIndex);
+        }
     }
     [PunRPC]
     private void RPC_UpdateTurn(int index)

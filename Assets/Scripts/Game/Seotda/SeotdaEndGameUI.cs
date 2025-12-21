@@ -21,17 +21,17 @@ public class SeotdaEndGameUI : MonoBehaviourPun
     [SerializeField]
     private Button _exitButton;
 
-    private bool _isClickPosible = false;
+  
     private bool _isShowReGame = false;
-
+    public void OnClickRestart()
+    {
+        EventManager.Instance.Invoke<bool>("ResetGameManager", true);
+    }
     private void Start()
     {
         OffPanel();
     }
-    private void Update()
-    {
-        if (!_isClickPosible) return;
-    }
+
     private void OnEnable()
     {
         EventManager.Instance.Subscribe("OffEndGameUI", OffPanel);
@@ -70,11 +70,10 @@ public class SeotdaEndGameUI : MonoBehaviourPun
         }
 
         _resultText.text = str;
-        _isClickPosible = true;
         _restartButton.gameObject.SetActive(true);
         _exitButton.gameObject.SetActive(true);
 
-        EventManager.Instance.Invoke("OffBottle");
+        GetComponent<SeotdaTurnManager>().EndGame();
         photonView.RPC("RPC_SetEndPanel", RpcTarget.Others, str);
     }
     [PunRPC]
@@ -97,11 +96,10 @@ public class SeotdaEndGameUI : MonoBehaviourPun
         }
 
         _resultText.text = str;
-        _isClickPosible = true;
         _restartButton.gameObject.SetActive(true);
         _exitButton.gameObject.SetActive(true);
 
-        EventManager.Instance.Invoke("OffBottle");
+        GetComponent<SeotdaTurnManager>().EndGame();
         photonView.RPC("RPC_SetEndPanel", RpcTarget.Others, str);
     }
     [PunRPC]
@@ -111,7 +109,6 @@ public class SeotdaEndGameUI : MonoBehaviourPun
         _resultText.text = str;
         _restartButton.gameObject.SetActive(false);
         _exitButton.gameObject.SetActive(false);
-        EventManager.Instance.Invoke("OffBottle");
     }    
     [PunRPC]
     private void RPC_OffResultPanel()

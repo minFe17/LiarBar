@@ -28,6 +28,7 @@ public class SeotdaGameManager : MonoBehaviourPun
     private bool _isUIOff = true;
 
     private bool _isAllIn = false;
+    private bool _isFirst = true;
 
     private SeotdaTurnManager _turn;
     private List<GameObject> _myCards;
@@ -47,11 +48,13 @@ public class SeotdaGameManager : MonoBehaviourPun
     {
         EventManager.Instance.Subscribe("DiePlayer", DiePlayer);
         EventManager.Instance.Subscribe("EndTime", EndTime);
+        EventManager.Instance.Subscribe("ResetGameManager", ResetGameManager);
     }
     private void OnDisable()
     {
         EventManager.Instance.UnSubscribe("DiePlayer", (Action)DiePlayer);
         EventManager.Instance.UnSubscribe("EndTime", (Action)EndTime);
+        EventManager.Instance.UnSubscribe("ResetGameManager", (Action)ResetGameManager);
     }
     private void Update()
     {
@@ -78,10 +81,11 @@ public class SeotdaGameManager : MonoBehaviourPun
         _pot = 0;
         _stake = 10;
         _callNum = 0;
-        _curPlayer = 0;
+        _curPlayer = PhotonNetwork.PlayerList.Length;
         _curIndex = 0; //카드인덱스임
         _summitNum = 0;
 
+        _isFirst = true;
         _isUIOff = true;
         _isAllIn = false;
 
@@ -125,7 +129,13 @@ public class SeotdaGameManager : MonoBehaviourPun
     {
         if (!PhotonNetwork.IsMasterClient) return;
 
-        if (_callNum == _curPlayer)
+        if (_callNum == _curPlayer && _isFirst)
+        {
+            EventManager.Instance.Invoke("OnSplit");
+            photonView.RPC("RPC_UpdatePot", RpcTarget.All, _stake, _pot, 0, false);// 콜넘버 0으로 초기화
+            _isFirst = false;
+        }
+        else if(_callNum == _curPlayer)
         {
             photonView.RPC("RPC_UpdatePot", RpcTarget.All, _stake, _pot, 0, false);// 콜넘버 0으로 초기화
             _turnMode = ESeotdaTurnMode.SummitMode;

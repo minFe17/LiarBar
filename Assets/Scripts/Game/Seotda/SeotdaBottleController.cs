@@ -11,23 +11,14 @@ public class SeotdaBottleController : MonoBehaviour
 
     private void Start()
     {
+        OnBottle();
         _turn = GetComponentInParent<SeotdaTurnManager>();
         _curTurnIndex = _turn.Turn;
-    }
-    private void OnEnable()
-    {
-        //보틀 끄는건 작성했는데, 켜는거 작성안함
-        EventManager.Instance.Subscribe("OnBottle", OnBottle);
-        EventManager.Instance.Subscribe("OffBottle", OffBottle);
-    }
-    private void OnDisable()
-    {
-        EventManager.Instance.UnSubscribe("OnBottle", (Action)OnBottle);
-        EventManager.Instance.UnSubscribe("OffBottle",(Action) OffBottle);
     }
 
     private void Update()
     {
+        if (!gameObject.activeSelf) return;
         if(_curTurnIndex!=_turn.Turn)
         {
             ChangeRotation();
