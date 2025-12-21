@@ -15,7 +15,7 @@ public class TurnManager : MonoBehaviourPun
 
     bool _isResolvingLiar = false;
     bool _isSettingTurn = false;
-    bool _isFirstGame = true; // 추가!
+    bool _isFirstGame = true;
 
     public Action OnEndRegisterPlayer;
     public Action OnGameEnd;
@@ -158,6 +158,7 @@ public class TurnManager : MonoBehaviourPun
         if (deadIndex < 0)
             return;
 
+        // 순위 기록
         _playerRankings[player.ViewID] = _currentRank;
         photonView.RPC(nameof(RPC_UpdateRanking), RpcTarget.All, player.ViewID, _currentRank);
         _currentRank--;
@@ -169,6 +170,7 @@ public class TurnManager : MonoBehaviourPun
 
         photonView.RPC(nameof(RPC_RemovePlayer), RpcTarget.Others, player.ViewID);
 
+        // 마지막 생존자 = 1위
         if (_players.Count == 1)
         {
             _playerRankings[_players[0].ViewID] = 1;
@@ -249,6 +251,7 @@ public class TurnManager : MonoBehaviourPun
             player.SetRank(rank);
         }
 
+        // 모든 플레이어 순위가 정해졌으면 게임 종료 이벤트 호출
         if (_playerRankings.Count == PhotonNetwork.CurrentRoom.PlayerCount)
         {
             OnGameEnd?.Invoke();

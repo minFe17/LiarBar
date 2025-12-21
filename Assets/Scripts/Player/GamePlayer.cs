@@ -18,7 +18,7 @@ public class GamePlayer : MonoBehaviourPun
     int _totalPotionCount = 6;
     int _deadPotionIndex;
     int _currentPotionIndex;
-    int _rank = -1; // 순위 추가
+    int _rank = -1;
     bool _isMyTurn = false;
 
     public Action OnStartTurn;
@@ -30,7 +30,7 @@ public class GamePlayer : MonoBehaviourPun
     public int TurnIndex { get; private set; }
     public int ViewID => photonView.ViewID;
     public bool IsMyTurn => _isMyTurn;
-    public int Rank => _rank; // 순위 프로퍼티 추가
+    public int Rank => _rank;
 
     void Start()
     {
@@ -66,7 +66,6 @@ public class GamePlayer : MonoBehaviourPun
         TurnManager.Instance.DiePlayer(this);
     }
 
-    // 순위 설정 메서드 추가
     public void SetRank(int rank)
     {
         _rank = rank;
@@ -81,7 +80,6 @@ public class GamePlayer : MonoBehaviourPun
             SimpleSingleton<MediatorManager>.Instance.Notify(EMediatorEventType.InitHandCard, this);
     }
 
-    // 새 라운드 시작 시 카드 초기화
     public void ClearHand()
     {
         _cards.Clear();
@@ -122,7 +120,8 @@ public class GamePlayer : MonoBehaviourPun
     {
         yield return null;
 
-        _potion = PhotonNetwork.Instantiate("LiarBarPotion", _handCardSlot.position, Quaternion.identity).GetComponent<LiarBarPotion>();
+        _potion = PhotonNetwork.Instantiate("LiarBarPotion", _handCardSlot.position, Quaternion.identity)
+            .GetComponent<LiarBarPotion>();
 
         _potion.Init(_handCardSlot);
     }
@@ -157,29 +156,18 @@ public class GamePlayer : MonoBehaviourPun
             return;
 
         _potion.DrinkPotion();
-        SimpleSingleton<MediatorManager>.Instance.Notify(EMediatorEventType.DrinkPotion);
     }
 
     public void ThrowPotion()
     {
-        if (!PhotonNetwork.IsMasterClient)
-            return;
+        // 모든 클라이언트: 포션 던지는 연출
+        SimpleSingleton<MediatorManager>.Instance.Notify(EMediatorEventType.DrinkPotion);
 
-        _potion.ThrowPotion();
-        if (_deadPotionIndex == _currentPotionIndex)
+        // 자기 클라이언트만: 결과 체크 요청
+        if (photonView.IsMine)
         {
-            Die();
-            return;
+            photonView.RPC(nameof(RPC_CheckPotionResult), RpcTarget.MasterClient);
         }
-
-        _currentPotionIndex++;
-        StartCoroutine(ContinueGameRoutine());
-    }
-
-    IEnumerator ContinueGameRoutine()
-    {
-        yield return null;
-        LiarBarTable.Instance.NewRound();
     }
     #endregion
 
@@ -190,7 +178,6 @@ public class GamePlayer : MonoBehaviourPun
         GamePlayer player = PhotonView.Find(viewID).GetComponent<GamePlayer>();
         LiarBarTable.Instance.TurnUI.ShowNextPlayer(player);
 
-        // 해당 플레이어만 턴 활성화
         _isMyTurn = (viewID == ViewID);
 
         if (_isMyTurn && photonView.IsMine)
@@ -232,6 +219,37 @@ public class GamePlayer : MonoBehaviourPun
     void RPC_UpdateThrowCardUI(int viewId, int count)
     {
         SimpleSingleton<MediatorManager>.Instance.Notify(EMediatorEventType.UpdateThrowCardUI, count);
+    }
+
+    [PunRPC]
+    void RPC_CheckPotionResult()
+    {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+
+        if (_deadPotionIndex == _currentPotionIndex)
+        {
+            // 독 포션 - 사망
+            photonView.RPC(nameof(RPC_Die), photonView.Owner);
+            return;
+        }
+
+        // 안전 - 다음 라운드
+        _currentPotionIndex++;
+        TurnManager.Instance.SetNextRoundStartPlayer(TurnIndex);
+        StartCoroutine(ContinueGameRoutine());
+    }
+
+    [PunRPC]
+    void RPC_Die()
+    {
+        Die();
+    }
+
+    IEnumerator ContinueGameRoutine()
+    {
+        yield return null;
+        LiarBarTable.Instance.NewRound();
     }
     #endregion
 }
