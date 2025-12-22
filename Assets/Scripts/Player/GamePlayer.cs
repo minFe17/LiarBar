@@ -64,12 +64,13 @@ public class GamePlayer : MonoBehaviourPun
 
         photonView.RPC(nameof(RPC_DieAnimation), RpcTarget.All);
         TurnManager.Instance.DiePlayer(this);
+        TurnManager.Instance.SetNextRoundStartPlayer(TurnIndex);
+        StartCoroutine(ContinueGameRoutine());
     }
 
     public void SetRank(int rank)
     {
         _rank = rank;
-        Debug.Log($"{photonView.Owner.NickName} 순위: {rank}등");
     }
 
     public void AddCardToHand(ELiarBarCardType randomCard)
@@ -120,9 +121,7 @@ public class GamePlayer : MonoBehaviourPun
     {
         yield return null;
 
-        _potion = PhotonNetwork.Instantiate("LiarBarPotion", _handCardSlot.position, Quaternion.identity)
-            .GetComponent<LiarBarPotion>();
-
+        _potion = PhotonNetwork.Instantiate("LiarBarPotion", _handCardSlot.position, Quaternion.identity).GetComponent<LiarBarPotion>();
         _potion.Init(_handCardSlot);
     }
 
@@ -140,8 +139,6 @@ public class GamePlayer : MonoBehaviourPun
         if (!photonView.IsMine || !_isMyTurn)
             return;
 
-        Debug.Log($"[CreateCard] {TurnIndex}번 플레이어가 카드 {_currentCardTypes.Count}장 생성");
-
         int[] cardInts = _currentCardTypes.Select(c => (int)c).ToArray();
         photonView.RPC(nameof(RPC_RequestCreateCard), RpcTarget.MasterClient, cardInts, ViewID);
         photonView.RPC(nameof(RPC_UpdateThrowCardUI), RpcTarget.All, ViewID, _currentCardTypes.Count);
@@ -149,7 +146,6 @@ public class GamePlayer : MonoBehaviourPun
         _currentCardTypes.Clear();
         _isMyTurn = false;
 
-        Debug.Log($"[CreateCard] EndTurn 호출");
         TurnManager.Instance.EndTurn();
     }
 
@@ -163,7 +159,7 @@ public class GamePlayer : MonoBehaviourPun
 
     public void ThrowPotion()
     {
-        if(_potion != null)
+        if (_potion != null)
             _potion.ThrowPotion();
 
         if (photonView.IsMine)

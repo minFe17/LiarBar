@@ -111,6 +111,10 @@ MonoBehaviour:
   - RPC_DieAnimation
   - RPC_DrinkPotionAnimation
   - RPC_PlayCardAnimation
+  - RPC_OnAlive
+  - RPC_OnRestartPanel
+  - RPC_OnRestartPanels
+  - RPC_ReStartGameManager
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

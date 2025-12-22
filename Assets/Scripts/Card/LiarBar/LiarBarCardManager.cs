@@ -91,11 +91,7 @@ public class LiarBarCardManager : MonoBehaviourPun
 
         Init();
         _targetCard = (ELiarBarCardType)Random.Range(0, (int)ELiarBarCardType.JokerCard);
-
-        if (triggerStartGame)
-            photonView.RPC("RPC_SetTargetCardWithStart", RpcTarget.All, (int)_targetCard);
-        else
-            photonView.RPC("RPC_SetTargetCardOnly", RpcTarget.All, (int)_targetCard);
+        photonView.RPC("RPC_SetTargetCard", RpcTarget.All, (int)_targetCard);
 
         DealCardsToPlayers();
     }
@@ -107,16 +103,10 @@ public class LiarBarCardManager : MonoBehaviourPun
 
     #region RPC
     [PunRPC]
-    void RPC_SetTargetCardWithStart(int cardType)
+    void RPC_SetTargetCard(int cardType)
     {
         _targetCard = (ELiarBarCardType)cardType;
         OnSetTableAction?.Invoke();
-    }
-
-    [PunRPC]
-    void RPC_SetTargetCardOnly(int cardType)
-    {
-        _targetCard = (ELiarBarCardType)cardType;
     }
 
     [PunRPC]
