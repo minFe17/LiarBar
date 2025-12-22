@@ -34,21 +34,8 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
         _photonManager = MonoSingleton<PhotonManager>.Instance;
         _firebaseRest = MonoSingleton<FirebaseREST>.Instance;
 
-        CheckNickname();
         ShowRoomID();
         UpdateAllPlayerUI();
-    }
-
-    void CheckNickname()
-    {
-        // 주석 제거 필요
-        PhotonNetwork.LocalPlayer.NickName = _firebaseRest.User.GetField<string>("nickname");
-
-        if (string.IsNullOrEmpty(_photonManager.Nickname))
-        {
-            _nicknameInputField.SetActive(true);
-            _selectCharacterUI.SetActive(false);
-        }
     }
 
     void ShowRoomID()
@@ -192,6 +179,12 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
 
         // 슬롯 전체 갱신
         UpdateAllPlayerUI();
+    }
+
+    public override void OnJoinedRoom()
+    {
+        PhotonNetwork.LocalPlayer.NickName = _firebaseRest.User.GetField<string>("nickname");
+        AssignRandomPositionIndex();
     }
 
     public override void OnLeftRoom()

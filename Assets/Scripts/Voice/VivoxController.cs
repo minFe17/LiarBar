@@ -4,6 +4,7 @@ using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.Vivox;
 using UnityEngine;
+using Utils;
 
 public class VivoxController : MonoBehaviour
 {
@@ -49,7 +50,8 @@ public class VivoxController : MonoBehaviour
         _loggedIn = true;
 
         // 5. Join Channel
-        await JoinVoiceChannelAsync("test-channel");
+        string roomId = MonoSingleton<PhotonManager>.Instance.RoomID;
+        await JoinVoiceChannelAsync(roomId);
     }
 
     public async Task JoinVoiceChannelAsync(string channelName)
