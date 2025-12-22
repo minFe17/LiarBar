@@ -20,7 +20,7 @@ public class SeotdaShowCards : MonoBehaviour
 
     private Vector3 _originalScale = new Vector3(0.03f, 0.03f, 0.03f);
 
-    private void Start()
+    private void Awake()
     {
         FindCards();
         

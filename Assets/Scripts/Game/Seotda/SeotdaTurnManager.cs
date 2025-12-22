@@ -56,14 +56,17 @@ public class SeotdaTurnManager : MonoBehaviourPun
     }
     public void EndGame()
     {
+        if (!PhotonNetwork.IsMasterClient) return;
         photonView.RPC("RPC_Stop", RpcTarget.All);
     }
     public void StartGame()
     {
+        if (!PhotonNetwork.IsMasterClient) return;
         photonView.RPC("RPC_Start", RpcTarget.All);
     }
     public void ReStartGame()
     {
+        if (!PhotonNetwork.IsMasterClient) return;
         photonView.RPC("RPC_ReStartTurn", RpcTarget.All);
     }
     private void Start()
@@ -79,6 +82,8 @@ public class SeotdaTurnManager : MonoBehaviourPun
         {
             int index = (int)players[i].CustomProperties["PositionIndex"];
             _playerList[index] = players[i];
+            photonView.RPC("RPC_OnAlive", players[i] );
+
         }
     }
     [PunRPC]
@@ -110,13 +115,20 @@ public class SeotdaTurnManager : MonoBehaviourPun
         }
     }
     [PunRPC]
+    private void RPC_OnAlive()
+    {
+        PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable
+         {
+              { "IsAlive", true }
+         });
+    }
+    [PunRPC]
     private void RPC_Stop()
     {
         //이벤트 발생시켜주기
         _isStop = true;
         _myTurn = false;
         _curIndex = 0;
-        EventManager.Instance.Invoke("OffBottle");
     }
     [PunRPC]
     private void RPC_Start()
@@ -142,10 +154,7 @@ public class SeotdaTurnManager : MonoBehaviourPun
         _isStop = false;
 
         if (!PhotonNetwork.IsMasterClient) return;
-        foreach (Player player in _playerList)
-        {
-            photonView.RPC("RPC_UpdateTurn", player, MyPlayer.local.PositionIndex);
-        }
+        photonView.RPC("RPC_ChangeTurn", RpcTarget.MasterClient,0);
     }
     [PunRPC]
     private void RPC_UpdateTurn(int index)

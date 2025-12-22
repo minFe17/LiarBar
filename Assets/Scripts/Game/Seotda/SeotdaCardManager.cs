@@ -68,7 +68,6 @@ public class SeotdaCardManager : MonoBehaviourPun
         winner = 0;
         if (!PhotonNetwork.IsMasterClient) return;
 
-        int rank = 0;
         bool isDdang = false;
         bool isGwangDdang = false;
         int amhang = -1;
@@ -90,11 +89,11 @@ public class SeotdaCardManager : MonoBehaviourPun
 
 
 
-        if (isGwangDdang && amhang >= 0 && rank != 1)
+        if (isGwangDdang && amhang >= 0 && list[0].data.rank != 1)
             winner = amhang;
-        else if (isDdang && ddangjap >= 0 && rank < 3)
+        else if (isDdang && ddangjap >= 0 && list[0].data.rank < 3)
             winner = ddangjap;
-        else if (rank == 4 || rank == 6)
+        else if (list[0].data.rank == 4 || list[0].data.rank == 6)
         {
             winner = -1;
             //재시작 rpc 시작하기
@@ -114,7 +113,7 @@ public class SeotdaCardManager : MonoBehaviourPun
     }
     private void Start()
     {
-        SetCardGame(); //이거 GameManager같은걸로 빼서 관리하면될듯 이벤트이용해서 
+        //SetCardGame(); //이거 GameManager같은걸로 빼서 관리하면될듯 이벤트이용해서 
         _isStart = true;
         //SplitCard();
     }
@@ -197,10 +196,6 @@ public class SeotdaCardManager : MonoBehaviourPun
 
         _myCards.Clear();
 
-        // PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable
-        //  {
-        //         
-        //  });
 
         if (!PhotonNetwork.IsMasterClient)
             return;   

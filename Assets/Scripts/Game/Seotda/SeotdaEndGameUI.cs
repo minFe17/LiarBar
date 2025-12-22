@@ -5,6 +5,7 @@ using System;
 using Photon.Pun;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 
 public class SeotdaEndGameUI : MonoBehaviourPun
 {
@@ -21,8 +22,8 @@ public class SeotdaEndGameUI : MonoBehaviourPun
     [SerializeField]
     private Button _exitButton;
 
-  
     private bool _isShowReGame = false;
+    private float _timer = 0;
     private void OnClickRestart()
     {
         if (!PhotonNetwork.IsMasterClient) return;
@@ -42,6 +43,20 @@ public class SeotdaEndGameUI : MonoBehaviourPun
     private void OnDisable()
     {
         EventManager.Instance.UnSubscribe("OffEndGameUI", (Action)OffPanel);
+    }
+    private void Update()
+    {
+        if(_reGame.activeSelf && _isShowReGame)
+        {
+            _timer += Time.deltaTime;
+            if(_timer>3)
+            {
+                _isShowReGame = false;
+                _timer = 0;
+                if (!PhotonNetwork.IsMasterClient) return;
+                photonView.RPC("RPC_ReStartGame", RpcTarget.All, false);
+            }
+        }
     }
     private void OffPanel()
     {
@@ -122,7 +137,25 @@ public class SeotdaEndGameUI : MonoBehaviourPun
     private void RPC_ReStartGame(bool isRestart)
     {
         _result.SetActive(false);
+        _reGame.SetActive(false);
         EventManager.Instance.Invoke<bool>("ResetSeotdaTable", isRestart);
+    }
+    [PunRPC]
+    private void RPC_OnRestartPanel(int type)
+    {
+        if (!PhotonNetwork.IsMasterClient) return;
+        _reGame.SetActive(true);
+        string str = DataManager.Instance.FindDataToType((ESeotdaRuleType)type).Value.name;
+        _name.text = str;
+        _isShowReGame = true;
+        photonView.RPC("RPC_OnRestartPanels", RpcTarget.Others, str);
+    }
+    [PunRPC]
+    private void RPC_OnRestartPanels(string str)
+    {
+        _name.text = str;
+        _reGame.SetActive(true);
+        _isShowReGame = true;
     }
     #endregion
 }

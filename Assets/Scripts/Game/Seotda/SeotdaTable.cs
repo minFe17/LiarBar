@@ -21,6 +21,8 @@ public class SeotdaTable : MonoBehaviourPun
     private float _timer = 0f;
     private int _splitNum = 0;
 
+    private bool _isFirst = true;
+
     private void Awake()
     {
         FindCards();
@@ -41,18 +43,27 @@ public class SeotdaTable : MonoBehaviourPun
     }
     private void Update()
     {
+        
         if (!_isSplitEvent)
             SplitCardToEvent();
 
-        if(_timer>2.0f && _splitNum==0)
+        if (_timer > 2.0f && _splitNum == 0 && _isFirst)
+        {
             ResetSeotdaTable();
-        else if(_timer>3.0f && _splitNum == 1)
+        }
+        else if (_timer > 3.0f && _splitNum == 1 && _isFirst)
         {
             OnSplitEvent();
             GetComponent<SeotdaTurnManager>().StartGame();
+            _isFirst = false;
             return;
         }
-        else if(_timer<=3.0f)
+        else if(_timer > 3.0f && _splitNum == 1 && !_isFirst)
+        {
+            OnSplitEvent();
+            GetComponent<SeotdaTurnManager>().ReStartGame();
+        }
+        else if (_timer <= 3.0f)
             _timer += Time.deltaTime;
     }
     //리셋 만들어주기
@@ -66,20 +77,25 @@ public class SeotdaTable : MonoBehaviourPun
         EventManager.Instance.UnSubscribe("OnSplit",(Action)OnSplitEvent);
         EventManager.Instance.UnSubscribe("ResetSeotdaTable", (Action<bool>)ResetSeotdaTable);
     }
-    private void ResetSeotdaTable(bool isRestart = false)
+    private void ResetSeotdaTable(bool isFirst = true)
     {
         _timer = 0f;
         EventManager.Instance.Invoke("OffEndGameUI");
-        EventManager.Instance.Invoke("ResetGameManager");
-        EventManager.Instance.Invoke("OffEndGameUI");
+
+        _isFirst = isFirst;
         _splitNum = 0;
         if (!PhotonNetwork.IsMasterClient) return;
-        OnSplitEvent();
-        photonView.RPC("RPC_ResetCards", RpcTarget.All);
-        if(isRestart)
-            GetComponent<SeotdaTurnManager>().ReStartGame();
+        if(isFirst)
+        {
+            photonView.RPC("RPC_OnAlive", RpcTarget.All);
+            photonView.RPC("RPC_ResetGameManager", RpcTarget.All);
+        }
         else
-            GetComponent<SeotdaTurnManager>().StartGame();
+            photonView.RPC("RPC_ReStartGameManager",RpcTarget.All);
+        photonView.RPC("RPC_ResetCards", RpcTarget.All);
+
+        OnSplitEvent();
+       
     }
     private void OnSplitEvent()
     {

@@ -3,6 +3,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using System.Collections.Generic;
 using UnityEngine;
+using Utils;
 
 
 public class MyPlayer : MonoBehaviour
@@ -24,7 +25,6 @@ public class MyPlayer : MonoBehaviour
 
     private void Awake()
     {
-        
     }
     private void Start()
     {

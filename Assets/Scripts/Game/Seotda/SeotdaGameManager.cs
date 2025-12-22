@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 using System.Collections.Generic;
 using System;
 using ExitGames.Client.Photon;
+using Utils;
 
 public class SeotdaGameManager : MonoBehaviourPun
 {
@@ -81,7 +82,21 @@ public class SeotdaGameManager : MonoBehaviourPun
         _pot = 0;
         _stake = 10;
         _callNum = 0;
+        _curIndex = 0; //카드인덱스임
+        _summitNum = 0;
         _curPlayer = PhotonNetwork.PlayerList.Length;
+
+        _isFirst = true;
+        _isUIOff = true;
+        _isAllIn = false;
+
+        _summitCards.Clear();
+    }
+    private void RestartGameManager()
+    {
+        _turnMode = ESeotdaTurnMode.PotMode;
+        _stake = 10;
+        _callNum = 0;
         _curIndex = 0; //카드인덱스임
         _summitNum = 0;
 
@@ -90,7 +105,17 @@ public class SeotdaGameManager : MonoBehaviourPun
         _isAllIn = false;
 
         _summitCards.Clear();
-
+        FindPlayerLength();
+    }
+    private void FindPlayerLength()
+    {
+        int num = 0;
+        for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+        {
+            if (PhotonNetwork.PlayerList[i].CustomProperties["IsAlive"] != null && (bool)PhotonNetwork.PlayerList[i].CustomProperties["IsAlive"])
+                num++;
+        }
+        _curPlayer = num;
     }
     private void OnUI()
     {
@@ -161,7 +186,9 @@ public class SeotdaGameManager : MonoBehaviourPun
     }
     private void PotMoney()
     {
+        
         //돈 있나없나 체크
+        //돈 있으면 내돈 차감하고 rpc부르면되고, 없으면 막아둬야됨
         if (Keyboard.current.cKey.wasPressedThisFrame)
         {
             photonView.RPC("RPC_ChangeStake", RpcTarget.MasterClient, 0);
@@ -181,9 +208,9 @@ public class SeotdaGameManager : MonoBehaviourPun
         {
             photonView.RPC("RPC_ChangeStake", RpcTarget.MasterClient, 1);
         }
-        else if (Keyboard.current.hKey.wasPressedThisFrame && !_isAllIn)
+        else if (Keyboard.current.jKey.wasPressedThisFrame && !_isAllIn)
         {
-            photonView.RPC("RPC_ChangeStake", RpcTarget.MasterClient, 3);
+            photonView.RPC("RPC_ChangeStake", RpcTarget.MasterClient, 3);//내돈 넘겨줘야됨
         }
         else
             return;
@@ -192,7 +219,7 @@ public class SeotdaGameManager : MonoBehaviourPun
     }
     private void SummitCard()
     {
-
+        Debug.Log(MonoSingleton<FirebaseREST>.Instance.User.GetField<string>("nickname"));
         if (Keyboard.current.aKey.wasPressedThisFrame)
         {
             _myCards[_curIndex].transform.localScale = _originScale;
@@ -280,7 +307,6 @@ public class SeotdaGameManager : MonoBehaviourPun
         {//게임멈추기
             photonView.RPC("RPC_CheckEndGame", RpcTarget.MasterClient);
         }
-
         else
         {
             _turn.NextTurn();
@@ -319,7 +345,7 @@ public class SeotdaGameManager : MonoBehaviourPun
         _isAllIn = isAllIn;
     }
     [PunRPC]
-    private void RPC_ChangeStake(int num)
+    private void RPC_ChangeStake(int num, int allIn = 0)
     {
         if (!PhotonNetwork.IsMasterClient) return;
 
@@ -369,9 +395,9 @@ public class SeotdaGameManager : MonoBehaviourPun
         if (winner == 0)
             photonView.RPC("RPC_OnResultPanel", RpcTarget.MasterClient, types, indexes);
         else if (winner == -1) // 재시작해주기
-            return;
-        else if (winner == -2)//재시작해주기 (순위같은애들만)
-            return;
+            photonView.RPC("RPC_OnRestartPanel", RpcTarget.MasterClient,types[0]);
+        //else if (winner == -2)//재시작해주기 (순위같은애들만)
+        //    return;
         else //특별한 위너~!
             photonView.RPC("RPC_OnResultPanelToSpecial", RpcTarget.MasterClient, types, indexes, winner);
             return;
@@ -382,6 +408,11 @@ public class SeotdaGameManager : MonoBehaviourPun
         ResetGameManager();
         _originScale = Vector3.zero;
     }
-
+    [PunRPC]
+    private void RPC_ReStartGameManager()
+    {
+        RestartGameManager();
+        _originScale = Vector3.zero;
+    }
     #endregion
 }
