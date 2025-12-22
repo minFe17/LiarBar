@@ -26,6 +26,7 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
     [SerializeField] Toggle _voiceToggle;
 
     bool _isReady = false;
+    bool _hasInitialized = false; // 초기화 플래그 추가
 
     FirebaseREST _firebaseRest;
     PhotonManager _photonManager;
@@ -36,6 +37,42 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
         _firebaseRest = MonoSingleton<FirebaseREST>.Instance;
 
         ShowRoomID();
+
+        // Start에서 초기화 시도 (Firebase 로드 완료 후)
+        InitializePlayer();
+    }
+
+    void InitializePlayer()
+    {
+        // 이미 초기화했으면 무시
+        if (_hasInitialized)
+            return;
+
+        // Firebase User가 null이면 대기
+        if (_firebaseRest.User == null)
+        {
+            Debug.Log("Firebase User가 아직 로드되지 않았습니다. 0.5초 후 재시도...");
+            Invoke(nameof(InitializePlayer), 0.5f);
+            return;
+        }
+
+        string nickname = _firebaseRest.User.GetField<string>("nickname");
+
+        // 닉네임이 비어있으면 대기
+        if (string.IsNullOrEmpty(nickname))
+        {
+            Debug.Log("닉네임이 비어있습니다. Firebase 로드 대기 중...");
+            Invoke(nameof(InitializePlayer), 0.5f);
+            return;
+        }
+
+        // 초기화 완료
+        _hasInitialized = true;
+        Debug.Log($"플레이어 초기화 완료: {nickname}");
+
+        _photonManager.SetNickname(nickname);
+        AssignRandomPositionIndex();
+        UpdateAllPlayerUI();
     }
 
     void ShowRoomID()
@@ -69,7 +106,6 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
         }
     }
 
-    // Generic helper 함수
     T GetCustomProperty<T>(Player player, string key, T defaultValue)
     {
         if (player.CustomProperties.TryGetValue(key, out object value) && value is T typedValue)
@@ -84,7 +120,7 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
             return;
 
         // 2. 인원 체크
-        if (PhotonNetwork.PlayerList.Length != 4) //멀티 인원
+        if (PhotonNetwork.PlayerList.Length != 4)
             return;
 
         // 3. 모든 플레이어 Ready 체크
@@ -148,13 +184,8 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
 
     public void OnClickReadyButton()
     {
-        // 토글
         _isReady = !_isReady;
-
-        // Photon에 업데이트
         _photonManager.SetReady(_isReady);
-
-        // 슬롯 UI 갱신
         UpdateAllPlayerUI();
     }
 
@@ -167,28 +198,21 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
     #region Photon Callbacks
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
     {
-        // 슬롯 전체 갱신
         UpdateAllPlayerUI();
         CheckAllPlayerReady();
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        // PlayerInfo에서 제거
         _photonManager.PlayerInfo.Remove(otherPlayer.ActorNumber);
-
-        // 슬롯 전체 갱신
         UpdateAllPlayerUI();
     }
 
     public override void OnJoinedRoom()
     {
-        string nickname = _firebaseRest.User.GetField<string>("nickname");
-        // 마스터 클라는 nickname 출력 X
-        Debug.Log(nickname);
-        _photonManager.SetNickname(nickname);
-        AssignRandomPositionIndex();
-        UpdateAllPlayerUI();
+        // OnJoinedRoom은 초기화만 트리거
+        Debug.Log("OnJoinedRoom 호출됨");
+        InitializePlayer();
     }
 
     public override void OnLeftRoom()
