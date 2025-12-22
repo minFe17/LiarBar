@@ -53,9 +53,7 @@ public class LiarBarCardManager : MonoBehaviourPun
 
         // 모든 플레이어의 손패 초기화 (각 클라이언트에서 실행)
         foreach (GamePlayer player in players)
-        {
             photonView.RPC("RPC_ClearHand", player.photonView.Owner);
-        }
 
         for (int i = _startDealCardIndex; i < _startDealCardIndex + players.Count; i++)
         {
@@ -119,7 +117,6 @@ public class LiarBarCardManager : MonoBehaviourPun
     void RPC_SetTargetCardOnly(int cardType)
     {
         _targetCard = (ELiarBarCardType)cardType;
-        // OnSetTableAction 호출 안 함
     }
 
     [PunRPC]

@@ -23,7 +23,7 @@ public class GameResultUI : MonoBehaviour
     void Start()
     {
         ShowRankings();
-        //GetMoney();
+        GetMoney();
     }
 
     void Update()
@@ -75,7 +75,6 @@ public class GameResultUI : MonoBehaviour
                 MonoSingleton<FirebaseREST>.Instance.User.SetField("money", money);
                 MonoSingleton<FirebaseREST>.Instance.SaveUserData();
             }
-
         }
     }
 }

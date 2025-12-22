@@ -247,15 +247,11 @@ public class TurnManager : MonoBehaviourPun
 
         GamePlayer player = PhotonView.Find(viewID)?.GetComponent<GamePlayer>();
         if (player != null)
-        {
             player.SetRank(rank);
-        }
 
         // 모든 플레이어 순위가 정해졌으면 게임 종료 이벤트 호출
         if (_playerRankings.Count == PhotonNetwork.CurrentRoom.PlayerCount)
-        {
             OnGameEnd?.Invoke();
-        }
     }
     #endregion
 }

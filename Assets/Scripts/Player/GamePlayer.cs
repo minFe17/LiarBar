@@ -62,7 +62,7 @@ public class GamePlayer : MonoBehaviourPun
         if (!photonView.IsMine)
             return;
 
-        _animator.SetTrigger("doDie");
+        photonView.RPC(nameof(RPC_DieAnimation), RpcTarget.All);
         TurnManager.Instance.DiePlayer(this);
     }
 
@@ -91,7 +91,7 @@ public class GamePlayer : MonoBehaviourPun
             return;
 
         _currentCardTypes.AddRange(cardTypes);
-        _animator.SetTrigger("doCard");
+        photonView.RPC(nameof(RPC_PlayCardAnimation), RpcTarget.All);
     }
 
     public void CallLiar()
@@ -99,7 +99,7 @@ public class GamePlayer : MonoBehaviourPun
         if (!photonView.IsMine)
             return;
 
-        _animator.SetTrigger("doCallLiar");
+        photonView.RPC(nameof(RPC_CallLiarAnimation), RpcTarget.All);
     }
 
     public void DrinkPotion()
@@ -107,7 +107,7 @@ public class GamePlayer : MonoBehaviourPun
         if (!photonView.IsMine)
             return;
 
-        _animator.SetTrigger("doDrinkPotion");
+        photonView.RPC(nameof(RPC_DrinkPotionAnimation), RpcTarget.All);
         StartCoroutine(SpawnPotionNextFrame());
     }
 
@@ -140,6 +140,8 @@ public class GamePlayer : MonoBehaviourPun
         if (!photonView.IsMine || !_isMyTurn)
             return;
 
+        Debug.Log($"[CreateCard] {TurnIndex}번 플레이어가 카드 {_currentCardTypes.Count}장 생성");
+
         int[] cardInts = _currentCardTypes.Select(c => (int)c).ToArray();
         photonView.RPC(nameof(RPC_RequestCreateCard), RpcTarget.MasterClient, cardInts, ViewID);
         photonView.RPC(nameof(RPC_UpdateThrowCardUI), RpcTarget.All, ViewID, _currentCardTypes.Count);
@@ -147,6 +149,7 @@ public class GamePlayer : MonoBehaviourPun
         _currentCardTypes.Clear();
         _isMyTurn = false;
 
+        Debug.Log($"[CreateCard] EndTurn 호출");
         TurnManager.Instance.EndTurn();
     }
 
@@ -160,12 +163,12 @@ public class GamePlayer : MonoBehaviourPun
 
     public void ThrowPotion()
     {
-        // 모든 클라이언트: 포션 던지는 연출
-        SimpleSingleton<MediatorManager>.Instance.Notify(EMediatorEventType.DrinkPotion);
+        if(_potion != null)
+            _potion.ThrowPotion();
 
-        // 자기 클라이언트만: 결과 체크 요청
         if (photonView.IsMine)
         {
+            SimpleSingleton<MediatorManager>.Instance.Notify(EMediatorEventType.DrinkPotion);
             photonView.RPC(nameof(RPC_CheckPotionResult), RpcTarget.MasterClient);
         }
     }
@@ -229,12 +232,10 @@ public class GamePlayer : MonoBehaviourPun
 
         if (_deadPotionIndex == _currentPotionIndex)
         {
-            // 독 포션 - 사망
             photonView.RPC(nameof(RPC_Die), photonView.Owner);
             return;
         }
 
-        // 안전 - 다음 라운드
         _currentPotionIndex++;
         TurnManager.Instance.SetNextRoundStartPlayer(TurnIndex);
         StartCoroutine(ContinueGameRoutine());
@@ -244,6 +245,30 @@ public class GamePlayer : MonoBehaviourPun
     void RPC_Die()
     {
         Die();
+    }
+
+    [PunRPC]
+    void RPC_DieAnimation()
+    {
+        _animator.SetTrigger("doDie");
+    }
+
+    [PunRPC]
+    void RPC_DrinkPotionAnimation()
+    {
+        _animator.SetTrigger("doDrinkPotion");
+    }
+
+    [PunRPC]
+    void RPC_PlayCardAnimation()
+    {
+        _animator.SetTrigger("doCard");
+    }
+
+    [PunRPC]
+    void RPC_CallLiarAnimation()
+    {
+        _animator.SetTrigger("doCallLiar");
     }
 
     IEnumerator ContinueGameRoutine()

@@ -107,6 +107,10 @@ MonoBehaviour:
   - RPC_OnSplitEvent
   - RPC_ReStartTurn
   - RPC_ReStartGame
+  - RPC_CallLiarAnimation
+  - RPC_DieAnimation
+  - RPC_DrinkPotionAnimation
+  - RPC_PlayCardAnimation
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

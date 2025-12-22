@@ -10,17 +10,18 @@ public class GameSelectUI : MonoBehaviourPunCallbacks
 
     List<Image> _images = new List<Image>();
 
+    Color _normalColor = new Color32(245, 161, 161, 255);
+    Color _selectColor = new Color32(245, 94, 94, 255);
+
     void Start()
     {
-        if (PhotonNetwork.IsMasterClient)
-            return;
         for (int i = 0; i < _buttons.Count; i++)
         {
-            _buttons[i].enabled = false;
+            if (!PhotonNetwork.IsMasterClient)
+                _buttons[i].enabled = false;
             _images.Add(_buttons[i].GetComponent<Image>());
-            _images[i].color = _buttons[i].colors.normalColor;
+            _images[i].color = _normalColor;
         }
-
         LoadCurrentGameMode();
     }
 
@@ -31,8 +32,18 @@ public class GameSelectUI : MonoBehaviourPunCallbacks
         {
             int gameMode = (int)gameModeObj;
             EGameMode gameModeType = (EGameMode)gameMode;
-
             UpdateUI(gameMode);
+        }
+    }
+
+    void UpdateUI(int selectedMode)
+    {
+        for (int i = 0; i < _buttons.Count; i++)
+        {
+            if (i == selectedMode)
+                _images[i].color = _selectColor;
+            else
+                _images[i].color = _normalColor;
         }
     }
 
@@ -49,19 +60,7 @@ public class GameSelectUI : MonoBehaviourPunCallbacks
             { "GameMode", gameMode }
         };
         PhotonNetwork.CurrentRoom.SetCustomProperties(roomProps);
-    }
-
-    void UpdateUI(int selectedMode)
-    {
-        if (PhotonNetwork.IsMasterClient)
-            return;
-        for (int i = 0; i < _buttons.Count; i++)
-        {
-            if (i == selectedMode)
-                _images[i].color = _buttons[i].colors.selectedColor;
-            else
-                _images[i].color = _buttons[i].colors.normalColor;
-        }
+        UpdateUI(gameMode);
     }
 
     // Room Properties가 변경되면 자동으로 호출됨
@@ -71,7 +70,6 @@ public class GameSelectUI : MonoBehaviourPunCallbacks
         {
             int gameMode = (int)gameModeObj;
             EGameMode gameModeType = (EGameMode)gameMode;
-
             UpdateUI(gameMode);
         }
     }

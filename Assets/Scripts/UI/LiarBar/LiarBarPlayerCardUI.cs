@@ -184,10 +184,7 @@ public class LiarBarPlayerCardUI : MonoBehaviour, IMediatorEvent
         List<LiarBarCardSlot> selectedSlots = _cardSlots.Where(slot => slot.IsSelected).ToList();
 
         if (selectedSlots.Count == 0)
-        {
-            Debug.Log("선택한 카드가 없습니다!");
             return;
-        }
 
         List<ELiarBarCardType> playedCards = selectedSlots.Select(slot => slot.CardType).ToList();
         _gamePlayer.PlayCard(playedCards);
