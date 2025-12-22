@@ -42,7 +42,7 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
     void CheckNickname()
     {
         // 주석 제거 필요
-        //PhotonNetwork.LocalPlayer.NickName = _firebaseRest.User.GetField<string>("nickname");
+        PhotonNetwork.LocalPlayer.NickName = _firebaseRest.User.GetField<string>("nickname");
 
         if (string.IsNullOrEmpty(_photonManager.Nickname))
         {
