@@ -142,12 +142,10 @@ public class SeotdaGameManager : MonoBehaviourPun
     }
     private void DiePlayer()
     {
-        //if (!PhotonNetwork.IsMasterClient) return;
-        //알피씨로 보내기
 
         _curPlayer--;
         Debug.Log("플레이어 수 : " + _curPlayer);
-        photonView.RPC("RPC_PlayerNumUpdate", RpcTarget.All, _curPlayer); // =>이거 어떻게해줄지 고민하기
+        photonView.RPC("RPC_PlayerNumUpdate", RpcTarget.All, _curPlayer); 
     }
 
     private void UpdateTurnMode()
@@ -191,26 +189,27 @@ public class SeotdaGameManager : MonoBehaviourPun
         //돈 있으면 내돈 차감하고 rpc부르면되고, 없으면 막아둬야됨
         if (Keyboard.current.cKey.wasPressedThisFrame)
         {
-            photonView.RPC("RPC_ChangeStake", RpcTarget.MasterClient, 0);
+            photonView.RPC("RPC_ChangeStake", RpcTarget.MasterClient, 0,0);
             Debug.Log("콜함");
 
         }
         else if (Keyboard.current.xKey.wasPressedThisFrame)
         {
             _turn.Die();
+            photonView.RPC("RPC_OnCallText", RpcTarget.All, "Die", new Color32(255, 68, 0, 255));
             return;
         }
         else if (Keyboard.current.bKey.wasPressedThisFrame && !_isAllIn)
         {
-            photonView.RPC("RPC_ChangeStake", RpcTarget.MasterClient, 2);
+            photonView.RPC("RPC_ChangeStake", RpcTarget.MasterClient, 2,0);
         }
         else if (Keyboard.current.hKey.wasPressedThisFrame && !_isAllIn)
         {
-            photonView.RPC("RPC_ChangeStake", RpcTarget.MasterClient, 1);
+            photonView.RPC("RPC_ChangeStake", RpcTarget.MasterClient, 1,0);
         }
         else if (Keyboard.current.jKey.wasPressedThisFrame && !_isAllIn)
         {
-            photonView.RPC("RPC_ChangeStake", RpcTarget.MasterClient, 3);//내돈 넘겨줘야됨
+            photonView.RPC("RPC_ChangeStake", RpcTarget.MasterClient, 3,0);//내돈 넘겨줘야됨
         }
         else
             return;
@@ -345,7 +344,7 @@ public class SeotdaGameManager : MonoBehaviourPun
         _isAllIn = isAllIn;
     }
     [PunRPC]
-    private void RPC_ChangeStake(int num, int allIn = 0)
+    private void RPC_ChangeStake(int num, int allInMoney)
     {
         if (!PhotonNetwork.IsMasterClient) return;
 
@@ -353,17 +352,21 @@ public class SeotdaGameManager : MonoBehaviourPun
         {
             case 0:
                 _callNum++;
+                photonView.RPC("RPC_OnCallText", RpcTarget.All, "Call", new Color32(255,233,129,255));
                 break;
             case 1: // 하프
                 _stake = _stake + (int)(_stake * 0.5f);
+                photonView.RPC("RPC_OnCallText", RpcTarget.All, "Half", new Color32(37,255,238,255));
                 _callNum = 1;
                 break;
             case 2: //더블
                 _stake *= 2;
                 _callNum = 1;
+                photonView.RPC("RPC_OnCallText", RpcTarget.All, "Double", new Color32(112,255,0,255));
                 break;
             case 3: //올인
-                //_stake = mymoney; 데이터 가져와야됨
+                    //_stake = mymoney; 데이터 가져와야됨
+                photonView.RPC("RPC_OnCallText", RpcTarget.All, "AllIn", new Color32(255,0,226,255));
                 _isAllIn = true;
                 break;
         }

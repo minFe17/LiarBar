@@ -81,7 +81,8 @@ public class SeotdaEndGameUI : MonoBehaviourPun
         string str="";
         for(int i=0;i< types.Length;i++)
         {
-            str += i + 1 + "등 " + "플레이어 아이디" + FindPlayer(indexes[i]) + " ";
+            string name = PhotonNetwork.PlayerList[FindPlayer(indexes[i])].NickName;
+            str += i + 1 + "등 "  + name + " ";
             if ((ESeotdaRuleType)types[i] == ESeotdaRuleType.Keut || (ESeotdaRuleType)types[i] == ESeotdaRuleType.Ddang)
                 str += GetComponent<SeotdaCardManager>().FindMonth(indexes[i]);
             str += DataManager.Instance.FindDataToType((ESeotdaRuleType)types[i]).Value.name + "\n";
@@ -101,13 +102,15 @@ public class SeotdaEndGameUI : MonoBehaviourPun
         _result.SetActive(true);
         string str = "";
         int num = 1;
-        str+=num + "등 + 플레이어 아이디 " + FindPlayer(indexes[winner])+" "+ 
+        string name = PhotonNetwork.PlayerList[FindPlayer(indexes[winner])].NickName;
+        str +=num + "등 "+  name + " "+ 
             DataManager.Instance.FindDataToType((ESeotdaRuleType)types[winner]).Value.name + "\n";
         num++;
         for (int i = 0; i < types.Length; i++)
         {
             if (i == winner) continue;
-            str += num++ + "등 " + "플레이어 아이디" + FindPlayer(indexes[i]) + " ";
+            name = PhotonNetwork.PlayerList[FindPlayer(indexes[i])].NickName;
+            str += num++ + "등 "  + name + " ";
             if ((ESeotdaRuleType)types[i] == ESeotdaRuleType.Keut || (ESeotdaRuleType)types[i] == ESeotdaRuleType.Ddang)
                 str += GetComponent<SeotdaCardManager>().FindMonth(indexes[i]);
             str += DataManager.Instance.FindDataToType((ESeotdaRuleType)types[i]).Value.name + "\n";

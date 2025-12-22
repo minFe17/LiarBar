@@ -115,6 +115,8 @@ MonoBehaviour:
   - RPC_OnRestartPanel
   - RPC_OnRestartPanels
   - RPC_ReStartGameManager
+  - OnCallText
+  - RPC_OnCallText
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
