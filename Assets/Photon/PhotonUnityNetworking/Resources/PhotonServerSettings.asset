@@ -106,6 +106,7 @@ MonoBehaviour:
   - RPC_Stop
   - RPC_OnSplitEvent
   - RPC_ReStartTurn
+  - RPC_ReStartGame
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

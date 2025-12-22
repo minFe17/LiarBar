@@ -23,13 +23,16 @@ public class SeotdaEndGameUI : MonoBehaviourPun
 
   
     private bool _isShowReGame = false;
-    public void OnClickRestart()
+    private void OnClickRestart()
     {
-        EventManager.Instance.Invoke<bool>("ResetGameManager", true);
+        if (!PhotonNetwork.IsMasterClient) return;
+        Debug.Log("클릭 버튼");
+        photonView.RPC("RPC_ReStartGame", RpcTarget.All, true);
     }
     private void Start()
     {
         OffPanel();
+        _restartButton.onClick.AddListener(OnClickRestart);
     }
 
     private void OnEnable()
@@ -114,6 +117,12 @@ public class SeotdaEndGameUI : MonoBehaviourPun
     private void RPC_OffResultPanel()
     {
         _result.SetActive(false);
+    }
+    [PunRPC]
+    private void RPC_ReStartGame(bool isRestart)
+    {
+        _result.SetActive(false);
+        EventManager.Instance.Invoke<bool>("ResetSeotdaTable", isRestart);
     }
     #endregion
 }

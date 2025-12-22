@@ -72,6 +72,7 @@ public class SeotdaTable : MonoBehaviourPun
         EventManager.Instance.Invoke("OffEndGameUI");
         EventManager.Instance.Invoke("ResetGameManager");
         EventManager.Instance.Invoke("OffEndGameUI");
+        _splitNum = 0;
         if (!PhotonNetwork.IsMasterClient) return;
         OnSplitEvent();
         photonView.RPC("RPC_ResetCards", RpcTarget.All);

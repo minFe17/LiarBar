@@ -13,7 +13,7 @@ public class SeotdaBottleController : MonoBehaviour
     {
         OnBottle();
         _turn = GetComponentInParent<SeotdaTurnManager>();
-        _curTurnIndex = _turn.Turn;
+        //_curTurnIndex = _turn.Turn;
     }
 
     private void Update()

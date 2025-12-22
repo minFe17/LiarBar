@@ -197,10 +197,10 @@ public class SeotdaCardManager : MonoBehaviourPun
 
         _myCards.Clear();
 
-        PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable
-         {
-              { "IsAlive", true }
-         });
+        // PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable
+        //  {
+        //         
+        //  });
 
         if (!PhotonNetwork.IsMasterClient)
             return;   

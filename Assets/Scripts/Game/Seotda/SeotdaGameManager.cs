@@ -77,7 +77,7 @@ public class SeotdaGameManager : MonoBehaviourPun
 
     private void ResetGameManager()
     {
-        ESeotdaTurnMode _turnMode = ESeotdaTurnMode.PotMode;
+        _turnMode = ESeotdaTurnMode.PotMode;
         _pot = 0;
         _stake = 10;
         _callNum = 0;
