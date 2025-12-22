@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
+using Unity.Services.Vivox;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -35,7 +36,6 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
         _firebaseRest = MonoSingleton<FirebaseREST>.Instance;
 
         ShowRoomID();
-        UpdateAllPlayerUI();
     }
 
     void ShowRoomID()
@@ -138,7 +138,7 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
         _nicknameInputField.SetActive(false);
         _selectCharacterUI.SetActive(true);
         AssignRandomPositionIndex();
-        UpdateAllPlayerUI(); //이거해줘야되나?
+        UpdateAllPlayerUI();
     }
 
     public void OnClickExitRoom()
@@ -160,7 +160,7 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
 
     public void OnClickVoiceToggle()
     {
-        MonoSingleton<VoiceManager>.Instance.ChangeVoiceChat(_voiceToggle.isOn);
+        // 비복스 음소거 토글
     }
     #endregion
 
@@ -183,8 +183,12 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        PhotonNetwork.LocalPlayer.NickName = _firebaseRest.User.GetField<string>("nickname");
+        string nickname = _firebaseRest.User.GetField<string>("nickname");
+        // 마스터 클라는 nickname 출력 X
+        Debug.Log(nickname);
+        _photonManager.SetNickname(nickname);
         AssignRandomPositionIndex();
+        UpdateAllPlayerUI();
     }
 
     public override void OnLeftRoom()
