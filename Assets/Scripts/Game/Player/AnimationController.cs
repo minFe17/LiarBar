@@ -11,7 +11,7 @@ public class AnimationController : MonoBehaviour
     private CameraFollow _camera;
     private GamePlayer _player;
 
-    private void Start()
+    private void Awake()
     {
         _animator = GetComponent<Animator>();
         _view = GetComponentInParent<PhotonView>();
@@ -19,6 +19,10 @@ public class AnimationController : MonoBehaviour
         _player = GetComponentInParent<GamePlayer>();
         _player.Animator = _animator;
 
+
+    }
+    private void OnEnable()
+    {
         if (!_view.IsMine && FindFirstObjectByType<InGameManager>().Mode != EGameMode.Seotda) return;
         _animator.SetBool("HoldCard", true);
     }

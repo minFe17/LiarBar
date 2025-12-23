@@ -23,6 +23,8 @@ public class MyPlayer : MonoBehaviour
         { get { return _leftHand; } }
     public int PositionIndex
     { get { return _positionIndex; } }    
+    public int Money
+    { get { return MonoSingleton<FirebaseREST>.Instance.User.GetField<int>("money"); } }
 
     private void Awake()
     {

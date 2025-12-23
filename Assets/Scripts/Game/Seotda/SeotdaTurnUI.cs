@@ -2,6 +2,7 @@ using Photon.Voice;
 using UnityEngine;
 using System;
 using TMPro;
+using Utils;
 
 public class SeotdaTurnUI : MonoBehaviour
 {
@@ -14,13 +15,23 @@ public class SeotdaTurnUI : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI _timer;
 
+    [SerializeField]
+    private TextMeshProUGUI _myMoney;
+    [SerializeField]
+    private TextMeshProUGUI _potMoney;
+    [SerializeField]
+    private TextMeshProUGUI _stakeMoney;
+
     private bool _isFlow = false;
     private float _time = 0;
-    
+    private int _curMyMoney = 0;
+    private int _curPotMoney = 0;
+    private int _curStakeMoney = 0;
 
     private void Start()
     {
         OffUI();
+
     }
     private void OnEnable()
     {
@@ -36,6 +47,8 @@ public class SeotdaTurnUI : MonoBehaviour
     }
     private void Update()
     {
+        UpdateMoney();
+
         if (!_isFlow) return;
         
         _time -= Time.deltaTime;
@@ -50,6 +63,27 @@ public class SeotdaTurnUI : MonoBehaviour
             _isFlow = false;
             EventManager.Instance.Invoke("EndTime");
         }    
+    }
+    private void UpdateMoney()
+    {
+        int money = MyPlayer.local.Money;
+        if (_curMyMoney != money)
+        {
+            _myMoney.text = "³» µ· : " + money.ToString();
+            _curMyMoney = money;
+        }
+        money = GetComponentInParent<SeotdaGameManager>().Pot;
+        if (_curPotMoney != money)
+        {
+            _potMoney.text = "¸ðÀÎ µ· : " + money.ToString();
+            _curPotMoney = money;
+        }
+        money = GetComponentInParent<SeotdaGameManager>().Stake;
+        if (_curStakeMoney != money)
+        {
+            _stakeMoney.text = "ÆÇµ· : " + money.ToString();
+            _curStakeMoney = money;
+        }
     }
 
     private void OffUI()
