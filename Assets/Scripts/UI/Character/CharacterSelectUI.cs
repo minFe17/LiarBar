@@ -195,8 +195,6 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
 
     void UpdateAllPlayerUI()
     {
-        Debug.Log($"[UpdateAllPlayerUI] 플레이어 수: {PhotonNetwork.PlayerList.Length}");
-
         foreach (PlayerSlotUI slot in _playerSlots)
             slot.ClearSlot();
 
@@ -328,7 +326,6 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
     #region Photon Callbacks
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
     {
-        Debug.Log($"[OnPlayerPropertiesUpdate] {targetPlayer.NickName} 속성 변경됨");
         UpdateAllPlayerUI();
         CheckAllPlayerReady();
     }
@@ -341,7 +338,6 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        Debug.Log($"[OnJoinedRoom] 호출됨 - 상태: {PhotonNetwork.NetworkClientState}, IsMasterClient: {PhotonNetwork.IsMasterClient}");
         InitializePlayer();
     }
 
