@@ -61,4 +61,12 @@ public class VivoxController : MonoBehaviour
 
         await VivoxService.Instance.JoinGroupChannelAsync(channelName, ChatCapability.AudioOnly);
     }
+
+    public void ChangeVoiceChat(bool isOn)
+    {
+        if(isOn)
+            VivoxService.Instance.UnmuteInputDevice();
+        else
+            VivoxService.Instance.MuteInputDevice();
+    }
 }

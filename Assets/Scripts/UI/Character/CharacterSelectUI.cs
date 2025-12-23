@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
@@ -93,7 +94,6 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
 
         _photonManager.SetNickname(nickname);
 
-        // 🎯 MasterClient에게 PositionIndex 할당 요청
         if (PhotonNetwork.IsMasterClient)
         {
             // 마스터는 직접 할당
@@ -326,7 +326,7 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
 
     public void OnClickVoiceToggle()
     {
-        // 비복스 음소거 토글
+        VivoxController.Instance.ChangeVoiceChat(_voiceToggle.isOn);
     }
     #endregion
 
