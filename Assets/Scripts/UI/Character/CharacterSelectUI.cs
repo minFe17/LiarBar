@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
@@ -26,7 +26,7 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
     [SerializeField] Toggle _voiceToggle;
 
     bool _isReady = false;
-    bool _hasInitialized = false; // ÃÊ±âÈ­ ÇÃ·¡±× Ãß°¡
+    bool _hasInitialized = false;
 
     FirebaseREST _firebaseRest;
     PhotonManager _photonManager;
@@ -37,42 +37,156 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
         _firebaseRest = MonoSingleton<FirebaseREST>.Instance;
 
         ShowRoomID();
+        Invoke(nameof(TryInitialize), 0.5f);
+    }
 
-        // Start¿¡¼­ ÃÊ±âÈ­ ½Ãµµ (Firebase ·Îµå ¿Ï·á ÈÄ)
-        InitializePlayer();
+    void TryInitialize()
+    {
+        Debug.Log($"[TryInitialize] InRoom: {PhotonNetwork.InRoom}, State: {PhotonNetwork.NetworkClientState}");
+
+        if (PhotonNetwork.InRoom && PhotonNetwork.NetworkClientState == ClientState.Joined)
+        {
+            InitializePlayer();
+        }
+        else
+        {
+            Debug.Log("[TryInitialize] ì•„ì§ ë°© ì…ì¥ ì•ˆ ë¨, ì¬ì‹œë„...");
+            Invoke(nameof(TryInitialize), 0.3f);
+        }
     }
 
     void InitializePlayer()
     {
-        // ÀÌ¹Ì ÃÊ±âÈ­ÇßÀ¸¸é ¹«½Ã
-        if (_hasInitialized)
-            return;
+        Debug.Log($"[InitializePlayer] í˜¸ì¶œë¨. _hasInitialized: {_hasInitialized}");
 
-        // Firebase User°¡ nullÀÌ¸é ´ë±â
+        if (_hasInitialized)
+        {
+            Debug.Log("[InitializePlayer] ì´ë¯¸ ì´ˆê¸°í™”ë¨");
+            return;
+        }
+
+        if (!PhotonNetwork.InRoom || PhotonNetwork.NetworkClientState != ClientState.Joined)
+        {
+            Debug.Log($"[InitializePlayer] ë°© ì…ì¥ ëŒ€ê¸° ì¤‘... í˜„ì¬ ìƒíƒœ: {PhotonNetwork.NetworkClientState}");
+            Invoke(nameof(InitializePlayer), 0.3f);
+            return;
+        }
+
         if (_firebaseRest.User == null)
         {
-            Debug.Log("Firebase User°¡ ¾ÆÁ÷ ·ÎµåµÇÁö ¾Ê¾Ò½À´Ï´Ù. 0.5ÃÊ ÈÄ Àç½Ãµµ...");
-            Invoke(nameof(InitializePlayer), 0.5f);
+            Debug.Log("[InitializePlayer] Firebase Userê°€ ì•„ì§ ë¡œë“œë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤. 0.3ì´ˆ í›„ ì¬ì‹œë„...");
+            Invoke(nameof(InitializePlayer), 0.3f);
             return;
         }
 
         string nickname = _firebaseRest.User.GetField<string>("nickname");
 
-        // ´Ğ³×ÀÓÀÌ ºñ¾îÀÖÀ¸¸é ´ë±â
         if (string.IsNullOrEmpty(nickname))
         {
-            Debug.Log("´Ğ³×ÀÓÀÌ ºñ¾îÀÖ½À´Ï´Ù. Firebase ·Îµå ´ë±â Áß...");
-            Invoke(nameof(InitializePlayer), 0.5f);
+            Debug.Log("[InitializePlayer] ë‹‰ë„¤ì„ì´ ë¹„ì–´ìˆìŠµë‹ˆë‹¤. Firebase ë¡œë“œ ëŒ€ê¸° ì¤‘...");
+            Invoke(nameof(InitializePlayer), 0.3f);
             return;
         }
 
-        // ÃÊ±âÈ­ ¿Ï·á
         _hasInitialized = true;
-        Debug.Log($"ÇÃ·¹ÀÌ¾î ÃÊ±âÈ­ ¿Ï·á: {nickname}");
+        Debug.Log($"[InitializePlayer] í”Œë ˆì´ì–´ ì´ˆê¸°í™” ì™„ë£Œ: {nickname}");
 
         _photonManager.SetNickname(nickname);
-        AssignRandomPositionIndex();
-        UpdateAllPlayerUI();
+
+        // ğŸ¯ MasterClientì—ê²Œ PositionIndex í• ë‹¹ ìš”ì²­
+        if (PhotonNetwork.IsMasterClient)
+        {
+            // ë§ˆìŠ¤í„°ëŠ” ì§ì ‘ í• ë‹¹
+            AssignPositionIndexToPlayer(PhotonNetwork.LocalPlayer);
+        }
+        else
+        {
+            // ë‹¤ë¥¸ í”Œë ˆì´ì–´ëŠ” RPCë¡œ ìš”ì²­
+            PhotonView pv = GetComponent<PhotonView>();
+            if (pv == null)
+            {
+                // PhotonViewê°€ ì—†ìœ¼ë©´ ì¶”ê°€
+                GameObject go = GameObject.Find("CharacterSelectUI");
+                if (go != null)
+                    pv = go.GetComponent<PhotonView>();
+            }
+
+            if (pv != null && pv.ViewID != 0)
+            {
+                pv.RPC(nameof(RPC_RequestPositionIndex), RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
+            }
+            else
+            {
+                // PhotonViewê°€ ì—†ìœ¼ë©´ ì§ì ‘ í• ë‹¹ (fallback)
+                Invoke(nameof(AssignRandomPositionIndex), 0.2f);
+            }
+        }
+    }
+
+    [PunRPC]
+    void RPC_RequestPositionIndex(int actorNumber)
+    {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+
+        Debug.Log($"[RPC_RequestPositionIndex] ActorNumber {actorNumber} ìš”ì²­ ë°›ìŒ");
+
+        Player targetPlayer = PhotonNetwork.CurrentRoom.GetPlayer(actorNumber);
+        if (targetPlayer != null)
+        {
+            AssignPositionIndexToPlayer(targetPlayer);
+        }
+    }
+
+    void AssignPositionIndexToPlayer(Player player)
+    {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+
+        // ì´ë¯¸ PositionIndexê°€ ìˆìœ¼ë©´ ë¬´ì‹œ
+        if (player.CustomProperties.ContainsKey("PositionIndex"))
+        {
+            int existingIndex = (int)player.CustomProperties["PositionIndex"];
+            Debug.Log($"[AssignPositionIndexToPlayer] {player.NickName}ì€ ì´ë¯¸ PositionIndex {existingIndex}ë¥¼ ê°€ì§€ê³  ìˆìŒ");
+            UpdateAllPlayerUI();
+            return;
+        }
+
+        // ì‚¬ìš© ì¤‘ì¸ ì¸ë±ìŠ¤ ìˆ˜ì§‘
+        HashSet<int> usedIndexes = new HashSet<int>();
+        foreach (Player p in PhotonNetwork.PlayerList)
+        {
+            int posIndex = GetCustomProperty(p, "PositionIndex", -1);
+            if (posIndex >= 0)
+            {
+                usedIndexes.Add(posIndex);
+                Debug.Log($"[AssignPositionIndexToPlayer] ì‚¬ìš© ì¤‘: {posIndex} ({p.NickName})");
+            }
+        }
+
+        // ì‚¬ìš© ê°€ëŠ¥í•œ ì¸ë±ìŠ¤ ì°¾ê¸°
+        int maxPlayers = PhotonNetwork.CurrentRoom.MaxPlayers;
+        List<int> availableIndexes = new List<int>();
+        for (int i = 0; i < maxPlayers; i++)
+        {
+            if (!usedIndexes.Contains(i))
+                availableIndexes.Add(i);
+        }
+
+        if (availableIndexes.Count > 0)
+        {
+            int chosenIndex = availableIndexes[0]; // ì²« ë²ˆì§¸ ì‚¬ìš© ê°€ëŠ¥í•œ ì¸ë±ìŠ¤
+            Debug.Log($"[AssignPositionIndexToPlayer] {player.NickName}ì—ê²Œ PositionIndex {chosenIndex} í• ë‹¹");
+
+            Hashtable props = new Hashtable { { "PositionIndex", chosenIndex } };
+            player.SetCustomProperties(props);
+
+            Invoke(nameof(UpdateAllPlayerUI), 0.2f);
+        }
+        else
+        {
+            Debug.LogError($"[AssignPositionIndexToPlayer] ì‚¬ìš© ê°€ëŠ¥í•œ PositionIndexê°€ ì—†ìŠµë‹ˆë‹¤!");
+        }
     }
 
     void ShowRoomID()
@@ -83,26 +197,38 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
 
     void UpdateAllPlayerUI()
     {
-        // ½½·Ô ÃÊ±âÈ­
+        Debug.Log($"[UpdateAllPlayerUI] í”Œë ˆì´ì–´ ìˆ˜: {PhotonNetwork.PlayerList.Length}");
+
         foreach (PlayerSlotUI slot in _playerSlots)
             slot.ClearSlot();
 
-        // ÇöÀç ¹æ¿¡ ÀÖ´Â ÇÃ·¹ÀÌ¾î¸¸ ºó ½½·Ô ¼ø¼­´ë·Î Ã¤¿ì±â
-        for (int i = 0; i < PhotonNetwork.PlayerList.Length && i < _playerSlots.Length; i++)
+        List<Player> sortedPlayers = new List<Player>(PhotonNetwork.PlayerList);
+        sortedPlayers.Sort((a, b) =>
         {
-            Player player = PhotonNetwork.PlayerList[i];
+            int posA = GetCustomProperty(a, "PositionIndex", -1);
+            int posB = GetCustomProperty(b, "PositionIndex", -1);
+            return posA.CompareTo(posB);
+        });
 
-            PlayerInfo info = new PlayerInfo
+        foreach (Player player in sortedPlayers)
+        {
+            int posIndex = GetCustomProperty(player, "PositionIndex", -1);
+
+            if (posIndex >= 0 && posIndex < _playerSlots.Length)
             {
-                Nickname = GetCustomProperty(player, "Nickname", player.NickName),
-                IsReady = GetCustomProperty(player, "IsReady", false),
-                SelectedCharacterIndex = GetCustomProperty(player, "SelectedCharacterIndex", 0),
-                PositionIndex = GetCustomProperty(player, "PositionIndex", 0),
-                ActorNumber = player.ActorNumber,
-                IsAlive = GetCustomProperty(player, "IsAlive", true)
-            };
+                PlayerInfo info = new PlayerInfo
+                {
+                    Nickname = GetCustomProperty(player, "Nickname", player.NickName),
+                    IsReady = GetCustomProperty(player, "IsReady", false),
+                    SelectedCharacterIndex = GetCustomProperty(player, "SelectedCharacterIndex", 0),
+                    PositionIndex = posIndex,
+                    ActorNumber = player.ActorNumber,
+                    IsAlive = GetCustomProperty(player, "IsAlive", true)
+                };
 
-            _playerSlots[i].SetSlot(info);
+                _playerSlots[posIndex].SetSlot(info);
+                Debug.Log($"[UpdateAllPlayerUI] ìŠ¬ë¡¯ {posIndex}: {info.Nickname} (ActorNumber: {info.ActorNumber})");
+            }
         }
     }
 
@@ -115,15 +241,12 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
 
     void CheckAllPlayerReady()
     {
-        // 1. °ÔÀÓ ¸ğµå°¡ ¼±ÅÃµÇ¾ú´ÂÁö È®ÀÎ
         if (!PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("GameMode", out object gameModeObj))
             return;
 
-        // 2. ÀÎ¿ø Ã¼Å©
         if (PhotonNetwork.PlayerList.Length != 4)
             return;
 
-        // 3. ¸ğµç ÇÃ·¹ÀÌ¾î Ready Ã¼Å©
         for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
         {
             Player player = PhotonNetwork.PlayerList[i];
@@ -136,17 +259,28 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
                 return;
         }
 
-        // 4. ¸ğµç Á¶°Ç ¸¸Á· ¡æ °ÔÀÓ ½ÃÀÛ
         if (PhotonNetwork.IsMasterClient)
             PhotonNetwork.LoadLevel("IngameScene");
     }
 
     void AssignRandomPositionIndex()
     {
-        // ÀÌ¹Ì ´Ù¸¥ ÇÃ·¹ÀÌ¾î°¡ »ç¿ëÁßÀÎ ÀÎµ¦½º ¼öÁı
+        Debug.Log("[AssignRandomPositionIndex] Fallback í˜¸ì¶œë¨");
+
+        if (PhotonNetwork.LocalPlayer.CustomProperties.ContainsKey("PositionIndex"))
+        {
+            int myIndex = (int)PhotonNetwork.LocalPlayer.CustomProperties["PositionIndex"];
+            Debug.Log($"[AssignRandomPositionIndex] ì´ë¯¸ PositionIndexê°€ í• ë‹¹ë¨: {myIndex}");
+            UpdateAllPlayerUI();
+            return;
+        }
+
         HashSet<int> usedIndexes = new HashSet<int>();
         foreach (Player player in PhotonNetwork.PlayerList)
         {
+            if (player.ActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
+                continue;
+
             int posIndex = GetCustomProperty(player, "PositionIndex", -1);
             if (posIndex >= 0)
                 usedIndexes.Add(posIndex);
@@ -162,8 +296,10 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
 
         if (availableIndexes.Count > 0)
         {
-            int chosenIndex = availableIndexes[Random.Range(0, availableIndexes.Count)];
+            int chosenIndex = availableIndexes[0];
+            Debug.Log($"[AssignRandomPositionIndex] PositionIndex í• ë‹¹: {chosenIndex}");
             _photonManager.SetPositionIndex(chosenIndex);
+            Invoke(nameof(UpdateAllPlayerUI), 0.2f);
         }
     }
 
@@ -174,7 +310,6 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
         _nicknameInputField.SetActive(false);
         _selectCharacterUI.SetActive(true);
         AssignRandomPositionIndex();
-        UpdateAllPlayerUI();
     }
 
     public void OnClickExitRoom()
@@ -191,13 +326,14 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
 
     public void OnClickVoiceToggle()
     {
-        // ºñº¹½º À½¼Ò°Å Åä±Û
+        // ë¹„ë³µìŠ¤ ìŒì†Œê±° í† ê¸€
     }
     #endregion
 
     #region Photon Callbacks
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
     {
+        Debug.Log($"[OnPlayerPropertiesUpdate] {targetPlayer.NickName} ì†ì„± ë³€ê²½ë¨");
         UpdateAllPlayerUI();
         CheckAllPlayerReady();
     }
@@ -210,8 +346,7 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        // OnJoinedRoomÀº ÃÊ±âÈ­¸¸ Æ®¸®°Å
-        Debug.Log("OnJoinedRoom È£ÃâµÊ");
+        Debug.Log($"[OnJoinedRoom] í˜¸ì¶œë¨ - ìƒíƒœ: {PhotonNetwork.NetworkClientState}, IsMasterClient: {PhotonNetwork.IsMasterClient}");
         InitializePlayer();
     }
 
