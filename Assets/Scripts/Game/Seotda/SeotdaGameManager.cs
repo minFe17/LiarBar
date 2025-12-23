@@ -194,7 +194,7 @@ public class SeotdaGameManager : MonoBehaviourPun
         if (Keyboard.current.cKey.wasPressedThisFrame && MyPlayer.local.Money >= _stake)
         {
             photonView.RPC("RPC_ChangeStake", RpcTarget.MasterClient, 0,0);
-            photonView.RPC("RPC_AddMoney", photonView.Owner, -(_stake));
+            photonView.RPC("RPC_AddMoney", MyPlayer.myPlayer, -(_stake));
             Debug.Log("ƒ›«‘");
         }
         else if (Keyboard.current.xKey.wasPressedThisFrame)
@@ -206,17 +206,17 @@ public class SeotdaGameManager : MonoBehaviourPun
         else if (Keyboard.current.bKey.wasPressedThisFrame && !_isAllIn &&MyPlayer.local.Money >= _stake*2)
         {
             photonView.RPC("RPC_ChangeStake", RpcTarget.MasterClient, 2,0);
-            photonView.RPC("RPC_AddMoney", photonView.Owner, -(_stake));
+            photonView.RPC("RPC_AddMoney", MyPlayer.myPlayer, -(_stake));
         }
         else if (Keyboard.current.hKey.wasPressedThisFrame && !_isAllIn && MyPlayer.local.Money >= _stake+(_stake*0.5f))
         {
             photonView.RPC("RPC_ChangeStake", RpcTarget.MasterClient, 1,0);
-            photonView.RPC("RPC_AddMoney", photonView.Owner, -(_stake));
+            photonView.RPC("RPC_AddMoney", MyPlayer.myPlayer, -(_stake));
         }
         else if (Keyboard.current.jKey.wasPressedThisFrame && !_isAllIn)
         {
             photonView.RPC("RPC_ChangeStake", RpcTarget.MasterClient, 3,0);//≥ªµ∑ ≥—∞‹¡‡æﬂµ 
-            photonView.RPC("RPC_AddMoney", photonView.Owner, -(_stake));
+            photonView.RPC("RPC_AddMoney", MyPlayer.myPlayer, -(_stake));
         }
         else
             return;
