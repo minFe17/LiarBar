@@ -58,11 +58,13 @@ public class SeotdaTurnManager : MonoBehaviourPun
     {
         if (!PhotonNetwork.IsMasterClient) return;
         photonView.RPC("RPC_Stop", RpcTarget.All);
+        photonView.RPC("RPC_OnCallText", RpcTarget.All, "종료", 255, 255, 255);
     }
     public void StartGame()
     {
         if (!PhotonNetwork.IsMasterClient) return;
         photonView.RPC("RPC_Start", RpcTarget.All);
+        photonView.RPC("RPC_OnCallText", RpcTarget.All, "시작", 255, 255, 255);
     }
     public void ReStartGame()
     {

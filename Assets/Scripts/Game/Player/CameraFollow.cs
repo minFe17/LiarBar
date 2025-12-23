@@ -31,6 +31,7 @@ public class CameraFollow : MonoBehaviour
     {
         _view = GetComponent<PhotonView>();
         _camera = GetComponentInChildren<Camera>();
+        MyPlayer.localCamera = _camera;
 
         if (!_view.IsMine)
         {

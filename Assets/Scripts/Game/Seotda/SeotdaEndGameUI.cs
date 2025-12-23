@@ -24,6 +24,16 @@ public class SeotdaEndGameUI : MonoBehaviourPun
 
     private bool _isShowReGame = false;
     private float _timer = 0;
+    public int FindPlayer(int index)
+    {
+        for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+        {
+            if (index == (int)PhotonNetwork.PlayerList[i].CustomProperties["PositionIndex"])
+                return i;
+        }
+        return -1;
+    } //포지션 인덱스로 플레이어 번호찾기
+
     private void OnClickRestart()
     {
         if (!PhotonNetwork.IsMasterClient) return;
@@ -63,15 +73,7 @@ public class SeotdaEndGameUI : MonoBehaviourPun
         _reGame.SetActive(false);
         _result.SetActive(false);
     }
-    private int FindPlayer(int index)
-    {
-        for(int i = 0; i < PhotonNetwork.PlayerList.Length;i++)
-        {
-            if (index == (int)PhotonNetwork.PlayerList[i].CustomProperties["PositionIndex"])
-                return i;
-        }
-        return -1;
-    }
+
     #region RPC
     [PunRPC]
     private void RPC_OnResultPanel(int[] types, int[] indexes)

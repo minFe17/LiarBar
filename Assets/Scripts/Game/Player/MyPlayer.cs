@@ -9,6 +9,7 @@ using Utils;
 public class MyPlayer : MonoBehaviour
 {
     public static MyPlayer local;
+    public static Camera localCamera;
     public static List<(Player player, Transform hand)> playerLeftHands = new();
     public static Player myPlayer;
 

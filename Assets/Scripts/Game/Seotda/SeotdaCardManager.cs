@@ -165,7 +165,7 @@ public class SeotdaCardManager : MonoBehaviourPun
                 return (int)(month * 0.5f);
 
             case ESeotdaRuleType.Keut:
-                return month-10;
+                return month<10 ? month : month -10;
         }
         //둘 재대결하게해야됨
         return -1;

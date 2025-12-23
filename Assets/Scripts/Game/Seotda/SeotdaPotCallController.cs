@@ -5,35 +5,32 @@ using Photon.Pun;
 public class SeotdaPotCallController : MonoBehaviourPun
 {
     private TextMeshPro _text;
+
     private float _timer = 0;
     private bool _isOn = false;
     void Start()
     {
-        _text = GetComponent<TextMeshPro>();
-        _text.gameObject.SetActive(false);
+        Transform callPot = transform.Find("TableObject/CallPot");
+        _text = callPot.GetComponent<TextMeshPro>();
+        //카메라 방향 바라보게 회전해야됨
     }
-
-    void Update()
+    void LateUpdate()
     {
-        if (_isOn)
-        {
-            _timer += Time.deltaTime;
-            if (_timer > 3)
-            {
-                _isOn = false;
-                _timer = 0;
-            }
-        }
+        LookAtCameraY();
+    }
+    void LookAtCameraY()
+    {
+        //위왼아래오른쪽
+        Vector3[] rotation = { new Vector3(0, 180, 0), new Vector3(0, 90, 0), new Vector3(0, 0, 0), new Vector3(0, 270, 0) };
+        _text.transform.rotation = Quaternion.Euler(rotation[MyPlayer.local.PositionIndex]);
     }
 
 
     [PunRPC]
-    private void RPC_OnCallText(string text, Color32 color)
+    private void RPC_OnCallText(string text, int r, int g, int b)
     {
-        _isOn = true;
-        _text.gameObject.SetActive(true);
         _text.text = text;
-        _text.color = color;
+        _text.color = new Color32((byte)r, (byte)g, (byte)b, 255);
     }
 
 }

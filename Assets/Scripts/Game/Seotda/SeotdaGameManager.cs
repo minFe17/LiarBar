@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System;
 using ExitGames.Client.Photon;
 using Utils;
+using TMPro;
 
 public class SeotdaGameManager : MonoBehaviourPun
 {
@@ -38,6 +39,8 @@ public class SeotdaGameManager : MonoBehaviourPun
 
     private Vector3 _originScale = Vector3.zero;
 
+    public int Pot
+    { get { return _pot; } }
     void Start()
     {
         _turn = GetComponent<SeotdaTurnManager>();
@@ -196,7 +199,7 @@ public class SeotdaGameManager : MonoBehaviourPun
         else if (Keyboard.current.xKey.wasPressedThisFrame)
         {
             _turn.Die();
-            photonView.RPC("RPC_OnCallText", RpcTarget.All, "Die", new Color32(255, 68, 0, 255));
+            photonView.RPC("RPC_OnCallText", RpcTarget.All, "Die", 255, 68, 0);
             return;
         }
         else if (Keyboard.current.bKey.wasPressedThisFrame && !_isAllIn)
@@ -352,21 +355,21 @@ public class SeotdaGameManager : MonoBehaviourPun
         {
             case 0:
                 _callNum++;
-                photonView.RPC("RPC_OnCallText", RpcTarget.All, "Call", new Color32(255,233,129,255));
+                photonView.RPC("RPC_OnCallText", RpcTarget.All, "콜", 255,233,129);
                 break;
             case 1: // 하프
                 _stake = _stake + (int)(_stake * 0.5f);
-                photonView.RPC("RPC_OnCallText", RpcTarget.All, "Half", new Color32(37,255,238,255));
+                photonView.RPC("RPC_OnCallText", RpcTarget.All, "하프", 37,255,238);
                 _callNum = 1;
                 break;
             case 2: //더블
                 _stake *= 2;
                 _callNum = 1;
-                photonView.RPC("RPC_OnCallText", RpcTarget.All, "Double", new Color32(112,255,0,255));
+                photonView.RPC("RPC_OnCallText", RpcTarget.All, "따당", 112,255,0);
                 break;
             case 3: //올인
                     //_stake = mymoney; 데이터 가져와야됨
-                photonView.RPC("RPC_OnCallText", RpcTarget.All, "AllIn", new Color32(255,0,226,255));
+                photonView.RPC("RPC_OnCallText", RpcTarget.All, "올인",255,0,226);
                 _isAllIn = true;
                 break;
         }
@@ -394,16 +397,37 @@ public class SeotdaGameManager : MonoBehaviourPun
             indexes[i] = list[i].index;
         }
 
+        bool isSame = false;
+        int sameMaxIndex = 0;
+        SeotdaCardManager card = GetComponent<SeotdaCardManager>();
+        if (list.Count>=2 && list[0].data.rank == list[1].data.rank && card.FindMonth(list[0].index) == card.FindMonth(list[1].index))
+        {
+            isSame = true;
+            sameMaxIndex = 1;
+            if (list.Count>=3 && list[0].data.rank == list[2].data.rank && card.FindMonth(list[0].index) == card.FindMonth(list[2].index))
+                sameMaxIndex++;
+            if(list.Count >= 4 && list[0].data.rank == list[3].data.rank && card.FindMonth(list[0].index) == card.FindMonth(list[3].index))
+                sameMaxIndex++;
+        }
+
         // RPC 호출
-        if (winner == 0)
+        if (isSame)
+        {
             photonView.RPC("RPC_OnResultPanel", RpcTarget.MasterClient, types, indexes);
+            //pot머니 나눠서 입금해주기
+        }
+        else if (winner == 0)
+        {
+            photonView.RPC("RPC_OnResultPanel", RpcTarget.MasterClient, types, indexes);
+        }
         else if (winner == -1) // 재시작해주기
-            photonView.RPC("RPC_OnRestartPanel", RpcTarget.MasterClient,types[0]);
+            photonView.RPC("RPC_OnRestartPanel", RpcTarget.MasterClient, types[0]);
         //else if (winner == -2)//재시작해주기 (순위같은애들만)
         //    return;
         else //특별한 위너~!
-            photonView.RPC("RPC_OnResultPanelToSpecial", RpcTarget.MasterClient, types, indexes, winner);
-            return;
+        {
+            photonView.RPC("RPC_OnResultPanel", RpcTarget.MasterClient, types, indexes);
+        }
     }
     [PunRPC]
     private void RPC_ResetGameManager()
