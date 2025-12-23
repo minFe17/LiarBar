@@ -9,15 +9,6 @@ public class LiarBarTurnUI : MonoBehaviourPun
         gameObject.SetActive(false);
     }
 
-    void RotateToPlayer(GamePlayer player)
-    {
-        Vector3 dir = player.transform.position - transform.position;
-        float angle = Mathf.Atan2(dir.z, dir.x) * Mathf.Rad2Deg;
-
-        // 모든 클라이언트에 회전 RPC
-        photonView.RPC("RPC_RotateBar", RpcTarget.All, angle);
-    }
-
     public void ShowNextPlayer(GamePlayer player)
     {
         if (!gameObject.activeInHierarchy)

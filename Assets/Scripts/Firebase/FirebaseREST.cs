@@ -81,7 +81,9 @@ public class FirebaseREST : MonoBehaviour
                 if (isSignUp)
                 {
                     // Firestore에 초기 데이터 저장
-                    _firestoreUser.SetField("nickname", ""); // 기본값
+                    _firestoreUser.SetField("nickname", "");
+                    _firestoreUser.SetField("money", 5000);
+
                     StartCoroutine(SaveUserDataRoutine());   // 저장만 하고 LoadUserData는 생략
                 }
                 else

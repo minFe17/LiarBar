@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Data;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
-using Unity.Services.Vivox;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -227,7 +225,6 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
                 };
 
                 _playerSlots[posIndex].SetSlot(info);
-                Debug.Log($"[UpdateAllPlayerUI] 슬롯 {posIndex}: {info.Nickname} (ActorNumber: {info.ActorNumber})");
             }
         }
     }
@@ -265,8 +262,6 @@ public class CharacterSelectUI : MonoBehaviourPunCallbacks
 
     void AssignRandomPositionIndex()
     {
-        Debug.Log("[AssignRandomPositionIndex] Fallback 호출됨");
-
         if (PhotonNetwork.LocalPlayer.CustomProperties.ContainsKey("PositionIndex"))
         {
             int myIndex = (int)PhotonNetwork.LocalPlayer.CustomProperties["PositionIndex"];

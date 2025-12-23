@@ -64,7 +64,7 @@ public class VivoxController : MonoBehaviour
 
     public void ChangeVoiceChat(bool isOn)
     {
-        if(isOn)
+        if (isOn)
             VivoxService.Instance.UnmuteInputDevice();
         else
             VivoxService.Instance.MuteInputDevice();

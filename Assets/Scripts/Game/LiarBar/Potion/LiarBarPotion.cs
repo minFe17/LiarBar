@@ -5,10 +5,10 @@ using UnityEngine;
 public class LiarBarPotion : MonoBehaviour
 {
     [SerializeField] MeshRenderer _potion;
-    float _potionFill = 0.3f; 
-    Coroutine _drinkCoroutine;
 
+    Coroutine _drinkCoroutine;
     Transform _handTransform;
+    float _potionFill = 0.3f;
 
     public void Init(Transform handTransform)
     {
@@ -37,7 +37,7 @@ public class LiarBarPotion : MonoBehaviour
             StopCoroutine(_drinkCoroutine);
 
         // 자기 화면에서 Fill 감소
-        _drinkCoroutine = StartCoroutine(DrinkRoutine(-1f, _potionFill, 1.5f)); 
+        _drinkCoroutine = StartCoroutine(DrinkRoutine(-1f, _potionFill, 1.5f));
     }
 
     public void ThrowPotion()

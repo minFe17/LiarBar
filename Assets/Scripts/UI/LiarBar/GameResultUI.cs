@@ -19,6 +19,7 @@ public class GameResultUI : MonoBehaviour
     };
 
     float _timertime = 5f;
+    bool _isSceneLoading = false;
 
     void Start()
     {
@@ -28,15 +29,20 @@ public class GameResultUI : MonoBehaviour
 
     void Update()
     {
+        if (_isSceneLoading) return;
+
         _timertime -= Time.deltaTime;
+        _timerText.text = Mathf.CeilToInt(_timertime).ToString();
+
         if (_timertime <= 0f)
         {
+            _isSceneLoading = true;
+
             SimpleSingleton<MediatorManager>.Instance.ClearAll();
+
             if (PhotonNetwork.IsMasterClient)
                 PhotonNetwork.LoadLevel("SelectCharacterScene");
         }
-
-        _timerText.text = Mathf.CeilToInt(_timertime).ToString();
     }
 
     void ShowRankings()
@@ -72,7 +78,8 @@ public class GameResultUI : MonoBehaviour
         {
             if (_rankMoneys.TryGetValue(myRank, out int money))
             {
-                MonoSingleton<FirebaseREST>.Instance.User.SetField("money", money);
+                int userMoney = MonoSingleton<FirebaseREST>.Instance.User.GetField<int>("money");
+                MonoSingleton<FirebaseREST>.Instance.User.SetField("money", money + userMoney);
                 MonoSingleton<FirebaseREST>.Instance.SaveUserData();
             }
         }
